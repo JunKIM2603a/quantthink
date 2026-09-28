@@ -9,21 +9,54 @@
   "novelty_gate": "OPEN_WITH_ADJACENT_CONTROL_OVERLAP",
   "protocol_gate": "DRAFT_NOT_FROZEN",
   "research_approval": "NOT_RECORDED",
-  "user_hardware_preflight": "USER_REPORTED_ENVIRONMENT_NOT_READY",
+  "user_hardware_preflight": "USER_REPORTED_CUDA_VISIBLE",
   "user_hardware_preflight_summary": {
-    "evidence_source": "User-submitted terminal output; not an assistant-run hardware inspection",
-    "observed_commit": "a5789ce55fb47475ea3fe94bbf02d26bbdd5c237",
-    "diagnostic_recorded_at_utc": "2026-09-28T15:44:16.783488+00:00",
-    "user_cpu_diagnostic_tests": "7_PASSED_USER_REPORTED",
+    "evidence_source": "User-submitted terminal output; not an assistant-run hardware inspection or verification of local file bytes",
+    "observed_commit": "95e7be8b125eb3307b7054a931c7a7033d7c5dfb",
+    "diagnostic_recorded_at_utc": "2026-09-28T15:55:30.618275+00:00",
+    "git_dirty": false,
+    "python": "3.11.16",
+    "torch": "2.7.1+cu118",
+    "numpy": "1.26.4",
+    "cuda_build": "11.8",
     "nvidia_smi_status": "ok",
     "nvidia_smi_device_count": 2,
-    "torch_probe_status": "not_installed",
-    "interpretation": "The active Python environment has no PyTorch installation. The derived CUDA/device-count warnings do not establish a GPU or driver fault. CUDA computation remains unverified.",
+    "torch_probe_status": "ok",
+    "torch_cuda_available": true,
+    "torch_visible_device_count": 2,
+    "bf16_supported_on_both_devices": true,
+    "interpretation": "CUDA visibility is confirmed by the submitted report. This is a basic environment milestone, not model, quantizer, communication, or research-gate validation.",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "Create an isolated Python environment, install a pinned CUDA-enabled PyTorch build, rerun preflight, and verify small per-device BF16 tensor operations. No model download, inference, distributed communication test, or scientific gate pass is implied.",
-  "user_gpu_tensor_smoke": "NOT_RUN_OR_NOT_PROVIDED",
-  "assistant_cpu_diagnostic_tests": "7_PASSED",
+  "user_hardware_preflight_history": [
+    {
+      "observed_commit": "a5789ce55fb47475ea3fe94bbf02d26bbdd5c237",
+      "diagnostic_recorded_at_utc": "2026-09-28T15:44:16.783488+00:00",
+      "status": "USER_REPORTED_ENVIRONMENT_NOT_READY",
+      "torch_probe_status": "not_installed",
+      "nvidia_smi_device_count": 2,
+      "user_cpu_diagnostic_tests": "7_PASSED_USER_REPORTED",
+      "interpretation": "The earlier environment lacked PyTorch; the derived warnings did not establish a hardware fault. Superseded by the later CUDA-visible report."
+    }
+  ],
+  "user_gpu_tensor_smoke": "USER_REPORTED_PASS_2_GPUS",
+  "user_gpu_tensor_smoke_summary": {
+    "evidence_source": "User-submitted terminal output",
+    "reported_artifact": "results/local/gpu_tensor_smoke_20260928T155549946270Z.json",
+    "reported_status": "GPU_TENSOR_SMOKE_PASS",
+    "device_indices": [0, 1],
+    "operation": "Individual 256x256 BF16 all-ones matrix products with expected output 256",
+    "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
+    "raw_report_committed": false
+  },
+  "next_local_environment_step": "No additional basic CUDA installation or repeat tensor smoke is required unless the environment changes. Review docs/REPRODUCTION_READINESS_REVIEW.md before selecting the inference/quantization stack; do not install the upstream full stack or run its benchmark wrappers yet.",
+  "upstream_code_audit": {
+    "repository": "ruikangliu/Quantized-Reasoning-Models",
+    "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
+    "scope": "README, AWQ/inference wrappers and inference.py inspected; no code executed and not an exact Lotfi runtime provenance claim",
+    "review_document": "docs/REPRODUCTION_READINESS_REVIEW.md"
+  },
+  "assistant_cpu_diagnostic_tests": "7_PASSED_PREVIOUS_TURN_NOT_RERUN_IN_THIS_UPDATE",
   "bf16_reproduction": "NOT_RUN",
   "awq_reproduction": "NOT_RUN",
   "kl_matching": "NOT_RUN",
@@ -32,10 +65,10 @@
   "next_session_ready": false,
   "next_session_title": "QuantThink 02 — 환경 구축·BF16/AWQ 재현",
   "blocking_items": [
-    "Review full text and controls of arXiv:2609.23125; only the indexed primary abstract was accessible in this audit",
-    "Complete scoped novelty search and write a contribution beyond adding a generic noise control",
-    "Record acceptance of corrected smoke protocol and research-run approval",
-    "Resolve model/tokenizer revisions, quantizer implementation, evaluator, data splits and generation budget before model runs"
+    "Review full text and controls of arXiv:2609.23125; repeated primary retrieval attempts still yielded only the indexed primary abstract",
+    "Complete scoped novelty review and assess the proposed contribution beyond generic matched-noise control design",
+    "Record acceptance of a concrete corrected reproduction manifest and research-run approval",
+    "Resolve model/tokenizer revisions, quantizer/calibration provenance, evaluator, disjoint data IDs, sample size/seeds, termination logging, and generation/context budgets before model runs"
   ],
   "allowed_now": ["literature_review", "protocol_design", "cpu_unit_tests", "local_environment_inspection"],
   "not_yet_authorized_by_gates": ["scientific_model_runs", "confirmatory_hypothesis_tests", "full_model_benchmark_matrix"]
