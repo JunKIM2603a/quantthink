@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "as_of_local_date": "2026-09-29",
+  "timezone": "Asia/Seoul",
+  "current_session": "01",
+  "current_session_title": "QuantThink 01 — 저장소 점검·연구 설계 검증",
+  "audited_base_commit": "5048d4146a3f2ea82c99a4dd4fef6103bed530d4",
+  "source_audit": "PARTIAL_PRIMARY_SOURCE_REVIEW",
+  "novelty_gate": "OPEN_WITH_ADJACENT_CONTROL_OVERLAP",
+  "protocol_gate": "DRAFT_NOT_FROZEN",
+  "research_approval": "NOT_RECORDED",
+  "user_hardware_preflight": "NOT_RUN_OR_NOT_PROVIDED",
+  "assistant_cpu_diagnostic_tests": "7_PASSED",
+  "bf16_reproduction": "NOT_RUN",
+  "awq_reproduction": "NOT_RUN",
+  "kl_matching": "NOT_RUN",
+  "h1": "UNTESTED",
+  "h2": "UNTESTED",
+  "next_session_ready": false,
+  "next_session_title": "QuantThink 02 — 환경 구축·BF16/AWQ 재현",
+  "blocking_items": [
+    "Review full text and controls of arXiv:2609.23125; only the indexed primary abstract was accessible in this audit",
+    "Complete scoped novelty search and write a contribution beyond adding a generic noise control",
+    "Record acceptance of corrected smoke protocol and research-run approval",
+    "Resolve model/tokenizer revisions, quantizer implementation, evaluator, data splits and generation budget before model runs"
+  ],
+  "allowed_now": ["literature_review", "protocol_design", "cpu_unit_tests", "local_environment_inspection"],
+  "not_yet_authorized_by_gates": ["scientific_model_runs", "confirmatory_hypothesis_tests", "full_model_benchmark_matrix"]
+}
