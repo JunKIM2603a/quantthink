@@ -49,7 +49,7 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "Run scripts/resolve_asset_revisions.py --online with a new results/local output path. This collects public metadata and three small model configuration files only; it installs nothing, downloads no weights or dataset rows, and does not authorize model runs. No repeat CUDA setup is needed.",
+  "next_local_environment_step": "Install only requirements/tokenizer-audit.txt and run scripts/audit_tokenizer_contract.py --online using the existing reviewed asset_revisions report. The probe uses CPU tokenizer/configuration assets at the recorded SHA, not model weights, dataset examples, generation or CUDA. Do not repeat metadata-main resolution or basic GPU setup.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
@@ -65,13 +65,38 @@
     "original_h1_h2_changed": false,
     "candidate_development": "100 GSM8K main/train questions with two sampling seeds; proposed development check, not MATH-500 reproduction. MATH-500 remains primary confirmation.",
     "source_review": "Expanded primary HTML review of perturbation-temperature, pruning, calibration and e-CUSUM termination work; 2609.23125 still abstract-only, 2609.06473 remains an unverified lead",
-    "metadata_collector": "IMPLEMENTED_CPU_TESTED_LIVE_SUCCESS_NOT_VERIFIED",
+    "metadata_collector": "LIVE_SUCCESS_USER_REPORTED_INTERNAL_CONFIG_HASHES_CHECKED",
     "measurement_contracts": "EXACT_TOKEN_BLOCKS_AND_EOS_BUDGET_ACCOUNTING_CPU_TESTED",
     "mathematical_check": "Equal KL and entropy can coexist with different EOS probabilities and expected lengths in a memoryless toy model; not an empirical H1 test or novelty claim",
-    "new_cpu_tests": "18_PASSED_WITH_MOCK_HTTP_IN_ASSISTANT_ENVIRONMENT",
-    "syntax_check": "COMPILEALL_PASSED_FOR_NEW_SCRIPTS_AND_TESTS",
-    "user_asset_revision_report": "NOT_RUN_OR_NOT_PROVIDED",
+    "new_cpu_tests": "18_PASSED_WITH_MOCK_HTTP_IN_ASSISTANT_ENVIRONMENT_PREVIOUS_UPDATE",
+    "syntax_check": "COMPILEALL_PASSED_FOR_PREPARATION_SCRIPTS_AND_TESTS_PREVIOUS_UPDATE",
+    "user_asset_revision_report": "USER_REPORTED_METADATA_RESOLVED_INTERNAL_HASHES_MATCH",
     "source_fulltext_artifact_needed": "Primary PDF of arXiv:2609.23125"
+  },
+  "asset_config_review": {
+    "source_recorded_at_utc": "2026-09-28T23:25:35.768653+00:00",
+    "evidence_source": "User-pasted report; canonical configuration hashes recomputed from a local transcription of the supplied fields, not independent remote retrieval or verification of original local file bytes",
+    "manifest_canonical_sha256": "98ff733b0d8391c3a33aa2f561e2d389bd6e482ee53b1b680c1bb6e7e6b6201f",
+    "manifest_hash_matches_current_candidate": true,
+    "supplied_configuration_internal_hashes": "3_OF_3_MATCH",
+    "inspection_references": "configs/asset_inspection_refs.json",
+    "inspection_reference_status": "INSPECTION_REFERENCES_PINNED_NOT_A_RUNTIME_LOCK",
+    "review_document": "docs/ASSET_CONFIG_REVIEW_V01.md",
+    "source_findings": [
+      "Source model BOS 151643 differs from source generation BOS 151646; actual tokenizer IDs remain to be tested",
+      "Numeric source EOS values agree at 151643; tokenizer names EOS and PAD identically",
+      "Chat template already appends the opening think marker; this prefix is not generated text",
+      "Tokenizer length metadata 16384 differs from model position capacity 131072; long-context runtime remains unverified",
+      "Source generation file omits top_k; Transformers 4.51.3 source defaults to 50, while the existing candidate explicitly disables it with 0"
+    ],
+    "tokenizer_probe_script": "scripts/audit_tokenizer_contract.py",
+    "tokenizer_probe_dependencies": "requirements/tokenizer-audit.txt",
+    "tokenizer_probe_actual_execution": "NOT_RUN_OR_NOT_PROVIDED",
+    "assistant_new_cpu_tests": "25_PASSED_WITH_TEST_DOUBLES",
+    "assistant_new_syntax_check": "PASSED",
+    "offline_cli_on_transcribed_source_fields": "METADATA_REVIEW_PASS_TOKENIZER_NOT_RUN",
+    "model_execution": "NOT_RUN",
+    "raw_report_committed": false
   },
   "assistant_cpu_diagnostic_tests": "7_PASSED_PREVIOUS_TURN_NOT_RERUN_IN_THIS_UPDATE",
   "bf16_reproduction": "NOT_RUN",
@@ -85,8 +110,8 @@
     "Review primary full text and controls of arXiv:2609.23125; only its indexed primary abstract was accessible. Resolve additional primary-source leads before broad novelty claims.",
     "Complete scoped novelty decision beyond generic matched-noise control design, compression verbosity and termination measurement",
     "Review and accept the concrete candidate reproduction plan and record required research-run approval",
-    "Collect and review immutable model/tokenizer/dataset revisions, then finalize executable quantizer/calibration provenance, evaluator/rubric, disjoint data IDs, seeds, prompt/stop tokens and generation/context budgets before model runs"
+    "Asset revision references and supplied configuration hashes are reviewed; actual tokenizer contracts, executable quantizer/calibration provenance, evaluator/rubric, disjoint data IDs, prompt/stop handling and long-context validation remain pending before model runs"
   ],
-  "allowed_now": ["literature_review", "protocol_design", "cpu_unit_tests", "local_environment_inspection", "public_asset_metadata_collection"],
+  "allowed_now": ["literature_review", "protocol_design", "cpu_unit_tests", "local_environment_inspection", "public_asset_metadata_collection", "cpu_tokenizer_asset_inspection"],
   "not_yet_authorized_by_gates": ["scientific_model_runs", "confirmatory_hypothesis_tests", "full_model_benchmark_matrix"]
 }
