@@ -1,5 +1,7 @@
 # QuantThink R0/R1 candidate v0.1 — 2026-09-29
 
+Status note: this candidate and its preparation history are retained. Later asset/tokenizer status is in `research_status.json`; the two primary-text access limitations in the source audit below are superseded by [the Session 01 continuation](NOVELTY_FOLLOWUP_20260929.md). The candidate remains unaccepted and no model run is recorded.
+
 **PROPOSED, NOT ACCEPTED, NOT RUN READY.** This advances Session 01; it neither changes its exit criteria nor freezes H1/H2. The owner's instruction to continue supports preparation. Required academic/research-run approval is still not recorded. All settings introduced here are design proposals, not recovered settings from Lotfi's exact runtime.
 
 ## 1. Scope decision

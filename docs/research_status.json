@@ -5,7 +5,7 @@
   "current_session": "01",
   "current_session_title": "QuantThink 01 — 저장소 점검·연구 설계 검증",
   "audited_base_commit": "5048d4146a3f2ea82c99a4dd4fef6103bed530d4",
-  "source_audit": "EXTENDED_PARTIAL_PRIMARY_SOURCE_REVIEW",
+  "source_audit": "SCOPED_PRIMARY_FULLTEXT_FOLLOWUP_COMPLETED",
   "novelty_gate": "OPEN_WITH_ADJACENT_CONTROL_OVERLAP",
   "protocol_gate": "REVIEWABLE_CANDIDATE_NOT_ACCEPTED",
   "research_approval": "NOT_RECORDED",
@@ -44,7 +44,10 @@
     "evidence_source": "User-submitted terminal output",
     "reported_artifact": "results/local/gpu_tensor_smoke_20260928T155549946270Z.json",
     "reported_status": "GPU_TENSOR_SMOKE_PASS",
-    "device_indices": [0, 1],
+    "device_indices": [
+      0,
+      1
+    ],
     "operation": "Individual 256x256 BF16 all-ones matrix products with expected output 256",
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
@@ -64,14 +67,14 @@
     "candidate_manifest_status": "PROPOSED_NOT_ACCEPTED_NOT_RUN_READY",
     "original_h1_h2_changed": false,
     "candidate_development": "100 GSM8K main/train questions with two sampling seeds; proposed development check, not MATH-500 reproduction. MATH-500 remains primary confirmation.",
-    "source_review": "Expanded primary HTML review of perturbation-temperature, pruning, calibration and e-CUSUM termination work; 2609.23125 still abstract-only, 2609.06473 remains an unverified lead",
+    "source_review": "Earlier primary-source reviews are retained as historical evidence. Relevant primary HTML sections of 2609.23125v1 and 2609.06473v1 were inspected in the continuation; see docs/NOVELTY_FOLLOWUP_20260929.md. Broad novelty is not established.",
     "metadata_collector": "LIVE_SUCCESS_USER_REPORTED_INTERNAL_CONFIG_HASHES_CHECKED",
     "measurement_contracts": "EXACT_TOKEN_BLOCKS_AND_EOS_BUDGET_ACCOUNTING_CPU_TESTED",
     "mathematical_check": "Equal KL and entropy can coexist with different EOS probabilities and expected lengths in a memoryless toy model; not an empirical H1 test or novelty claim",
     "new_cpu_tests": "18_PASSED_WITH_MOCK_HTTP_IN_ASSISTANT_ENVIRONMENT_PREVIOUS_UPDATE",
     "syntax_check": "COMPILEALL_PASSED_FOR_PREPARATION_SCRIPTS_AND_TESTS_PREVIOUS_UPDATE",
     "user_asset_revision_report": "USER_REPORTED_METADATA_RESOLVED_INTERNAL_HASHES_MATCH",
-    "source_fulltext_artifact_needed": "Primary PDF of arXiv:2609.23125"
+    "source_fulltext_artifact_needed": null
   },
   "asset_config_review": {
     "source_recorded_at_utc": "2026-09-28T23:25:35.768653+00:00",
@@ -107,11 +110,57 @@
   "next_session_ready": false,
   "next_session_title": "QuantThink 02 — 환경 구축·BF16/AWQ 재현",
   "blocking_items": [
-    "Review primary full text and controls of arXiv:2609.23125; only its indexed primary abstract was accessible. Resolve additional primary-source leads before broad novelty claims.",
+    "Integrate the newly inspected primary text of 2609.23125v1 and 2609.06473v1 with the earlier collision table and make a scoped contribution decision; their primary-text access blockers are resolved, not the overall novelty gate.",
     "Complete scoped novelty decision beyond generic matched-noise control design, compression verbosity and termination measurement",
     "Review and accept the concrete candidate reproduction plan and record required research-run approval",
     "Asset revision references and supplied configuration hashes are reviewed; actual tokenizer contracts, executable quantizer/calibration provenance, evaluator/rubric, disjoint data IDs, prompt/stop handling and long-context validation remain pending before model runs"
   ],
-  "allowed_now": ["literature_review", "protocol_design", "cpu_unit_tests", "local_environment_inspection", "public_asset_metadata_collection", "cpu_tokenizer_asset_inspection"],
-  "not_yet_authorized_by_gates": ["scientific_model_runs", "confirmatory_hypothesis_tests", "full_model_benchmark_matrix"]
+  "allowed_now": [
+    "literature_review",
+    "protocol_design",
+    "cpu_unit_tests",
+    "local_environment_inspection",
+    "public_asset_metadata_collection",
+    "cpu_tokenizer_asset_inspection"
+  ],
+  "not_yet_authorized_by_gates": [
+    "scientific_model_runs",
+    "confirmatory_hypothesis_tests",
+    "full_model_benchmark_matrix"
+  ],
+  "novelty_followup": {
+    "review_document": "docs/NOVELTY_FOLLOWUP_20260929.md",
+    "audited_working_commit": "e31983317d1d9cb3fb708c7b0a4ddbc1e6b360da",
+    "review_local_date": "2026-09-29",
+    "sources": [
+      {
+        "paper": "2609.23125v1",
+        "url": "https://arxiv.org/html/2609.23125v1",
+        "verification": "PRIMARY_HTML_RELEVANT_SECTIONS_READ",
+        "sections": [
+          "2-4",
+          "6-7",
+          "10-11",
+          "F-G"
+        ]
+      },
+      {
+        "paper": "2609.06473v1",
+        "url": "https://arxiv.org/html/2609.06473v1",
+        "verification": "PRIMARY_HTML_RELEVANT_SECTIONS_READ",
+        "sections": [
+          "3-4",
+          "6",
+          "A-B"
+        ]
+      }
+    ],
+    "source_access_blockers_resolved": true,
+    "novelty_gate_closed": false,
+    "source_code_executed": false,
+    "new_model_or_tokenizer_execution": false,
+    "original_hypotheses_or_candidate_changed": false,
+    "next_user_evidence": "Actual online tokenizer audit JSON using the existing reviewed metadata report",
+    "validation": "Documentation and JSON consistency checked; no code tests or model runs rerun in this continuation"
+  }
 }
