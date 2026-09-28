@@ -5,9 +5,9 @@
   "current_session": "01",
   "current_session_title": "QuantThink 01 — 저장소 점검·연구 설계 검증",
   "audited_base_commit": "5048d4146a3f2ea82c99a4dd4fef6103bed530d4",
-  "source_audit": "PARTIAL_PRIMARY_SOURCE_REVIEW",
+  "source_audit": "EXTENDED_PARTIAL_PRIMARY_SOURCE_REVIEW",
   "novelty_gate": "OPEN_WITH_ADJACENT_CONTROL_OVERLAP",
-  "protocol_gate": "DRAFT_NOT_FROZEN",
+  "protocol_gate": "REVIEWABLE_CANDIDATE_NOT_ACCEPTED",
   "research_approval": "NOT_RECORDED",
   "user_hardware_preflight": "USER_REPORTED_CUDA_VISIBLE",
   "user_hardware_preflight_summary": {
@@ -49,12 +49,29 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "No additional basic CUDA installation or repeat tensor smoke is required unless the environment changes. Review docs/REPRODUCTION_READINESS_REVIEW.md before selecting the inference/quantization stack; do not install the upstream full stack or run its benchmark wrappers yet.",
+  "next_local_environment_step": "Run scripts/resolve_asset_revisions.py --online with a new results/local output path. This collects public metadata and three small model configuration files only; it installs nothing, downloads no weights or dataset rows, and does not authorize model runs. No repeat CUDA setup is needed.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
-    "scope": "README, AWQ/inference wrappers and inference.py inspected; no code executed and not an exact Lotfi runtime provenance claim",
-    "review_document": "docs/REPRODUCTION_READINESS_REVIEW.md"
+    "scope": "README, AWQ/inference wrappers and inference.py inspected; follow-up also inspected methods/awq/run_awq.py, calib_data.py and pre_quant.py. No upstream code executed and no exact Lotfi runtime provenance claim.",
+    "review_document": "docs/REPRODUCTION_READINESS_REVIEW.md",
+    "followup_document": "docs/REPRODUCTION_PLAN_V01.md",
+    "calibration_finding": "The pileval loader's n_samples counts source documents, then concatenates and splits them; 128 documents do not ensure 128 blocks of 512 tokens."
+  },
+  "session01_followup": {
+    "owner_instruction": "Proceed with the next research step; treated as authorization for continued preparation, not evidence of academic approval or acceptance of newly proposed settings",
+    "candidate_manifest": "configs/reproduction_candidate.json",
+    "candidate_manifest_status": "PROPOSED_NOT_ACCEPTED_NOT_RUN_READY",
+    "original_h1_h2_changed": false,
+    "candidate_development": "100 GSM8K main/train questions with two sampling seeds; proposed development check, not MATH-500 reproduction. MATH-500 remains primary confirmation.",
+    "source_review": "Expanded primary HTML review of perturbation-temperature, pruning, calibration and e-CUSUM termination work; 2609.23125 still abstract-only, 2609.06473 remains an unverified lead",
+    "metadata_collector": "IMPLEMENTED_CPU_TESTED_LIVE_SUCCESS_NOT_VERIFIED",
+    "measurement_contracts": "EXACT_TOKEN_BLOCKS_AND_EOS_BUDGET_ACCOUNTING_CPU_TESTED",
+    "mathematical_check": "Equal KL and entropy can coexist with different EOS probabilities and expected lengths in a memoryless toy model; not an empirical H1 test or novelty claim",
+    "new_cpu_tests": "18_PASSED_WITH_MOCK_HTTP_IN_ASSISTANT_ENVIRONMENT",
+    "syntax_check": "COMPILEALL_PASSED_FOR_NEW_SCRIPTS_AND_TESTS",
+    "user_asset_revision_report": "NOT_RUN_OR_NOT_PROVIDED",
+    "source_fulltext_artifact_needed": "Primary PDF of arXiv:2609.23125"
   },
   "assistant_cpu_diagnostic_tests": "7_PASSED_PREVIOUS_TURN_NOT_RERUN_IN_THIS_UPDATE",
   "bf16_reproduction": "NOT_RUN",
@@ -65,11 +82,11 @@
   "next_session_ready": false,
   "next_session_title": "QuantThink 02 — 환경 구축·BF16/AWQ 재현",
   "blocking_items": [
-    "Review full text and controls of arXiv:2609.23125; repeated primary retrieval attempts still yielded only the indexed primary abstract",
-    "Complete scoped novelty review and assess the proposed contribution beyond generic matched-noise control design",
-    "Record acceptance of a concrete corrected reproduction manifest and research-run approval",
-    "Resolve model/tokenizer revisions, quantizer/calibration provenance, evaluator, disjoint data IDs, sample size/seeds, termination logging, and generation/context budgets before model runs"
+    "Review primary full text and controls of arXiv:2609.23125; only its indexed primary abstract was accessible. Resolve additional primary-source leads before broad novelty claims.",
+    "Complete scoped novelty decision beyond generic matched-noise control design, compression verbosity and termination measurement",
+    "Review and accept the concrete candidate reproduction plan and record required research-run approval",
+    "Collect and review immutable model/tokenizer/dataset revisions, then finalize executable quantizer/calibration provenance, evaluator/rubric, disjoint data IDs, seeds, prompt/stop tokens and generation/context budgets before model runs"
   ],
-  "allowed_now": ["literature_review", "protocol_design", "cpu_unit_tests", "local_environment_inspection"],
+  "allowed_now": ["literature_review", "protocol_design", "cpu_unit_tests", "local_environment_inspection", "public_asset_metadata_collection"],
   "not_yet_authorized_by_gates": ["scientific_model_runs", "confirmatory_hypothesis_tests", "full_model_benchmark_matrix"]
 }
