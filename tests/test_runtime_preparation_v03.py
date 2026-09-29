@@ -272,8 +272,9 @@ class DatasetTests(unittest.TestCase):
 
 
 class RuntimeTests(unittest.TestCase):
-    def test_existing_gates_block_before_environment_or_model(self):
-        status = json.loads((ROOT / "docs/research_status.json").read_text())
+    def test_unapproved_run_stops_before_environment_or_model(self):
+        # 실제 저장소의 승인 상태가 바뀌어도 미승인 실행 차단을 검사합니다.
+        status = {**contracts.REQUIRED_GATES, "research_approval": "NOT_RECORDED"}
         with patch.object(run_r0, "repository_state") as repo, \
              patch.object(run_r0, "load_upstream") as upstream, self.assertRaises(ValueError):
             run_r0.run(None, None, None, "cuda:0", {}, {}, {}, status)
@@ -294,8 +295,10 @@ class RuntimeTests(unittest.TestCase):
              patch.object(sys, "argv", ["r0"]), patch("sys.stdout", new_callable=io.StringIO) as stream:
             self.assertEqual(run_r0.main(), 0)
         result = json.loads(stream.getvalue())
-        self.assertTrue(result["unmet_gates"])
+        status = json.loads((ROOT / "docs/research_status.json").read_text())
+        self.assertEqual(result["unmet_gates"], contracts.unmet_gates(status))
         self.assertFalse(result["model_loaded"])
+        self.assertFalse(result["network_used"])
 
     def test_calibration_shape_and_id_validation(self):
         adapter.validate_shape([[0, 2], [1, 0]], expected_shape=(2, 2), vocab_size=3)

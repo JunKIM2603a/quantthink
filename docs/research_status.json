@@ -2,13 +2,13 @@
   "schema_version": 1,
   "as_of_local_date": "2026-09-29",
   "timezone": "Asia/Seoul",
-  "current_session": "01",
-  "current_session_title": "QuantThink 01 — 저장소 점검·연구 설계 검증",
+  "current_session": "02",
+  "current_session_title": "QuantThink 02 — 환경 구축·BF16/AWQ 재현",
   "audited_base_commit": "5048d4146a3f2ea82c99a4dd4fef6103bed530d4",
   "source_audit": "SCOPED_PRIMARY_FULLTEXT_FOLLOWUP_COMPLETED",
-  "novelty_gate": "OPEN_WITH_ADJACENT_CONTROL_OVERLAP",
-  "protocol_gate": "REVIEWABLE_CANDIDATE_NOT_ACCEPTED",
-  "research_approval": "NOT_RECORDED",
+  "novelty_gate": "SCOPED_CONTRIBUTION_ACCEPTED",
+  "protocol_gate": "ACCEPTED",
+  "research_approval": "APPROVED",
   "user_hardware_preflight": "USER_REPORTED_CUDA_VISIBLE",
   "user_hardware_preflight_summary": {
     "evidence_source": "User-submitted terminal output; not an assistant-run hardware inspection or verification of local file bytes",
@@ -52,7 +52,7 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "데이터 준비·토크나이저·합성 AWQ 재실행은 불필요하다. docs/R0_REVIEW_PACKET_20260929_KO.md의 제한된 기여 범위와 R0 계획을 검토하고 수락·필요한 연구 실행 승인 근거를 기록한다. 이후 세션 01 종료 조건을 대조하고 실모델 R0 명령을 사용한다.",
+  "next_local_environment_step": "conda activate quantthink 후 cd ~/quantthink, 기존 작업 브랜치를 pull하고 승인된 R0를 실행한다. docs/HANDOFF_01_TO_02_KO.md의 명령을 사용한다. 기존 데이터 준비·토크나이저·합성 GPU 점검은 반복하지 않는다.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
@@ -67,7 +67,7 @@
     "synthetic_execution_review_document": "docs/SYNTHETIC_AWQ_REVIEW_20260929_KO.md"
   },
   "session01_followup": {
-    "owner_instruction": "Proceed with the next research step; treated as authorization for continued preparation, not evidence of academic approval or acceptance of newly proposed settings",
+    "owner_instruction": "이전 다음 단계 진행 요청은 준비의 근거였으며, 2026-09-29 현재 대화의 명시적 승인으로 제안 기여 범위와 제한된 R0 수락·실행 승인을 별도 기록했다. research_approval_record 참조.",
     "candidate_manifest": "configs/reproduction_candidate.json",
     "candidate_manifest_status": "PROPOSED_NOT_ACCEPTED_NOT_RUN_READY",
     "original_h1_h2_changed": false,
@@ -114,11 +114,11 @@
   "h1": "UNTESTED",
   "h2": "UNTESTED",
   "next_session_ready": false,
-  "next_session_title": "QuantThink 02 — 환경 구축·BF16/AWQ 재현",
+  "next_session_title": "QuantThink 03 — 교란 매칭·대조군 검증",
   "blocking_items": [
-    "기존 문헌의 통합 검토와 제한된 기여 범위 제안은 docs/R0_REVIEW_PACKET_20260929_KO.md에 정리했다. 해당 범위의 채택 결정이 필요하다.",
-    "이번 고정 자료를 사용하는 합성 2문제 × BF16/AWQ R0 계획의 수락과 필요한 연구 실행 승인 기록이 필요하다.",
-    "실모델 R0, 전체 모델 좌표·logit 검증, 실제 생성문 평가·수동 판정 검증과 장문맥은 후속 미실행 항목이다. R1·확증·KL 매칭·H1/H2는 이번 R0 범위에 포함하지 않는다."
+    "세션 02의 첫 작업인 승인된 실모델 R0 실행·결과 검토가 아직 남아 있다.",
+    "실모델 기능·좌표·logit 검증과 실제 생성문 평가·수동 판정의 타당도를 확인하고, 후속 R1 재현 기준·출력 예산·프로토콜을 별도로 확정해야 한다.",
+    "R1·MATH-500·KL 매칭·장문맥·H1/H2·7B는 이번 R0 승인 범위 밖이며 아직 미실행이다. 세션 03 전환 조건은 충족되지 않았다."
   ],
   "allowed_now": [
     "literature_review",
@@ -128,11 +128,17 @@
     "public_asset_metadata_collection",
     "cpu_tokenizer_asset_inspection",
     "synthetic_random_model_engineering_checks",
-    "public_dataset_provenance_preparation"
+    "public_dataset_provenance_preparation",
+    "approved_r0_synthetic_2_prompts_bf16_awq_w3_128_tokens"
   ],
   "not_yet_authorized_by_gates": [
-    "scientific_model_runs",
+    "scientific_model_runs_outside_approved_r0_scope",
+    "r1_100_question_evaluation",
+    "math500_confirmation",
+    "kl_matching_experiments",
+    "long_context_experiments",
     "confirmatory_hypothesis_tests",
+    "7b_extension",
     "full_model_benchmark_matrix"
   ],
   "novelty_followup": {
@@ -249,7 +255,7 @@
     "scientific_gate_states_changed": false
   },
   "reproduction_preparation_v03": {
-    "status": "USER_PREPARED_DATA_REVIEWED_R0_ACCEPTANCE_PENDING",
+    "status": "R0_PROTOCOL_ACCEPTED_EXECUTION_APPROVED_NOT_RUN",
     "document": "docs/REPRODUCTION_PREPARATION_V03_KO.md",
     "audited_base_commit": "3e78771b43f5024d844eef741f24f2c6feef8b43",
     "policy": "configs/runtime_preparation_v03.json",
@@ -295,7 +301,8 @@
     "latest_user_review_document": "docs/SYNTHETIC_AWQ_REVIEW_20260929_KO.md",
     "latest_data_preparation_review_document": "docs/DATA_PREPARATION_REVIEW_20260929_KO.md",
     "latest_r0_review_document": "docs/R0_REVIEW_PACKET_20260929_KO.md",
-    "prepared_asset_review_reference": "configs/prepared_assets_review_v03.json"
+    "prepared_asset_review_reference": "configs/prepared_assets_review_v03.json",
+    "latest_approval_document": "docs/R0_APPROVAL_20260929_KO.md"
   },
   "user_command_environment": {
     "activation_command": "conda activate quantthink",
@@ -509,13 +516,77 @@
   },
   "r0_review_packet": {
     "document": "docs/R0_REVIEW_PACKET_20260929_KO.md",
-    "status": "SCOPED_PROPOSAL_AWAITING_ACCEPTANCE_AND_RESEARCH_APPROVAL",
+    "status": "ACCEPTED_R0_EXECUTION_APPROVED_NOT_RUN",
     "source_scope": "저장소의 초기 검토·재현 계획·후속 관련 본문 검토를 통합. 이번 갱신에서 새 원문 대조나 체계적 검색을 수행하지 않음.",
     "proposed_contribution": "동일 BF16 참조 prefix에서 출력 KL을 맞춘 고정 Gaussian 가중치 교란이 AWQ-W3의 길이·종료·검증된 정답 포기 변화를 함께 재현하는지 평가.",
     "r0_scope": "합성 2문제 × BF16/AWQ-W3, seed 42, 응답당 최대 128토큰, 총 4회 생성. 전체 계층 AWQ calibration 비용은 별도.",
     "original_h1_h2_frozen": false,
     "world_first_claim": false,
-    "protocol_accepted": false,
-    "research_approval_recorded": false
+    "protocol_accepted": true,
+    "research_approval_recorded": true,
+    "contribution_scope_accepted": true,
+    "approved_at": "2026-09-29T15:34:45+09:00",
+    "approval_document": "docs/R0_APPROVAL_20260929_KO.md",
+    "accepted_base_commit": "ff14820c6fde1f4b4b907ceacc6b65ad9bb2cb53",
+    "accepted_packet_sha256": "2fa4fffd77f84d81b3534b889ba818d7235e7e573965c6ea1f455951e8b3e584"
+  },
+  "approval_scope": "R0_SYNTHETIC_2_PROMPTS_BF16_AWQ_W3_128_TOKENS_ONLY",
+  "research_approval_record": {
+    "status": "APPROVED",
+    "approved_at": "2026-09-29T15:34:45+09:00",
+    "authority": "USER_EXPLICIT_SCOPE_APPROVAL",
+    "evidence": "이전 응답의 기여 범위·R0 계획 수락 및 이 범위의 실모델 실행 승인 질문에 사용자가 현재 대화에서 승인해.라고 응답함.",
+    "approved_base_commit": "ff14820c6fde1f4b4b907ceacc6b65ad9bb2cb53",
+    "accepted_packet_path": "docs/R0_REVIEW_PACKET_20260929_KO.md",
+    "accepted_packet_sha256": "2fa4fffd77f84d81b3534b889ba818d7235e7e573965c6ea1f455951e8b3e584",
+    "accepted_packet_url": "https://github.com/JunKIM2603a/quantthink/blob/ff14820c6fde1f4b4b907ceacc6b65ad9bb2cb53/docs/R0_REVIEW_PACKET_20260929_KO.md",
+    "prepared_assets_review_sha256": "70027712fdac6b02127c810f829bba231e6e96900c4be74ee3bea4a3a45f8689",
+    "candidate_sha256": "98ff733b0d8391c3a33aa2f561e2d389bd6e482ee53b1b680c1bb6e7e6b6201f",
+    "policy_sha256": "36ca463c20f278562f5e21d5a28040b636c7d8dad1551e3f46fd4b0e2c545a4a",
+    "inspection_refs_sha256": "97f5b7bf6cb6888c716a3838f21c224e7920b1df05c5996efe1321d39cd15276",
+    "scope": "R0_SYNTHETIC_2_PROMPTS_BF16_AWQ_W3_128_TOKENS_ONLY",
+    "includes": [
+      "제한된 기여 범위 채택",
+      "고정 calibration 후보와 R0 프로토콜 수락",
+      "고정 모델 가중치 다운로드·BF16 로딩",
+      "전체 계층 AWQ-W3 g128 탐색·변환",
+      "합성 2문제 × BF16/AWQ, 각 seed 42, 응답당 최대 128토큰, 총 4회 생성"
+    ],
+    "excludes": [
+      "R1 100문제 평가",
+      "MATH-500 확증 평가",
+      "KL 매칭 실험",
+      "장문맥 실험",
+      "H1/H2 본검정",
+      "7B 확장",
+      "전체 모델 벤치마크 행렬"
+    ],
+    "document": "docs/R0_APPROVAL_20260929_KO.md",
+    "execution_status": "NOT_RUN"
+  },
+  "session01_completion": {
+    "status": "COMPLETED",
+    "completed_at": "2026-09-29T15:34:45+09:00",
+    "source_and_contribution_scope": "검토한 선행연구의 중복을 인정한 제한된 기여 범위 채택. 세계 최초 또는 논문 가치 인증 아님.",
+    "protocol": "고정 자료·런타임·출력 예산·실패 처리를 정한 R0 계획 수락. R1 및 본검증 계획은 미동결.",
+    "approval": "현재 대화의 명시적 사용자 승인 기록",
+    "handoff": "docs/HANDOFF_01_TO_02_KO.md",
+    "model_execution_completed": false
+  },
+  "session02": {
+    "status": "R0_APPROVED_AWAITING_LOCAL_EXECUTION",
+    "handoff": "docs/HANDOFF_01_TO_02_KO.md",
+    "next_single_task": "기존 quantthink 환경에서 승인 기록을 pull한 뒤 고정 합성 입력의 BF16/AWQ R0를 실행하고 run.json·계층 진단을 검토한다.",
+    "r0_output_directory": "results/local/r0_v03",
+    "exit_criteria_met": false
+  },
+  "snapshot_status_note": "configs의 기존 후보·정책·점검·준비 검토 JSON은 해시가 고정된 당시 스냅샷이다. 해당 파일의 과거 미승인 상태를 소급 수정하지 않으며, 현재 R0 승인은 research_approval_record와 R0_APPROVAL 문서로 기록한다. 상위 승인 상태 문자열은 approval_scope에 한정한다.",
+  "approval_record_validation": {
+    "r0_inspection": "PASS_NO_UNMET_GATES",
+    "model_loaded": false,
+    "network_used": false,
+    "affected_gate_tests_passed": 3,
+    "runtime_implementation_changed": false,
+    "test_change_reason": "미승인 실행 차단 검사가 실제 저장소를 계속 미승인으로 가정하지 않도록 명시적인 미승인 입력으로 수정함."
   }
 }

@@ -106,7 +106,8 @@ class PreparedReviewTests(unittest.TestCase):
                     self.verify()
 
     def test_research_gates_still_precede_review_and_model_loading(self):
-        state = json.loads((ROOT / "docs/research_status.json").read_text())
+        # 사용자 승인을 되돌리지 않고 명시적인 미승인 사례를 구성합니다.
+        state = {**contracts.REQUIRED_GATES, "research_approval": "NOT_RECORDED"}
         with patch.object(run_r0, "repository_state") as repo, \
              patch.object(run_r0, "verify_reviewed_preparation") as verify, \
              self.assertRaisesRegex(ValueError, "승인 기록"):
