@@ -125,7 +125,7 @@
       "input_tokens": 102,
       "generated_tokens": 4056
     },
-    "status": "PINNED_SOURCE_MASK_CONFOUND_IDENTIFIED_INSTALLED_CPU_PROBE_PENDING"
+    "status": "INSTALLED_CPU_MASK_OBSERVED_GENERATION_CAUSAL_IMPACT_UNVERIFIED"
   },
   "raw_generations_committed": false,
   "pre_window_prefix_sensitivity": {
@@ -150,6 +150,59 @@
       "modeling_attn_mask_utils.py": "dfdd976f0156139024c6f7788870a71e4a41754d",
       "sdpa_attention.py": "9c924c048ad52929a2d0f890a22295d5a56ef505"
     },
-    "verification": "고정원격소스직접검토. 설치된소스/CPU함수결과는후속확인."
+    "verification": "수신 CPU 보고의 4개 설치 소스 blob SHA-1·SHA-256을 공식 v4.51.3 바이트와 대조해 일치. 8개 마스크 행 검토. 독립 텐서/GPU 실행은 없음."
+  },
+  "sdpa_mask_review": {
+    "document": "docs/SDPA_MASK_REVIEW_20260929_KO.md",
+    "audited_repository_head": "c45899c7d02056422e5aaa9d58a8bb183a50f767",
+    "attachment_name": "sdpa_mask_review_v01.json",
+    "attachment_bytes": 4556,
+    "attachment_sha256": "bd18f808619c03859653d43c6ad956f3aea7c9d816a27e8387ff0b7fe3b81b0c",
+    "reported_at_utc": "2026-09-29T14:55:42.644433+00:00",
+    "status": "DISABLED_FLAG_WINDOW_MASK_OBSERVED",
+    "script_sha256": "831ce0cc8ad55cd68f55f280941a28cf7408a0e4f4e13fcc7829e707ee9928b3",
+    "script_hash_matches_repository": true,
+    "source_hashes_match_official_pinned_bytes": true,
+    "source_files": [
+      {
+        "file": "configuration_qwen2.py",
+        "git_blob_sha1": "2e82f1976f3922f3620415f4eace6c6e046243f8",
+        "sha256": "4d3fc49747ab9dd0be658842bd30b877bd8bb644e494bba484b98c191e3952ed"
+      },
+      {
+        "file": "modeling_qwen2.py",
+        "git_blob_sha1": "16a7316e2d0e56eafe301a7f2d8693d6cc6c73ec",
+        "sha256": "1760c628019995d3564c8572be6c5149f488b6c3aa95ceda16099c2516e146ff"
+      },
+      {
+        "file": "modeling_attn_mask_utils.py",
+        "git_blob_sha1": "dfdd976f0156139024c6f7788870a71e4a41754d",
+        "sha256": "75189bb86ad79bb0337b008eb564ea43e29682a886e3730b9605bfe1ae0d61c2"
+      },
+      {
+        "file": "sdpa_attention.py",
+        "git_blob_sha1": "9c924c048ad52929a2d0f890a22295d5a56ef505",
+        "sha256": "5a2d607459531430503dd3cb1adc8778885037c1d0be7e6ca0e82a1a852f4d8b"
+      }
+    ],
+    "eight_records_recomputed_match": true,
+    "as_recorded_blocked_key_counts": [
+      0,
+      0,
+      1,
+      109
+    ],
+    "window_none_control_blocked_key_counts": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "user_cpu_function_execution_reported": true,
+    "assistant_independent_tensor_execution": false,
+    "actual_generation_cache_or_mask_recorded": false,
+    "actual_model_or_sdpa_kernel_execution": false,
+    "original_results_changed": false,
+    "model_ready": false
   }
 }

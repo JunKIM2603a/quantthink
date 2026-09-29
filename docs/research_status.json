@@ -52,7 +52,7 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "docs/DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md의 inspect_qwen2_sdpa_mask.py로 설치된고정소스의4096문맥경계마스크를4위치×2조건의작은CPU텐서에서확인. 모델/토크나이저·forward·GPU·생성·다운로드없음. 원본내보내기/80회시험/준비/R0는반복하지않음.",
+  "next_local_environment_step": "CPU 마스크 첨부 검토 완료. docs/FIXED_PREFIX_DIAGNOSTIC_V01_KO.md의 D2/D3 고정 prefix 2개·최대12회 forward·새 생성0 범위 검토 후 새 GPU 진단 실행 여부 결정. 실행기/계약 준비·새 CPU 검사7개 통과. 현재 authorization=PENDING으로 모델 실행 전 차단. 기존 CPU 마스크/원본 내보내기/80회 시험/R0/준비는 반복하지 않음.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
@@ -118,7 +118,7 @@
   "blocking_items": [
     "기존R0의두LayerNorm56개비영잔차, BF16재적용파라미터잔차와B/S/Q/C/Cw전체모델logit영향은계속미검증이다.",
     "난도80개원본의입력/종료/집계·12개/31개재개백업·실행코드/상태해시대조완료. 형식미판정4개는수동정답. v01자동난도판정은보존하며43개검열의최종정오는미관측이다.",
-    "고정config는use_sliding_window=false와sliding_window=4096. 고정소스의공통SDPA마스크가사용플래그를확인하지않는경로를찾았으며44개응답이문맥4096을넘었다. 설치된소스의CPU확인·실제생성영향분리는미완료다.",
+    "고정 use_sliding_window=false·sliding_window=4096의 CPU 마스크에서 query4096부터 이전 키 차단을 관측했고4개 설치소스 해시가 공식 원본과 일치한다. 당시 생성 cache/마스크 및 실제 인과 영향은 미검증이다. 경계 전 EOS24/40 대12/40 차이도 남는다.",
     "기능적양자화검증·평가기의일반타당도·후속재현기준이미완료라model_ready=false·세션02유지. R1/MATH-500/새Pile/KL매칭/장문맥/H1/H2/7B와자동재실행/예산확대는진행하지않는다."
   ],
   "allowed_now": [
@@ -141,7 +141,8 @@
     "long_context_experiments",
     "confirmatory_hypothesis_tests",
     "7b_extension",
-    "full_model_benchmark_matrix"
+    "full_model_benchmark_matrix",
+    "fixed_prefix_diagnostic_v01_maximum_12_forward_calls"
   ],
   "novelty_followup": {
     "review_document": "docs/NOVELTY_FOLLOWUP_20260929.md",
@@ -577,15 +578,16 @@
     "model_execution_completed": false
   },
   "session02": {
-    "status": "DIFFICULTY_RAW_EVIDENCE_REVIEWED_SDPA_MASK_CPU_CHECK_PENDING",
+    "status": "SDPA_CPU_MASK_REVIEWED_FIXED_PREFIX_DIAGNOSTIC_PREPARED_PENDING_APPROVAL",
     "handoff": "docs/HANDOFF_01_TO_02_KO.md",
-    "next_single_task": "docs/DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md의 inspect_qwen2_sdpa_mask.py로 설치된고정소스의4096문맥경계마스크를4위치×2조건의작은CPU텐서에서확인. 모델/토크나이저·forward·GPU·생성·다운로드없음. 원본내보내기/80회시험/준비/R0는반복하지않음.",
+    "next_single_task": "CPU 마스크 첨부 검토 완료. docs/FIXED_PREFIX_DIAGNOSTIC_V01_KO.md의 D2/D3 고정 prefix 2개·최대12회 forward·새 생성0 범위 검토 후 새 GPU 진단 실행 여부 결정. 실행기/계약 준비·새 CPU 검사7개 통과. 현재 authorization=PENDING으로 모델 실행 전 차단. 기존 CPU 마스크/원본 내보내기/80회 시험/R0/준비는 반복하지 않음.",
     "r0_output_directory": "results/local/r0_v03",
     "exit_criteria_met": false,
-    "latest_review_document": "docs/DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md",
+    "latest_review_document": "docs/SDPA_MASK_REVIEW_20260929_KO.md",
     "diagnostic_followup_plan": "docs/R0_DIAGNOSTIC_FOLLOWUP_20260929_KO.md",
     "realistic_input_plan": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md",
-    "difficulty_pilot_plan": "docs/DIFFICULTY_PILOT_V01_KO.md"
+    "difficulty_pilot_plan": "docs/DIFFICULTY_PILOT_V01_KO.md",
+    "fixed_prefix_diagnostic_plan": "docs/FIXED_PREFIX_DIAGNOSTIC_V01_KO.md"
   },
   "snapshot_status_note": "configs의 기존 후보·정책·점검·준비 검토 JSON은 해시가 고정된 당시 스냅샷이다. 해당 파일의 과거 미승인 상태를 소급 수정하지 않으며, 현재 R0 승인은 research_approval_record와 R0_APPROVAL 문서로 기록한다. 상위 승인 상태 문자열은 approval_scope에 한정한다.",
   "approval_record_validation": {
@@ -701,7 +703,7 @@
     "raw_user_result_or_token_arrays_committed": false,
     "latest_detail_review_document": "docs/R0_DETAIL_REVIEW_20260929_KO.md",
     "input_review_reference": "configs/r0_diagnostic_input_review_v01.json",
-    "future_model_runner_implementation": "NOT_IMPLEMENTED",
+    "future_model_runner_implementation": "CANDIDATE_IMPLEMENTED_FIXED_PREFIX_V01_CPU_CONTRACTS_TESTED_GPU_NOT_RUN",
     "detail_review": {
       "reported_summary_head": "7067e5a3832bd0e405003d7fa38db0ffd8182860",
       "source_attachment_sha256": "6f70f7c17d0f2bff77624e8d713b4b407671bedbd6da797a2f344a73b3d796b6",
@@ -826,7 +828,7 @@
     },
     "input_scope_revision_document": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md",
     "original_12_forward_plan_role": "기존 산수 2개를 재사용하는 최소 연결 점검 후보. 실제 난도 검증 전체를 대신하는 유일한 후속 경로로 사용하지 않음.",
-    "replay_implementation": "scripts/replay_r0_awq.py: dtype/shape/파일 검사는 CPU 검증, 실모델 CUDA 경로 미검증. 전체 logit 진단 실행기는 계속 미구현."
+    "replay_implementation": "기존 replay는 난도 시험28계층 재구성 기록/해시를 검토함. 새 B/S/Q/C/Cw 실행기는 scripts/run_fixed_prefix_diagnostic.py에 준비했으나 실모델/CUDA 실행은 미검증·미승인."
   },
   "realistic_input_proposal": {
     "status": "DIRECTION_REQUESTED_SPECIFIC_PROTOCOL_NOT_ACCEPTED_NOT_RUN",
@@ -873,7 +875,7 @@
     "current_next_action": "사용자의 추가 자체 문제 요청에 따라 difficulty_pilot v01을 구현했다. 이전 MATH train 28문제/8192 후보는 별도 초안으로 남기고 실행하지 않는다."
   },
   "difficulty_pilot": {
-    "status": "RAW_80_RECORDS_REVIEWED_MANUAL_4_CORRECT_MASK_CONFOUND_PENDING",
+    "status": "RAW_80_REVIEWED_CPU_MASK_CONFOUND_OBSERVED_MODEL_IMPACT_UNVERIFIED",
     "authorization": "USER_REQUESTED_BOUNDED_DIFFICULTY_PILOT",
     "request_recorded_at": "2026-09-29T18:58:01+09:00",
     "user_request": "시험문제를 난이도에 따라서 여러개 만들어서, 어느 난이도 쯤에서 시험이 통과하는지 확인해보자. 그리고 다음 연구 단계에서 어떻게 해야할지 명령어도 함께 줘.",
@@ -931,7 +933,7 @@
     "math500_used": false,
     "raw_user_results_committed": false,
     "question_document": "docs/DIFFICULTY_QUESTIONS_V01_KO.md",
-    "latest_review_document": "docs/DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md",
+    "latest_review_document": "docs/SDPA_MASK_REVIEW_20260929_KO.md",
     "partial_execution_review": {
       "reviewed_at": "2026-09-29T20:22:14+09:00",
       "attachment_sha256": "52907e27e8918e6e55fcde1d79392be872f87853faa4df19611caee27fe936b2",
@@ -1151,7 +1153,7 @@
           "input_tokens": 102,
           "generated_tokens": 4056
         },
-        "status": "PINNED_SOURCE_MASK_CONFOUND_IDENTIFIED_INSTALLED_CPU_PROBE_PENDING"
+        "status": "INSTALLED_CPU_MASK_OBSERVED_GENERATION_CAUSAL_IMPACT_UNVERIFIED"
       },
       "pre_window_prefix_sensitivity": {
         "status": "POST_HOC_DESCRIPTIVE_EXISTING_IDS_ONLY",
@@ -1186,7 +1188,99 @@
       "gpu_or_network": false,
       "source_config_modified": false,
       "assistant_validation": "구문·고정소스호출시그니처·첨부해시/설정의--plan조회·잘못된근거해시거부·기존출력보호확인. PyTorch/Transformers부재로실제CPU텐서호출미실행.",
-      "user_result": "NOT_YET_RECEIVED"
+      "user_result": "DISABLED_FLAG_WINDOW_MASK_OBSERVED",
+      "review": {
+        "document": "docs/SDPA_MASK_REVIEW_20260929_KO.md",
+        "audited_repository_head": "c45899c7d02056422e5aaa9d58a8bb183a50f767",
+        "attachment_name": "sdpa_mask_review_v01.json",
+        "attachment_bytes": 4556,
+        "attachment_sha256": "bd18f808619c03859653d43c6ad956f3aea7c9d816a27e8387ff0b7fe3b81b0c",
+        "reported_at_utc": "2026-09-29T14:55:42.644433+00:00",
+        "status": "DISABLED_FLAG_WINDOW_MASK_OBSERVED",
+        "script_sha256": "831ce0cc8ad55cd68f55f280941a28cf7408a0e4f4e13fcc7829e707ee9928b3",
+        "script_hash_matches_repository": true,
+        "source_hashes_match_official_pinned_bytes": true,
+        "source_files": [
+          {
+            "file": "configuration_qwen2.py",
+            "git_blob_sha1": "2e82f1976f3922f3620415f4eace6c6e046243f8",
+            "sha256": "4d3fc49747ab9dd0be658842bd30b877bd8bb644e494bba484b98c191e3952ed"
+          },
+          {
+            "file": "modeling_qwen2.py",
+            "git_blob_sha1": "16a7316e2d0e56eafe301a7f2d8693d6cc6c73ec",
+            "sha256": "1760c628019995d3564c8572be6c5149f488b6c3aa95ceda16099c2516e146ff"
+          },
+          {
+            "file": "modeling_attn_mask_utils.py",
+            "git_blob_sha1": "dfdd976f0156139024c6f7788870a71e4a41754d",
+            "sha256": "75189bb86ad79bb0337b008eb564ea43e29682a886e3730b9605bfe1ae0d61c2"
+          },
+          {
+            "file": "sdpa_attention.py",
+            "git_blob_sha1": "9c924c048ad52929a2d0f890a22295d5a56ef505",
+            "sha256": "5a2d607459531430503dd3cb1adc8778885037c1d0be7e6ca0e82a1a852f4d8b"
+          }
+        ],
+        "eight_records_recomputed_match": true,
+        "as_recorded_blocked_key_counts": [
+          0,
+          0,
+          1,
+          109
+        ],
+        "window_none_control_blocked_key_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "user_cpu_function_execution_reported": true,
+        "assistant_independent_tensor_execution": false,
+        "actual_generation_cache_or_mask_recorded": false,
+        "actual_model_or_sdpa_kernel_execution": false,
+        "original_results_changed": false,
+        "model_ready": false
+      }
     }
+  },
+  "fixed_prefix_diagnostic": {
+    "status": "IMPLEMENTATION_CANDIDATE_CPU_CONTRACTS_TESTED_NOT_RUN",
+    "authorization": "PENDING",
+    "authorization_reason_ko": "기존 R0/자체 난도 시험에 포함되지 않은 새 GPU forward·문맥 설정 변경. AGENTS.md 8번 및 사용자의 자동 예산 확대 금지를 적용. 기존 승인 재요청 아님.",
+    "document": "docs/FIXED_PREFIX_DIAGNOSTIC_V01_KO.md",
+    "config": "configs/fixed_prefix_diagnostic_v01.json",
+    "config_sha256": "5d24000bfa9d7b15d398b978f671d94be816918bd9c5881a458448bced488fd6",
+    "script": "scripts/run_fixed_prefix_diagnostic.py",
+    "implementation_sha256": {
+      "run_fixed_prefix_diagnostic.py": "8c0c5d72984c8ba366e2209657f2bacbede196cbb52c1f341a08d4f942f326ff",
+      "fixed_prefix_diagnostic_contracts.py": "bafc0997feac28d93a2fc5b30910fe487edea85ccb56f9adfeaf4a14fc00c31d",
+      "replay_r0_awq.py": "b01e0124eb97a7e1145c886842d894966084ac8b1f7b47f538c647d7e1fb574a",
+      "qwen2_awq_adapter.py": "ea7d9e3c35443fc889480c667a826a9eca793c7592fb03be778b150d094b59c5",
+      "awq_weight_space.py": "230b604c0f436696b9118753c8ddbbd383029a3ca9a2aa89aab6478b1bd23b6b",
+      "runtime_assets.py": "d647bb31a0a72a373a95bf1561603c8eff2563ff598eff60516bd54dbedca130",
+      "run_difficulty_pilot.py": "809b14475e7eac56ce6667b52b85839e674f766106130407b6802aafe9fdaec7",
+      "difficulty_pilot_contracts.py": "d14b79ea22069dc6666fce2e70edc17557ef97029158eafdd51ebb306c460446",
+      "runtime_contracts.py": "ca514a25f560b8912edd90de83cb8d4a18aed0cd97d8769f5b9f1627cc8924ee",
+      "reproduction_contracts.py": "04923d60075be31ca7b14b7566dd0040b474bb4f1e009d416ee66819401e45bb"
+    },
+    "maximum_forward_calls": 12,
+    "maximum_forward_input_tokens": 25476,
+    "maximum_sequence_length": 2127,
+    "new_generation_tokens": 0,
+    "maximum_raw_logit_bytes": 940787712,
+    "proposed_effective_sliding_window": null,
+    "proposed_use_cache": false,
+    "selection": "기존 BF16 D2-03/D3-01 seed42의 입력+앞2048 생성토큰. 사후 선택한 탐색 표본, 모든 상태 동일 prefix.",
+    "assistant_validation": {
+      "new_cpu_tests_passed": 7,
+      "actual_attachment_inputs_verified": true,
+      "unapproved_execute_rejected_before_gpu_or_output": true,
+      "torch_transformers_available": false,
+      "gpu_or_model_execution": false,
+      "old_tests_rerun": false
+    },
+    "user_execution": "NOT_RUN",
+    "model_ready": false
   }
 }

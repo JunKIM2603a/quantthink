@@ -66,7 +66,7 @@ v01 파서는 박스 뒤 일반 문자를 모두 거부하므로 단위 설명�
 
 고정 [Qwen2 설정 코드](https://github.com/huggingface/transformers/blob/v4.51.3/src/transformers/models/qwen2/configuration_qwen2.py)는 두 값을 그대로 유지한다. [모델 코드](https://github.com/huggingface/transformers/blob/v4.51.3/src/transformers/models/qwen2/modeling_qwen2.py)의 경고 조건과 공통 causal-mask 작성 부분은 `use_sliding_window`를 확인하지 않고 `sliding_window` 값을 사용한다. [마스크 유틸리티](https://github.com/huggingface/transformers/blob/v4.51.3/src/transformers/modeling_attn_mask_utils.py)도 key/value 길이4096부터 명시적 마스크 경로를 사용한다. [SDPA 연결 코드](https://github.com/huggingface/transformers/blob/v4.51.3/src/transformers/integrations/sdpa_attention.py)는 그 마스크를 attention 함수에 전달한다.
 
-소스에 따른 **DynamicCache 경로의 예상 동작**은 다음과 같다. 위치는0부터 세며 마지막 입력 토큰도 query 위치에 포함된다. 사용자 환경에서 설치된 소스 바이트와 실제 CPU 함수 결과를 아직 받지는 않았다.
+소스에 따른 **DynamicCache 경로의 예상 동작**은 다음과 같다. 위치는0부터 세며 마지막 입력 토큰도 query 위치에 포함된다. 이 표는 소스 검토 시점의 예상이다. 이후 설치 소스 해시와 CPU 결과를 받아 아래 [후속 검토](SDPA_MASK_REVIEW_20260929_KO.md)에서 동일한 동작을 확인했다.
 
 | query 위치 | key/value 길이 | 기록 설정의 예상 마스크 | 차단되는 이전 키 |
 |---:|---:|---|---:|
@@ -81,26 +81,12 @@ v01 파서는 박스 뒤 일반 문자를 모두 거부하므로 단위 설명�
 
 한편, 새 생성 없이 **공통 생성 prefix3986토큰**만 재검토했다.3986=4096−최대입력110이며 마지막 예측의 key/value 길이는 최대4095다. 고정 소스의 문맥 경계 진입 전 구간에서도 BF16 EOS24/40, AWQ12/40이다. 양쪽EOS12쌍, BF16만EOS12쌍, 반대0쌍, 양쪽미종료16쌍이다. 따라서 경계 이전에도 종료 차이가 남는다. 이는 사후 민감도 확인이며 기존4096 예산·점수·응답을 덮어쓰지 않는다. 전체 자연 길이나 AWQ만의 인과 효과를 확증하지 않는다.
 
-## 다음 명령 — 설치 코드의 CPU 마스크 확인
+## 설치 코드의 CPU 마스크 확인 완료
 
-`scripts/inspect_qwen2_sdpa_mask.py`는 모델을 만들지 않고 실제 설치된 마스크 함수를 작은 CPU 텐서에 호출한다.4개 위치×2조건을 확인한다. 두 번째 조건은 메모리 안에서만 sliding_window를 None으로 둔 비교이며 기존 설정/결과 파일을 바꾸지 않는다. 가중치·토크나이저 로딩, 모델 forward, SDPA attention 계산, GPU, 생성, calibration, 다운로드는 없다. 버전과 upstream4개 소스 blob이 다르면 중단한다.
-
-```bash
-conda activate quantthink
-cd ~/quantthink
-git switch setup/session-01-research-gates &&
-git pull --ff-only &&
-python scripts/inspect_qwen2_sdpa_mask.py \
-  --evidence results/local/difficulty_v01/review_evidence_v01.json \
-  --output results/local/difficulty_v01/sdpa_mask_review_v01.json
-```
-
-완료하면 `sdpa_mask_review_v01.json`을 첨부한다. 소스대로라면 `DISABLED_FLAG_WINDOW_MASK_OBSERVED`가 나오며, 이는 모델 실패 판정이 아니라 사용 플래그와 경계 마스크 사이의 동작을 관측했다는 뜻이다. 다른 결과나 오류도 그대로 검토한다. 패키지 업데이트·flash-attn 설치·기존 시험 재개는 필요 없다.
-
-작성 환경에는 PyTorch/Transformers가 없어 실제 CPU 텐서 호출은 미실행이다. 구문, 첨부 해시/설정의 `--plan` 조회, 잘못된 근거 해시 거부, 기존 출력 보호와 고정 소스의 호출 시그니처를 확인했다. 기존 R0·데이터 준비·토크나이저·합성 AWQ 검사는 반복하지 않았다. 지금 요청하는 CPU 함수 확인은 이 새 문맥 경계 문제의 점검이며 모델 실험 예산을 소비하지 않는다.
+이후 `sdpa_mask_review_v01.json`을 수신해 [CPU 결과 검토](SDPA_MASK_REVIEW_20260929_KO.md)를 완료했다. 상태는 DISABLED_FLAG_WINDOW_MASK_OBSERVED이며4개 위치×2조건이 위 예상과 일치했다. 검사 스크립트와 설치 소스4개의 해시를 저장소/공식 원본에 대조했다. 모델 forward·SDPA 연산·GPU·실제 생성 영향은 검증하지 않았다. 기존 CPU 확인 명령을 반복하거나 같은 파일을 다시 제출할 필요는 없다.
 
 ## 이후 판단과 세션 유지
 
-CPU 결과를 받으면 생성 runtime의 경계 동작을 문서로 고정하고, 이를 반영한 동일 prefix의 B/S/Q/C/Cw 좌표·logit 진단 범위와 허용 기준을 구체화한다. 설치 코드의 마스크 확인만으로 원래 생성의 인과 영향이나 전체 모델 동등성을 인증하지 않는다. `sliding_window=None`을 실제 생성에 적용하거나 새 버전으로 재시험하는 것은 조건 변경이므로 기존 결과와 구분한 후속 실행 계획으로 다룬다. 이번 명령은 그 변경을 하지 않는다.
+[고정 prefix 진단 v01](FIXED_PREFIX_DIAGNOSTIC_V01_KO.md)에 D2/D3 입력2개·B/S/Q/C/Cw·최대12회 forward의 구체적인 후보와 실행기를 준비했다. 새 생성0토큰, 저장 recipe 재적용, 문맥2127 이하의 고정 prefix 비교다. 진단용 설정 복사본에서만 window=None을 명시하며 기존 결과·패키지·난도 실행기는 보존한다. 새 GPU 범위는 미승인·미실행이다.
 
-원본 종료·재개 보존·수동 답안 확인은 진전됐지만, 기능적 양자화 검증·문맥 경계 영향·후속 재현 기준은 남아 있다. **model_ready=false와 세션02를 유지한다.** R0/난도 시험 재실행, 예산 확대, MATH-500·새 Pile·R1·KL 매칭·장문맥·H1/H2·7B를 자동 진행하지 않는다.
+기능적 양자화 검증·문맥 경계의 생성 영향·평가 일반 타당도·후속 재현 기준이 남아 있다. model_ready=false와 세션02를 유지한다. 기존 R0/난도 시험/CPU 마스크 확인 재실행, 자동 예산 확대, MATH-500·새 Pile·R1·KL 매칭·장문맥·H1/H2·7B는 진행하지 않는다.

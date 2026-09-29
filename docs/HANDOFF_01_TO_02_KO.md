@@ -1,10 +1,10 @@
-# 세션 02 인계 — 자체 난도80개 원본 검토·문맥 마스크 확인 대기
+# 세션 02 인계 — CPU 마스크 검토 완료·고정 prefix 진단 범위 결정
 
 **현재 세션 이름: QuantThink 02 — 환경 구축·BF16/AWQ 재현**
 
 새 채팅에서도 세션 02를 계속한다. 세션 01은 명시적 사용자 승인으로 완료됐고, 이후 R0 실행 결과 요약도 제출됐다. 초기 검토는 [R0 결과 검토](R0_RESULT_REVIEW_20260929_KO.md), 최신 상세 값은 [상세 요약 검토](R0_DETAIL_REVIEW_20260929_KO.md), 승인 범위는 [승인 기록](R0_APPROVAL_20260929_KO.md)을 따른다.
 
-이후 자체 난도20문제의80개 응답 요약과 원본/백업 묶음을 받아 [최신 원본 근거 검토](DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md)를 기록했다. **현재 다음 작업은 설치된 Qwen2 코드의 문맥 경계 마스크를 작은 CPU 텐서로 확인하는 것**이다. 아래 R0 결과와 새 난도 시험 결과를 구분한다.
+이후 자체 난도20문제의80개 응답 요약과 원본/백업 묶음을 받아 [최신 원본 근거 검토](DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md)를 기록했다. 이후 [설치 코드의 CPU 마스크 결과](SDPA_MASK_REVIEW_20260929_KO.md)도 검토 완료했다. **현재 다음 작업은 [고정 prefix 진단 v01](FIXED_PREFIX_DIAGNOSTIC_V01_KO.md)의 새 GPU 범위를 검토해 실행 여부를 결정하는 것**이다. 아래 R0 결과와 새 난도 시험 결과를 구분한다.
 
 ## 현재 인계 상태
 
@@ -30,7 +30,7 @@
 
 사용자가 scripts/summarize_r0_diagnostics.py의 터미널 요약을 첨부해 상세 값 검토를 완료했다. 28계층·196개 weight·140개 norm/bias 기록에 구조 불일치가 없으며, 두 norm 각각 28계층의 비영 잔차와 q/k/v bias 전 계층 잔차 0이 보고됐다. 사용자 원본 JSON·전체 생성 ID·가중치 배열을 직접 받은 것은 아니다. 기존 생성은 모두 검열됐지만 닫는 think 태그 앞 토큰 수는 BF16 57·78, AWQ 101·99로 보고됐다. 두 문제의 형식상 구간 길이 관찰이며 자연 EOS 길이·H1·과잉 추론 판정은 아니다.
 
-이후 사용자가 산수 2문제의 대표성 부족을 지적해 [실제 난도·길이 확대안](REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md)을 추가했다. 당시 다음 후보는 MATH train 개발 표본·평가기와 다양한 입력을 지원하는 전체 모델 진단 실행기 준비였다. 현재의 우선 실행 경로는 아래 자체 난도 시험이다. 기존 29개 파일 참조는 AWQ 재구성과 원래 R0 기록 대조에 유지한다. 같은 요약·준비·R0를 재실행하도록 요청하지 않는다. 요약 도구 CPU 검사 6개는 이전 턴의 기록이며 이번 검토에서 반복하지 않았다.
+이후 사용자가 산수 2문제의 대표성 부족을 지적해 [실제 난도·길이 확대안](REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md)을 추가했다. 당시 다음 후보는 MATH train 개발 표본·평가기와 다양한 입력을 지원하는 전체 모델 진단 실행기 준비였다. 자체 난도 시험은 이후 완료됐으며 현재 후속 후보는 아래 고정 prefix 진단이다. 기존 29개 파일 참조는 AWQ 재구성과 원래 R0 기록 대조에 유지한다. 같은 요약·준비·R0를 재실행하도록 요청하지 않는다. 요약 도구 CPU 검사 6개는 이전 턴의 기록이며 이번 검토에서 반복하지 않았다.
 
 후속 logit 점검과 512토큰 × 4회 종료 관측은 미승인·미실행 초안이다. 기능적 허용오차 수치는 미정이며 기존 RMS를 포함하도록 사후 기준을 만들어 PASS로 바꾸지 않는다.
 
@@ -44,13 +44,13 @@
 
 이후 원본 run/summary·생성문/ID·실행/재개 기록·캐시 설정을 받아 검토했다.80개 입력/종료/집계,12개·31개 백업 보존, 최초 fbe673e와 재개49317c0의 코드/상태 해시가 일치한다. 실제 가중치 배열·GPU는 이 환경에서 재실행하지 않았다. 형식 미판정4개는 모두 단위 설명이어서 수동 정답이다. 자동+수동 확인 정답은 BF16 25/40·AWQ12/40이며, 수동 보완표에서는 BF16 D1이8/8 EOS·정답 조건을 충족한다. v01 자동 점수와 전체 INCONCLUSIVE 판정은 보존한다.
 
-캐시 설정의 use_sliding_window=false·sliding_window=4096 조합과 고정 소스의 마스크 경로가 주의 대상이다. 전체 문맥4096을 넘은 응답은44개이며, 경계 이전 공통3986 생성 토큰까지만 보아도 EOS는 BF16 24/40·AWQ12/40이다. 다음은 [최신 검토](DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md)의 inspect_qwen2_sdpa_mask.py 명령으로 실제 설치 코드의 CPU 마스크를 확인한다. 모델·생성·GPU 연산·다운로드가 없다. 기존 내보내기·생성·재개·준비·R0·토크나이저 검사를 반복하지 않는다.
+캐시 설정의 use_sliding_window=false·sliding_window=4096 조합과 고정 소스의 마스크 경로가 주의 대상이다. 전체 문맥4096을 넘은 응답은44개이며, 경계 이전 공통3986 생성 토큰까지만 보아도 EOS는 BF16 24/40·AWQ12/40이다. [수신 CPU 마스크 결과](SDPA_MASK_REVIEW_20260929_KO.md)에서 query4094/4095/4096/4204의 차단0/0/1/109개와 window=None 대조의 전부0개를 확인했다. 스크립트 및 설치 소스4개 해시가 저장소/공식 원본과 일치한다. 실제 모델·SDPA·GPU·생성 영향 검증은 아니다. CPU 점검도 반복하지 않는다. 기존 내보내기·생성·재개·준비·R0·토크나이저 검사를 반복하지 않는다.
 
-전체 모델 B/S/Q/C/Cw 좌표·logit 진단과 허용치 결정은 계속 남아 있다. 난도 시험 통과 여부만으로 model_ready 또는 세션 03으로 바꾸지 않는다.
+B/S/Q/C/Cw 실행기 후보를 준비했다. D2-03/D3-01 BF16 seed42의 생성 앞2048토큰을 고정 재사용해 문맥2119/2127·최대12회 forward·새생성0의 범위다. 진단용 config 복사본만 window=None으로 두며 원본 결과와 설정은 보존한다. 새 CPU 계약/수치 검사7개가 통과했고 실제 첨부 prefix 해시를 대조했다. GPU 경로는 미검증·미승인이고 authorization=PENDING이다. B 반복이 비동일하면4회에서 중단하며 비영 차이에 임의 허용치를 적용해 PASS로 바꾸지 않는다. 일반 기능적 허용치·cache/문맥 영향·평가 일반 타당도는 남아 model_ready=false·세션02를 유지한다.
 
 ## 새 채팅에서 이어갈 때
 
-최신 근거: review_evidence_v01.json, SHA-256 f9e30e7ad4b7638689e62a4f9f3368d61b5ac21d735a60cb08054019757baad4. 원본 ID/텍스트·재개 백업을 직접 대조했으며 검사 결과는 configs/difficulty_evidence_review_v01.json에 있다. 새 CPU 마스크 확인기는 구문·계획 조회만 검증했고 실제 PyTorch CPU 결과는 아직 없다. 이 점검의 결과가 다음 제출 자료다.
+최신 근거: review_evidence_v01.json, SHA-256 f9e30e7ad4b7638689e62a4f9f3368d61b5ac21d735a60cb08054019757baad4. 원본 ID/텍스트·재개 백업을 직접 대조했으며 검사 결과는 configs/difficulty_evidence_review_v01.json에 있다. 추가 첨부 sdpa_mask_review_v01.json의 SHA-256은 bd18f808619c03859653d43c6ad956f3aea7c9d816a27e8387ff0b7fe3b81b0c이며 설치 코드의 CPU 마스크 확인을 완료했다. 다음 명령은 FIXED_PREFIX_DIAGNOSTIC_V01_KO.md의 --plan 조회다. 새 모델 실행은 구체화한 최대12회 범위의 승인 후이며 기존 R0 승인을 다시 묻지 않는다.
 
 아래 내용을 그대로 복사한다.
 
@@ -76,6 +76,9 @@
 - docs/DIFFICULTY_RESULT_REVIEW_20260929_KO.md
 - docs/DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md
 - configs/difficulty_evidence_review_v01.json
+- docs/SDPA_MASK_REVIEW_20260929_KO.md
+- docs/FIXED_PREFIX_DIAGNOSTIC_V01_KO.md
+- configs/fixed_prefix_diagnostic_v01.json
 
 세션 01은 완료됐다. 제한된 기여 범위와 합성 2문제 × BF16/AWQ,
 응답당 최대 128토큰의 R0 계획은 내가 명시적으로 승인했다.
@@ -122,9 +125,20 @@ BF16 D1은8/8 EOS·정답·4/4안정 조건을 충족한다. 원래자동판정�
 공통SDPA마스크경로에불일치가있다. 문맥4096을넘은응답은44개다.
 경계전공통생성prefix3986토큰에서도EOS는BF16 24/40·AWQ12/40으로차이가남는다.
 이것은사후기술분석이며원인확증·기존예산변경이아니다.
-다음은 DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md의 inspect_qwen2_sdpa_mask.py
-CPU 명령으로 설치된코드의4개위치×2조건을 확인하는 것이다. 모델/토크나이저·
-forward·GPU·새생성·다운로드가없다. 실제PyTorch CPU결과는아직없다.
+이후 sdpa_mask_review_v01.json을 받아 CPU 마스크 결과도 검토 완료했다.
+SHA-256: bd18f808619c03859653d43c6ad956f3aea7c9d816a27e8387ff0b7fe3b81b0c
+query4094/4095/4096/4204에서 기록설정 차단0/0/1/109개,
+window=None 메모리 대조에서는 모두0개다. 스크립트·설치소스4개 해시가
+저장소/공식원본과 일치한다. 모델 forward·SDPA 연산·GPU·원래 생성 영향은 미검증이다.
+같은 CPU 확인이나 자료 제출을 반복 요청하지 마라.
+현재 후보는 FIXED_PREFIX_DIAGNOSTIC_V01_KO.md의 고정 prefix 진단이다.
+D2-03/D3-01 BF16 seed42의 앞2048생성토큰을 모든 B/S/Q/C/Cw 상태에 재사용한다.
+문맥2119/2127·최대12회 forward·처리입력25476토큰·새생성0이며
+진단용 메모리 config만 window=None이다. 기존 결과/실행기/패키지는 보존한다.
+실행기 후보와 새 CPU 검사7개·실제 첨부 prefix 대조는 완료했으나
+GPU 경로는 미검증·미승인이고 authorization=PENDING이다. --plan은 조회만 한다.
+새 GPU 범위의 실행 여부를 결정한 뒤 승인 기록과 코드/설정 해시를 연결한다.
+이 제한은 AGENTS.md 8번과 자동 예산 확대 금지에 따른 것이며 기존 R0 재승인이 아니다.
 기존내보내기·실행·재개·동일요약요청을 반복하지 마라.
 좌표/norm·전체 logit 검증은 남아 있다. model_ready=false로 세션02를 유지한다.
 기존 MATH train 28문제/8192토큰 후보는 별도 미실행 초안으로 보존한다.
