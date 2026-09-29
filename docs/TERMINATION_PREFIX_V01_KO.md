@@ -1,8 +1,8 @@
-# 종료 직전·AWQ 경로의 고정 prefix 진단 v01 — 추가6회 제안
+# 종료 직전·AWQ 경로의 고정 prefix 진단 v01 — 추가6회 승인·실행 대기
 
-**상태: 코드·고정 입력·CPU 검사 준비 완료, 별도 실행 승인 PENDING. GPU/모델은 실행하지 않았다.**
+**상태: 2026-09-30 06:27:01 한국시간 사용자 “진행해줘”를 제안된 추가 최대6회의 [실행 승인](TERMINATION_PREFIX_APPROVAL_20260930_KO.md)으로 기록했다. 사용자 GPU 실행 결과 대기 중이며 이 환경에서 모델을 실행하지 않았다.**
 
-[기존 CPU 감사](LOGITS_AUDIT_REVIEW_20260930_KO.md)는 완료됐다. 초기 BF16 prefix258위치에서 모든 상태의 EOS가 수학적 top-p 후보 밖이었다. 이 구간만으로 자연 종료 차이를 설명할 수 없으므로, 이미 저장된 종료 직전과 AWQ 경로를 비교하는 제한된 탐색을 제안한다.
+[기존 CPU 감사](LOGITS_AUDIT_REVIEW_20260930_KO.md)는 완료됐다. 초기 BF16 prefix258위치에서 모든 상태의 EOS가 수학적 top-p 후보 밖이었다. 이 구간만으로 자연 종료 차이를 설명할 수 없으므로, 이미 저장된 종료 직전과 AWQ 경로를 비교하는 제한된 탐색을 진행한다.
 
 설정: [termination_prefix_v01.json](../configs/termination_prefix_v01.json). 실행기: [run_termination_prefix_diagnostic.py](../scripts/run_termination_prefix_diagnostic.py). 설정 정규화 SHA-256: `073986759aa41f29e54dfdf2835e7877aa2a2dccdb7347878a696451bdc2b1b3`.
 
@@ -26,7 +26,7 @@ D2-03 seed42의 BF16 응답은 생성2,425번째 토큰에서 EOS로 끝났고 A
 
 ## 계산 범위와 조건
 
-| 항목 | 제안 범위 |
+| 항목 | 승인 범위 |
 |---|---|
 | 상태 | 같은 B, B_repeat, 저장 recipe로 재구성한 Q |
 | forward 상한 | 입력2개×3상태=6회 full-sequence forward |
@@ -64,20 +64,22 @@ T=1·top-p 전 전체 어휘 지표와 T=0.6·top-p=.95 float64 수학적 필터
 
 ## 승인 상태와 명령
 
-기존 승인12회는 수집 완료로 소진됐다. 이번 첨부는 CPU 감사의 결과 제출이므로 추가 GPU 실행 승인으로 해석하지 않는다. AGENTS.md8의 실행 gate와 사용자의 승인 범위 제한에 따라 `termination_prefix_diagnostic.authorization=PENDING`, `remaining_forward_calls=0`으로 기록했다. **추가6회 범위를 승인하기 전에는 `--execute`가 모델 import와 출력 생성보다 먼저 중단된다.** 기존 R0나 완료한12회 범위의 승인을 다시 요청하는 것이 아니다.
+기존 승인12회는 수집 완료로 소진됐다. 이후 제시한 추가6회 범위에 대한 사용자 진행 지시를 [새 승인 기록](TERMINATION_PREFIX_APPROVAL_20260930_KO.md)에 남겼다. `termination_prefix_diagnostic.authorization=APPROVED`, `remaining_forward_calls=6`이며 설정·구현12개 해시는 제안 commit `f8fb2ee7fb084c3534f52cf20bca458ed104aa0d`와 같다. 같은 범위의 승인을 다시 요청하지 않는다. 설정 JSON의 `PROPOSED_NOT_AUTHORIZED_NOT_RUN`은 해시가 고정된 제안 당시 스냅샷이며 현재 실행 gate는 연구 상태의 승인을 읽는다.
 
-필요할 때만 읽기 전용 계획을 조회한다. 이미 실제 첨부로 검증했으므로 이 명령을 실행하거나 출력을 재제출할 필요는 없다.
+사용자 GPU 환경에서 아래 명령으로 승인된 진단을 1회 실행한다. 입력 계획은 이미 실제 첨부로 대조했으므로 `--plan`을 다시 실행하거나 제출할 필요는 없다.
 
 ```bash
 conda activate quantthink
 cd ~/quantthink
 git switch setup/session-01-research-gates &&
 git pull --ff-only &&
-python scripts/run_termination_prefix_diagnostic.py --plan
+python scripts/run_termination_prefix_diagnostic.py --execute
 ```
 
-승인 후에는 승인 기록·정규화 config 해시·구현12개 해시·최대6회 예산을 연구 상태에 연결한 뒤 별도 `--execute` 명령을 안내한다. 승인 전 실행 명령이나 자동 실행을 제공하지 않는다. 정상 수집 상태는 `TERMINATION_PREFIX_COLLECTED_PENDING_REVIEW`, 검토 파일은 새 폴더의 `run.json`이다.
+정상 수집 상태는 `TERMINATION_PREFIX_COLLECTED_PENDING_REVIEW`이며 `results/local/termination_prefix_v01/run.json`을 첨부한다. `.npy`는 로컬에 보존하고 공개 Git에는 올리지 않는다. B 반복이 다르면 `TERMINATION_PREFIX_BASELINE_REPEAT_DIFFERENCE`로 중단한다. 기존 출력 폴더가 있거나 오류/중단이 발생하면 파일을 지우거나 재실행하지 않고 현재 `run.json`과 로그를 검토한다. 결과 제출 전에는 실행 완료로 기록하지 않는다.
 
 ## 작성 환경 검증
 
 새 CPU 검사6개가 입력의 EOS 미포함·예측 위치/예산, 원본 불변, 근거/arm/온도/문맥 변경 거부, 완료한12회 승인 재사용 거부, 코드/예산 gate, 모델 import 없는 계획 조회와 미승인 실행 조기 차단을 확인했다. 실제 첨부3개로 같은 계획 조회도 성공했다. Python3.12 환경에서 검토했으며 PyTorch/Transformers/실모델/CUDA 경로는 이 환경에서 실행하지 않았다. 기존 R0·준비·난도·마스크·CPU 감사 검사는 재실행하지 않았다.
+
+승인 갱신에서는 제안의 설정·실행 코드12개가 최신 브랜치와 같은지 및 갱신된 순수 Python 승인 조건만 확인했다. 기존 검사·계획 조회·모델 실행은 반복하지 않았다.

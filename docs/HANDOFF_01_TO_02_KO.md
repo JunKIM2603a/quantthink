@@ -4,7 +4,7 @@
 
 새 채팅에서도 세션 02를 계속한다. 세션 01은 명시적 사용자 승인으로 완료됐고, 이후 R0 실행 결과 요약도 제출됐다. 초기 검토는 [R0 결과 검토](R0_RESULT_REVIEW_20260929_KO.md), 최신 상세 값은 [상세 요약 검토](R0_DETAIL_REVIEW_20260929_KO.md), 승인 범위는 [승인 기록](R0_APPROVAL_20260929_KO.md)을 따른다.
 
-이후 자체 난도20문제의80개 응답 요약과 원본/백업 묶음을 받아 [최신 원본 근거 검토](DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md)를 기록했다. 이후 [설치 코드의 CPU 마스크 결과](SDPA_MASK_REVIEW_20260929_KO.md)도 검토 완료했다. 이후 승인된 고정 prefix 진단12회 완료 run.json을 받아 [결과 검토](FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md)를 기록했다. 이후 [CPU 감사 결과](LOGITS_AUDIT_REVIEW_20260930_KO.md)까지 검토했다. **현재 다음 작업은 별도 [종료 prefix 추가6회 후보](TERMINATION_PREFIX_V01_KO.md)의 범위 검토·승인 판단**이다. 새 GPU 실행은 아직 승인하지 않았다. 아래 R0 결과와 새 난도 시험 결과를 구분한다.
+이후 자체 난도20문제의80개 응답 요약과 원본/백업 묶음을 받아 [최신 원본 근거 검토](DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md)를 기록했다. 이후 [설치 코드의 CPU 마스크 결과](SDPA_MASK_REVIEW_20260929_KO.md)도 검토 완료했다. 이후 승인된 고정 prefix 진단12회 완료 run.json을 받아 [결과 검토](FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md)를 기록했다. 이후 [CPU 감사 결과](LOGITS_AUDIT_REVIEW_20260930_KO.md)까지 검토했다. **현재 다음 작업은 [승인된 종료 prefix 추가 최대6회](TERMINATION_PREFIX_APPROVAL_20260930_KO.md)를 사용자 GPU에서 1회 실행하고 새 `run.json`을 검토하는 것**이다. 2026-09-30 06:27:01 한국시간의 “진행해줘”를 이 범위의 승인으로 기록했으며 실행 결과는 아직 받지 않았다. 아래 R0 결과와 새 난도 시험 결과를 구분한다.
 
 ## 현재 인계 상태
 
@@ -54,7 +54,7 @@ B/S/Q/C/Cw 실행기 후보를 준비했다. D2-03/D3-01 BF16 seed42의 생성 �
 
 최신 근거: review_evidence_v01.json, SHA-256 f9e30e7ad4b7638689e62a4f9f3368d61b5ac21d735a60cb08054019757baad4. 원본 ID/텍스트·재개 백업을 직접 대조했으며 검사 결과는 configs/difficulty_evidence_review_v01.json에 있다. 추가 첨부 sdpa_mask_review_v01.json의 SHA-256은 bd18f808619c03859653d43c6ad956f3aea7c9d816a27e8387ff0b7fe3b81b0c이며 설치 코드의 CPU 마스크 확인을 완료했다. 최신 fixed_prefix_v01/run.json의 SHA-256은68ff918d9c4b9a43ae154b1d08b2e5fcc93028d66d1fe67d4338001094097fb7이다. CPU 감사 파일도 수신했다. SHA-256은266ff9aedcd99f95d64f5a7e4e85a0963b4ec3686f4d46dab166f0eb5d4bccd1이며 사용자 로컬12개배열/10비교일치 보고·해시/집계를 대조했다. EOS는 모든 상태의258위치에서 수학적 top-p 후보 밖이다. B/Q 후보 집합62곳 차이·고유1위 역전18곳, 좌표 관련argmax5건은모두최댓값집합교집합을 확인했다. 원시 .npy/가중치를 이 환경에서 직접 읽은 것은 아니다. 같은 CPU 감사 재실행은 필요 없다.
 
-다음은 TERMINATION_PREFIX_V01_KO.md의 D2-03 종료 직전 BF16·동일길이 AWQ 입력2개×B/B_repeat/Q=추가6회 후보를 검토한다. 문맥2495·처리입력14970·생성0·원시배열470393856바이트, window=None·cache=false다. 실행기·새 CPU 검사6개·실제 첨부 입력 대조는 완료했고 authorization=PENDING으로 실행을 차단한다. 현재 첨부는 새 실행 승인으로 해석하지 않는다. AGENTS.md8과 기존 승인 범위 제한 때문에 새로운6회만 별도 승인 대상이다. 기존 R0·고정 prefix12회 실행 또는 승인을 반복하지 않는다.
+다음은 TERMINATION_PREFIX_V01_KO.md의 D2-03 종료 직전 BF16·동일길이 AWQ 입력2개×B/B_repeat/Q=추가 최대6회 진단이다. 문맥2495·처리입력14970·생성0·원시배열470393856바이트, window=None·cache=false다. 실행기·새 CPU 검사6개·실제 첨부 입력 대조 후 사용자 “진행해줘”를 [이 범위의 승인](TERMINATION_PREFIX_APPROVAL_20260930_KO.md)으로 기록했다. authorization=APPROVED·remaining_forward_calls=6이며 제안 commit f8fb2ee의 코드/설정은 그대로다. 사용자 GPU 실행 결과는 아직 받지 않았다. 실행 명령은 승인 문서를 따르고 `results/local/termination_prefix_v01/run.json`을 검토한다. 기존 R0·고정 prefix12회 실행 또는 같은 승인을 반복하지 않는다.
 
 아래 내용을 그대로 복사한다.
 
@@ -89,6 +89,7 @@ B/S/Q/C/Cw 실행기 후보를 준비했다. D2-03/D3-01 BF16 seed42의 생성 �
 - docs/LOGITS_AUDIT_REVIEW_20260930_KO.md
 - configs/logits_audit_review_v01.json
 - docs/TERMINATION_PREFIX_V01_KO.md
+- docs/TERMINATION_PREFIX_APPROVAL_20260930_KO.md
 - configs/termination_prefix_v01.json
 
 세션 01은 완료됐다. 제한된 기여 범위와 합성 2문제 × BF16/AWQ,
@@ -165,11 +166,16 @@ B/Q 후보집합변경62/258·평균TV0.087663·고유1위역전18/258이다.
 좌표관련argmax변경5건은모두공동최댓값집합교집합을확인했다.
 원시.npy/가중치는이환경에서직접읽지않았고GPU샘플링재현도아니다.
 같은CPU감사·기존실험을반복하지마라.
-다음후보는termination_prefix_v01: D2-03 BF16종료직전·동일길이AWQ경로2개,
+현재승인된다음작업은termination_prefix_v01: D2-03 BF16종료직전·동일길이AWQ경로2개,
 각B/B_repeat/Q로추가최대6회·문맥2495·처리입력14970·생성0이다.
 원시배열본체470393856바이트·window=None·use_cache=false다.
-코드·새CPU검사6개·실제첨부입력대조완료. 별도승인PENDING으로실행차단.
-기존12회승인이나CPU감사결과제출을새6회승인으로간주하지마라.
+코드·새CPU검사6개·실제첨부입력대조후2026-09-30 06:27:01한국시간의
+“진행해줘”를제시된추가최대6회범위의승인으로기록했다.
+TERMINATION_PREFIX_APPROVAL_20260930_KO.md를따르며authorization=APPROVED,
+remaining_forward_calls=6이다. 제안commit f8fb2ee의코드12개/설정은그대로다.
+사용자GPU에서run_termination_prefix_diagnostic.py --execute를1회실행하고
+results/local/termination_prefix_v01/run.json을검토한다. 아직결과미수신이다.
+기존12회승인이나CPU감사결과제출을재사용한승인이아니다.
 같은 범위의 승인을 다시 요청하거나 세션03으로 넘어가지 마라.
 기존내보내기·실행·재개·동일요약요청을 반복하지 마라.
 좌표/norm·전체logit·사용자로컬원시배열감사보고검토는완료했다.
@@ -184,7 +190,8 @@ MATH-500은 확인용으로 보존하고, Pile은 calibration과 문서가 겹�
 
 기존 R0·데이터 준비·토크나이저·합성 AWQ 검사를 자동으로 반복하지 마라.
 이미 승인한 R0와 완료한 고정 prefix12회의 승인을 다시 요청하지 마라.
-새 termination_prefix6회는별도미승인범위이며AGENTS.md8의gate를따른다.
+새 termination_prefix추가최대6회는승인기록을따르며동일범위의승인을다시요청하지마라.
+이실행의오류/중단시파일을보존하고자동재시도나예산확대없이보고부터검토한다.
 자체 난도 시험과 이번 진단의 범위는 각각의 승인/요청 기록을 따른다. 그 밖의 자동 예산 확대·R1·MATH-500·
 KL 매칭·장문맥·H1/H2·7B는 현재 범위에 포함되지 않는다.
 
