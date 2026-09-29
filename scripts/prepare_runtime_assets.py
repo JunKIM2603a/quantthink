@@ -8,7 +8,8 @@ import os
 from pathlib import Path
 
 from runtime_assets import (
-    ROOT, canonical_hash, development_bundle, download_sources, fetch_upstream,
+    ROOT, CALIBRATION_JSONL_MAX_LINE_CHARACTERS,
+    canonical_hash, development_bundle, download_sources, fetch_upstream,
     file_digests, implementation_fingerprint, iter_jsonl, load_contracts, package_versions, plan_sources,
     question_hash, read_development, select_calibration, write_jsonl, write_new,
 )
@@ -41,7 +42,14 @@ def load_tokenizer(refs):
     if (tokenizer.bos_token_id, tokenizer.eos_token_id, tokenizer.pad_token_id) != (151646, 151643, 151643):
         raise ValueError("토크나이저 특수 토큰이 사용자 검토 기록과 다릅니다.")
     return tokenizer, {"repo_id": asset["repo_id"], "revision": asset["revision"],
-                       "transformers": versions["transformers"], "add_special_tokens": False}
+                       "transformers": versions["transformers"], "add_special_tokens": False,
+                       "truncation": False, "verbose": False}
+
+
+def encode_calibration_text(tokenizer, text):
+    # 후보 적격성 검사만 수행합니다. 전체 길이를 세고 512토큰 초과는 select_calibration에서 제외합니다.
+    # 모델 입력용 길이 경고만 이 호출에서 끄며, 문서를 잘라 적격 표본으로 만들지 않습니다.
+    return tokenizer.encode(text, add_special_tokens=False, truncation=False, verbose=False)
 
 
 def prepare_data(output, candidate, refs, policy, *, include_calibration):
@@ -58,10 +66,12 @@ def prepare_data(output, candidate, refs, policy, *, include_calibration):
     plans = plan_sources(api, refs, policy, roles)
     print(f"원본 파일 다운로드 계획: {sum(x['size'] for x in plans):,} bytes", flush=True)
     paths, proofs = download_sources(plans, hf_hub_download)
+    print(f"고정 출처 파일 {len(proofs)}개 바이트 검증 완료", flush=True)
     development = read_development(paths["development"])
     # 원본 JSONL에는 정답도 있지만, 보존·선택하는 값은 problem 하나입니다.
     confirmation = [{"problem": row["problem"]} for _, row in iter_jsonl(paths["confirmation"])]
     manifest, inputs, gold = development_bundle(development, confirmation, candidate, policy)
+    print(f"개발 후보 {len(inputs)}개 선택 완료 (아직 파일 저장 전)", flush=True)
     manifest.update(status="SOURCE_FILES_VERIFIED_CANDIDATE_NOT_ACCEPTED",
                     source_files=[x for x in proofs if x["role"] != "awq_calibration"],
                     inspection_refs_sha256=canonical_hash(refs))
@@ -70,16 +80,23 @@ def prepare_data(output, candidate, refs, policy, *, include_calibration):
         tokenizer, tokenizer_evidence = load_tokenizer(refs)
         exclusions = {question_hash(row["question"]) for row in development}
         exclusions.update(question_hash(row["problem"]) for row in confirmation)
+        reader_statistics = {}
+        print("calibration 전체 행 검사·토큰화 시작 (모델 실행 없음)", flush=True)
         rows = iter_jsonl(paths["awq_calibration"], compressed=True,
-                          max_rows=policy["calibration"]["max_source_rows"])
+                          max_rows=policy["calibration"]["max_source_rows"],
+                          max_line_characters=CALIBRATION_JSONL_MAX_LINE_CHARACTERS,
+                          statistics=reader_statistics)
         blocks, calibration = select_calibration(
-            rows, lambda text: tokenizer.encode(text, add_special_tokens=False),
+            rows, lambda text: encode_calibration_text(tokenizer, text),
             exclusions, policy)
         calibration.update(status="SOURCE_FILES_VERIFIED_CANDIDATE_NOT_ACCEPTED",
                            source_file=next(x for x in proofs if x["role"] == "awq_calibration"),
                            tokenizer=tokenizer_evidence, candidate_sha256=canonical_hash(candidate),
                            preparation_policy_sha256=canonical_hash(policy),
-                           inspection_refs_sha256=canonical_hash(refs))
+                           inspection_refs_sha256=canonical_hash(refs),
+                           jsonl_reader=reader_statistics)
+        print(f"calibration 검사 완료: 원본 {reader_statistics['source_rows']:,}행, "
+              f"선택 {calibration['total_tokens']:,}토큰", flush=True)
         artifacts["calibration_manifest.json"] = calibration
         artifacts["calibration_tokens.json"] = {"blocks": blocks}
     output.mkdir(parents=True, exist_ok=False)

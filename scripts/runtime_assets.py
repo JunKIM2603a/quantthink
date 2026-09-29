@@ -19,6 +19,9 @@ ROOT = Path(__file__).resolve().parents[1]
 POLICY_PATH = ROOT / "configs/runtime_preparation_v03.json"
 HEX40 = re.compile(r"[0-9a-f]{40}\Z")
 HEX64 = re.compile(r"[0-9a-f]{64}\Z")
+DEFAULT_JSONL_MAX_LINE_CHARACTERS = 4 * 1024 * 1024
+# 고정 Pile validation 전체 검사: 최대 4,744,757자. 표본 선택 한도가 아닌 파서 자원 한도입니다.
+CALIBRATION_JSONL_MAX_LINE_CHARACTERS = 8 * 1024 * 1024
 
 
 def load_contracts():
@@ -125,20 +128,42 @@ def download_sources(plans, downloader):
     return paths, evidence
 
 
-def iter_jsonl(path, *, compressed=False, max_rows=1_000_000):
-    """파일의 실제 행 번호를 유지합니다. 과대 행·부분 해석은 실패로 처리합니다."""
+def iter_jsonl(path, *, compressed=False, max_rows=1_000_000,
+               max_line_characters=DEFAULT_JSONL_MAX_LINE_CHARACTERS, statistics=None):
+    """실제 행 번호와 전체 JSON을 보존합니다. 자원 한도를 넘으면 원인을 구분해 중단합니다."""
+    if type(max_rows) is not int or max_rows < 1:
+        raise ValueError("JSONL max_rows는 양의 정수여야 합니다.")
+    if type(max_line_characters) is not int or max_line_characters < 1:
+        raise ValueError("JSONL max_line_characters는 양의 정수여야 합니다.")
+    path = Path(path)
+    stats = statistics if statistics is not None else {}
+    stats.update(max_rows=max_rows, max_line_characters=max_line_characters,
+                 source_rows=0, largest_line_characters=0,
+                 rows_above_default_line_limit=0,
+                 length_unit="Unicode characters including line terminator")
+
     def rows(stream):
         for index in range(max_rows + 1):
-            raw = stream.readline(4 * 1024 * 1024 + 1)
+            raw = stream.readline(max_line_characters + 1)
             if not raw:
                 return
-            if index == max_rows or len(raw) > 4 * 1024 * 1024:
-                raise ValueError("행 수 또는 한 행의 크기가 상한을 초과했습니다.")
+            location = f"{path.name}, source_row={index} (행 {index + 1})"
+            if index == max_rows:
+                raise ValueError(f"JSONL 행 수 상한 초과: {location}, max_rows={max_rows}")
+            if len(raw) > max_line_characters:
+                raise ValueError(f"JSONL 행 길이 상한 초과: {location}, "
+                                 f"최소 {len(raw)}자 > {max_line_characters}자 (줄바꿈 포함)")
             if not raw.strip():
-                raise ValueError("원본 JSONL에 빈 행이 있습니다.")
-            obj = json.loads(raw)
+                raise ValueError(f"원본 JSONL에 빈 행이 있습니다: {location}")
+            try:
+                obj = json.loads(raw)
+            except json.JSONDecodeError as exc:
+                raise ValueError(f"JSONL 구문 오류: {location}, {exc.msg}") from exc
             if not isinstance(obj, dict):
-                raise ValueError("JSONL 행은 객체여야 합니다.")
+                raise ValueError(f"JSONL 행은 객체여야 합니다: {location}")
+            stats["source_rows"] += 1
+            stats["largest_line_characters"] = max(stats["largest_line_characters"], len(raw))
+            stats["rows_above_default_line_limit"] += int(len(raw) > DEFAULT_JSONL_MAX_LINE_CHARACTERS)
             yield index, obj
     if compressed:
         import zstandard
@@ -185,7 +210,9 @@ def select_calibration(rows, encode, excluded_questions, policy):
     cfg = policy["calibration"]
     pool, seen = [], set()
     counts = {"source_rows": 0, "eligible_unique_documents": 0,
-              "excluded_exact_question_overlap": 0, "duplicate_documents": 0}
+              "excluded_exact_question_overlap": 0, "duplicate_documents": 0,
+              "excluded_empty_text": 0, "excluded_text_length": 0,
+              "excluded_token_length": 0}
     for row_index, row in rows:
         counts["source_rows"] += 1
         if type(row_index) is not int or row_index < 0:
@@ -194,7 +221,11 @@ def select_calibration(rows, encode, excluded_questions, policy):
         if not isinstance(text, str):
             raise ValueError("calibration text 필드가 없습니다.")
         text = text.strip()
-        if not text or len(text) > cfg["max_text_characters"]:
+        if not text:
+            counts["excluded_empty_text"] += 1
+            continue
+        if len(text) > cfg["max_text_characters"]:
+            counts["excluded_text_length"] += 1
             continue
         if question_hash(text) in excluded_questions:
             counts["excluded_exact_question_overlap"] += 1
@@ -208,6 +239,7 @@ def select_calibration(rows, encode, excluded_questions, policy):
         if any(type(t) is not int or t < 0 for t in ids):
             raise ValueError("토크나이저 출력 ID가 유효하지 않습니다.")
         if not 0 < len(ids) <= cfg["max_document_tokens"]:
+            counts["excluded_token_length"] += 1
             continue
         counts["eligible_unique_documents"] += 1
         rank = int(hashlib.sha256(f"{cfg['seed']}\n{row_index}".encode()).hexdigest(), 16)

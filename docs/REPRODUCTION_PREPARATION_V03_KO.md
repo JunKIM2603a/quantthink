@@ -5,12 +5,14 @@
 
 실제 원본 AWQ 함수를 호출하는 Qwen2 어댑터, 데이터 파일의 출처·바이트 검증 로더, R0 실행기 후보를 구현했다. 작성 환경에는 PyTorch·Transformers가 없어 당시 GPU 검사를 실행하지 못했다. 이후 사용자 제출 합성 CUDA PASS의 코드·정책 해시를 대조했다. **최신 판정과 지금 실행할 명령은 [합성 AWQ 검토·데이터 준비 안내](SYNTHETIC_AWQ_REVIEW_20260929_KO.md)에 있다.**
 
+후속 데이터 준비에서 Pile 행 길이 오류가 발생했다. 원본 전체 구조 확인·수정·재실행 절차는 [데이터 준비 수정 기록](DATA_PREPARATION_FIX_20260929_KO.md)을 따른다. 아래 작성 당시 검사와 구분한다.
+
 ## 1. 이번 결과와 증거
 
 | 항목 | 이번 상태 |
 |---|---|
 | 고정 원본 AWQ 함수 연결 | 사용자 제출 합성 CUDA PASS 검토. 사전학습 모델은 미실행 |
-| 고정 revision의 데이터 로더 | 구현. 모의 Hub 응답과 합성 파일로 검증. 실제 원격 데이터 준비는 미실행 |
+| 고정 revision의 데이터 로더 | 사용자 준비 중단 후 수정. 실제 고정 Pile 바이트·전체 JSONL 읽기 검증 완료, 전체 후보 준비는 재실행 대기 |
 | Qwen2 입력 포착·스케일·clip·W3 적용 | 작은 무작위 모델의 사용자 GPU 연결 결과 확인. 실제 checkpoint는 별도 검증 필요 |
 | R0 입력·EOS·종료·자산 연결 | 구현. 현재 승인 기록으로는 사전학습 모델 실행 전에 중단 |
 | v0.3 작성 환경 테스트 | 32개 중 29개 통과, PyTorch·Transformers가 필요한 3개는 건너뜀 |
@@ -115,11 +117,11 @@ Hugging Face 공식 endpoint에 전체 40자리 revision을 지정하고 files_m
 
 문서 ID는 고정 파일의 행 번호와 텍스트 해시로 남긴다. 사용한 토큰 해시, 전체 블록 해시, 제외 개수와 전처리도 기록한다. 코퍼스 중복의 모든 형태를 잡는 절차는 아니다. 남은 GSM8K 문제를 KL 매칭·검증에 자동 배정하지 않는다.
 
-공개 파일 목록에서 Pile validation 파일은 약 338MB로 표시된다. 실제 다운로드 크기는 고정 revision의 응답으로 다시 검사하며, 데이터 파일 합계 상한은 512MiB이다. 숫자를 넘으면 추가 다운로드를 진행하지 않는다. 선택한 원본 경로가 고정 revision에 실제로 존재하는지와 실제 데이터 바이트 일치는 사용자 측 온라인 실행에서 최종 확인한다.
+공개 파일 목록에서 Pile validation 파일은 약 338MB로 표시된다. 실제 다운로드 크기는 고정 revision의 응답으로 다시 검사하며, 데이터 파일 합계 상한은 512MiB이다. 숫자를 넘으면 추가 다운로드를 진행하지 않는다. 후속 수정에서 Pile validation 파일의 고정 revision·크기·내용 SHA-256과 전체 JSONL을 작성 환경에서 직접 확인했다. 세 자산을 모두 묶은 실제 준비 보고서는 사용자 재실행에서 확인한다.
 
 ## 6. 지금 실행할 데이터 준비
 
-합성 CUDA 점검은 사용자 보고로 확인했다. 이제 전체 준비를 한 번 실행해 개발 목록과 calibration을 함께 만든다. 현재 설치된 Torch·NumPy·Transformers·Hugging Face Hub를 일괄 갱신하지 않는다.
+합성 CUDA 점검은 사용자 보고로 확인했다. 사용자 데이터 준비가 Pile 행 길이 한도에서 중단돼 수정했다. 설치된 의존성과 다운로드 캐시를 사용해 아래 검사를 확인하고 다시 준비한다.
 
 ~~~bash
 conda activate quantthink
@@ -127,7 +129,8 @@ cd ~/quantthink
 git switch setup/session-01-research-gates
 git pull --ff-only
 
-python -m pip install --no-deps -r requirements/data-preparation.txt
+python -m unittest discover -s tests -p 'test_data_preparation_limits.py' -v
+
 python scripts/prepare_runtime_assets.py \
   --mode all --online \
   --output-dir results/local/runtime_assets_v03
