@@ -4,7 +4,7 @@
   "timezone": "Asia/Seoul",
   "current_session": "02",
   "current_session_title": "QuantThink 02 — 환경 구축·BF16/AWQ 재현",
-  "audited_base_commit": "b57d9d7be24d8d8f7e1ebfdbb24c17dca983b636",
+  "audited_base_commit": "2825c56a7f5cecb68ac6e782fcc9bdc6163e4db3",
   "source_audit": "SCOPED_PRIMARY_FULLTEXT_FOLLOWUP_COMPLETED",
   "novelty_gate": "SCOPED_CONTRIBUTION_ACCEPTED",
   "protocol_gate": "ACCEPTED",
@@ -52,7 +52,7 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "종료 prefix6회 결과 수신·검토 완료: BF16 종료 직전 문맥은 B/Q 모두 필터 후 EOS1, 동일길이 AWQ 문맥은 양쪽0. 코드12개·실행 당시 상태/설정·입력·위치별 집계 일치. 승인 예산은 소진됐고 같은 실험/CPU 감사 재실행은 필요 없다. SESSION02_ACCEPTANCE_DESIGN_20260930_KO.md에 기능적 수락 기준과 독립 확인 설계를 구체화했다. 다음은 주 결과·수락 한도·미관측 입력/시드·runtime·채점/검열·예산을 고정하는 프로토콜 작성이다. 새 GPU 실행·생성은 승인하지 않았으며 model_ready=false·세션02를 유지한다.",
+  "next_local_environment_step": "새16문맥 좌표 점검 v01의 입력·한 단계 운영 한도·최대96회/생성0 예산·실행기를 준비하고 새 CPU 검사8개를 통과했다. 현재 새 실행 승인 여부 결정 단계: functional_holdout.authorization=PENDING·잔여예산0. 이전 R0/20문제/12회/6회/CPU 감사는 반복하지 않는다. 이 패널이 통과해도 전체 생성·모집단 동등성·H1/H2·model_ready를 확정하지 않는다. 미래 생성 주 결과·의미 있는 차이·검정력·실제 cache 검증은 별도 설계로 남긴다.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
@@ -116,7 +116,7 @@
   "next_session_ready": false,
   "next_session_title": "QuantThink 03 — 교란 매칭·대조군 검증",
   "blocking_items": [
-    "고정prefix12회·사용자CPU원시배열감사·종료prefix6회 보고검토완료. BF16반복정확일치보고이며 좌표변환의비영분포차이에대한기능적수락한도·독립확인이남음. BF16종료직전문맥에서B/Q모두필터후EOS1,동일길이AWQ문맥에서양쪽0이나 경로의인과역할·종료지연원인은미확정. 원시.npy/가중치직접검증과구분함.",
+    "고정 prefix12회·사용자 CPU 원시배열 감사·종료 prefix6회 보고 검토 완료. 새16문맥·96회 한 단계 좌표 점검의 입력·운영 한도·실행기·CPU 검사8개를 준비했으나 실행은 미승인·미실행이다. 원시.npy/가중치 직접 검증과 구분하며 종료 지연의 인과 원인·전체 생성 기능 수락 기준·독립 확인은 남아 있다.",
     "난도80개원본의입력/종료/집계·12개/31개재개백업·실행코드/상태해시대조완료. 형식미판정4개는수동정답. v01자동난도판정은보존하며43개검열의최종정오는미관측이다.",
     "고정 use_sliding_window=false·sliding_window=4096의 CPU 마스크에서 query4096부터 이전 키 차단을 관측했고4개 설치소스 해시가 공식 원본과 일치한다. 당시 생성 cache/마스크 및 실제 인과 영향은 미검증이다. 경계 전 EOS24/40 대12/40 차이도 남는다.",
     "기능적양자화검증·평가기의일반타당도·후속재현기준이미완료라model_ready=false·세션02유지. R1/MATH-500/새Pile/KL매칭/장문맥/H1/H2/7B와자동재실행/예산확대는진행하지않는다."
@@ -135,9 +135,11 @@
     "approved_fixed_prefix_diagnostic_v01_maximum_12_forward_calls_zero_generation",
     "read_only_saved_fixed_prefix_logits_cpu_audit_and_float64_filter_diagnostics",
     "approved_termination_prefix_v01_maximum_6_forward_calls_zero_generation",
-    "read_only_result_review_and_session02_acceptance_protocol_design"
+    "read_only_result_review_and_session02_acceptance_protocol_design",
+    "functional_holdout_v01_protocol_fixture_implementation_preparation_and_cpu_contract_tests_only"
   ],
   "not_yet_authorized_by_gates": [
+    "functional_holdout_v01_new_16_contexts_maximum_96_forward_calls",
     "scientific_model_runs_outside_r0_difficulty_v01_fixed_prefix_v01_and_termination_prefix_v01_scope",
     "r1_100_question_evaluation",
     "math500_confirmation",
@@ -581,9 +583,9 @@
     "model_execution_completed": false
   },
   "session02": {
-    "status": "TERMINATION_PREFIX_REPORT_REVIEWED_ACCEPTANCE_DESIGN_PENDING",
+    "status": "FUNCTIONAL_HOLDOUT_PREPARED_EXECUTION_APPROVAL_PENDING",
     "handoff": "docs/HANDOFF_01_TO_02_KO.md",
-    "next_single_task": "종료 prefix6회 결과 수신·검토 완료: BF16 종료 직전 문맥은 B/Q 모두 필터 후 EOS1, 동일길이 AWQ 문맥은 양쪽0. 코드12개·실행 당시 상태/설정·입력·위치별 집계 일치. 승인 예산은 소진됐고 같은 실험/CPU 감사 재실행은 필요 없다. SESSION02_ACCEPTANCE_DESIGN_20260930_KO.md에 기능적 수락 기준과 독립 확인 설계를 구체화했다. 다음은 주 결과·수락 한도·미관측 입력/시드·runtime·채점/검열·예산을 고정하는 프로토콜 작성이다. 새 GPU 실행·생성은 승인하지 않았으며 model_ready=false·세션02를 유지한다.",
+    "next_single_task": "새16문맥 좌표 점검 v01의 입력·한 단계 운영 한도·최대96회/생성0 예산·실행기를 준비하고 새 CPU 검사8개를 통과했다. 현재 새 실행 승인 여부 결정 단계: functional_holdout.authorization=PENDING·잔여예산0. 이전 R0/20문제/12회/6회/CPU 감사는 반복하지 않는다. 이 패널이 통과해도 전체 생성·모집단 동등성·H1/H2·model_ready를 확정하지 않는다. 미래 생성 주 결과·의미 있는 차이·검정력·실제 cache 검증은 별도 설계로 남긴다.",
     "r0_output_directory": "results/local/r0_v03",
     "exit_criteria_met": false,
     "latest_review_document": "docs/TERMINATION_PREFIX_RESULT_REVIEW_20260930_KO.md",
@@ -597,9 +599,11 @@
     "termination_prefix_proposal": "docs/TERMINATION_PREFIX_V01_KO.md",
     "termination_prefix_approval_record": "docs/TERMINATION_PREFIX_APPROVAL_20260930_KO.md",
     "termination_prefix_result_reference": "configs/termination_prefix_result_review_v01.json",
-    "acceptance_design_document": "docs/SESSION02_ACCEPTANCE_DESIGN_20260930_KO.md"
+    "acceptance_design_document": "docs/SESSION02_ACCEPTANCE_DESIGN_20260930_KO.md",
+    "easy_explanation_document": "docs/SESSION02_EXPLAINED_20260930_KO.md",
+    "functional_holdout_proposal": "docs/FUNCTIONAL_HOLDOUT_V01_KO.md"
   },
-  "snapshot_status_note": "configs의 기존 후보·정책·점검·준비 검토 JSON은 해시가 고정된 당시 스냅샷이다. 해당 파일의 과거 미승인 상태를 소급 수정하지 않으며, 현재 R0 승인은 research_approval_record와 R0_APPROVAL 문서로 기록한다. 상위 승인 상태 문자열은 approval_scope에 한정한다. 고정 prefix·CPU 감사·종료 prefix 설정의 과거 상태도 동결된 당시 스냅샷이다. 현재 추가6회 승인은 termination_prefix_diagnostic와 TERMINATION_PREFIX_APPROVAL_20260930_KO.md를 따른다.",
+  "snapshot_status_note": "configs의 기존 후보·정책·점검·준비 검토 JSON은 해시가 고정된 당시 스냅샷이며 과거 상태를 소급 수정하지 않는다. 상위 승인 상태와 allowed_now의 기존 실행 항목은 각 기록 범위에 한정한다. fixed_prefix_diagnostic와 termination_prefix_diagnostic의 APPROVED는 완료된 실행의 승인 이력이며 잔여 예산은0이다. 새 functional_holdout_v01 설정도 제안 당시 스냅샷으로 고정하고 현재 별도 실행 권한은 functional_holdout을 따른다. 프로토콜 준비 요청을 미제시 GPU 예산 승인으로 확대 해석하지 않는다.",
   "approval_record_validation": {
     "r0_inspection": "PASS_NO_UNMET_GATES",
     "model_loaded": false,
@@ -1458,5 +1462,96 @@
       "interpretation_ko": "BF16 종료 직전 경로에서는 두 모델 모두 수학적 top-p 후 EOS만 남고, 동일길이 AWQ 경로에서는 양쪽 EOS가 제외된다. 이 사례의 고정 종료 문맥에서 AWQ의 EOS 후보 제거는 관측되지 않았다. 경로 의존 기술 관측이며 종료 지연의 인과 분해·전역 EOS 가설 기각·기능적 동등성 PASS가 아니다."
     },
     "historical_execution_command": "conda activate quantthink\ncd ~/quantthink\ngit switch setup/session-01-research-gates &&\ngit pull --ff-only &&\npython scripts/run_termination_prefix_diagnostic.py --execute"
+  },
+  "functional_holdout": {
+    "status": "IMPLEMENTED_CPU_TESTED_EXECUTION_APPROVAL_PENDING",
+    "authorization": "PENDING",
+    "remaining_forward_calls": 0,
+    "preparation_user_message": "지금 세션에서 무엇을 하고 있고 목적은 무엇이고 진행 결과는 어떤지 아주 쉽게 설명해줘. 그리고 실험방법은 어떻게 했는지도 구체적으로 설명해줘. 알려준 명령어는 입력했어. 다음 작업도 진행해줘",
+    "preparation_request_at": "2026-09-30T07:15:49+09:00",
+    "authorization_reason_ko": "직전 다음 작업은 프로토콜 구체화였으며 그 준비를 완료했다. 사용자 원래 예산 제한과 AGENTS.md8에 따라 구체화한 추가96회 GPU 범위의 승인을 아직 기록하지 않았다. 기존 R0/12회/6회의 재승인 요청이 아니다.",
+    "document": "docs/FUNCTIONAL_HOLDOUT_V01_KO.md",
+    "config": "configs/functional_holdout_v01.json",
+    "config_sha256": "5e50ff5ecf9b948330ca513b38b400dacdde8eb274bf809ac59caa78650efb8a",
+    "suite": "fixtures/functional_holdout_v01.json",
+    "suite_sha256": "a589153d2abfab834dce6fad7ba433a9d074bd775c4c46d7d75a0cb0bc0ba187",
+    "script": "scripts/run_functional_holdout.py",
+    "implementation_sha256": {
+      "run_functional_holdout.py": "b0cd7af1930025442b80a7e6eaab04b2d140c5fcc068f77cfef8daa2e91e8c44",
+      "functional_holdout_contracts.py": "745a25f4ec7730f459a11d725a95c0d25096b857de47200a5f092f900ca16d57",
+      "audit_fixed_prefix_logits.py": "ab9b164c32413cdc4a2d8015c531b7a15bac0b76ebe7a5b7d9bc14894a2f5abd",
+      "run_fixed_prefix_diagnostic.py": "8c0c5d72984c8ba366e2209657f2bacbede196cbb52c1f341a08d4f942f326ff",
+      "fixed_prefix_diagnostic_contracts.py": "bafc0997feac28d93a2fc5b30910fe487edea85ccb56f9adfeaf4a14fc00c31d",
+      "replay_r0_awq.py": "b01e0124eb97a7e1145c886842d894966084ac8b1f7b47f538c647d7e1fb574a",
+      "qwen2_awq_adapter.py": "ea7d9e3c35443fc889480c667a826a9eca793c7592fb03be778b150d094b59c5",
+      "awq_weight_space.py": "230b604c0f436696b9118753c8ddbbd383029a3ca9a2aa89aab6478b1bd23b6b",
+      "runtime_assets.py": "d647bb31a0a72a373a95bf1561603c8eff2563ff598eff60516bd54dbedca130",
+      "run_difficulty_pilot.py": "809b14475e7eac56ce6667b52b85839e674f766106130407b6802aafe9fdaec7",
+      "difficulty_pilot_contracts.py": "d14b79ea22069dc6666fce2e70edc17557ef97029158eafdd51ebb306c460446",
+      "runtime_contracts.py": "ca514a25f560b8912edd90de83cb8d4a18aed0cd97d8769f5b9f1627cc8924ee",
+      "reproduction_contracts.py": "04923d60075be31ca7b14b7566dd0040b474bb4f1e009d416ee66819401e45bb"
+    },
+    "proposed_maximum_forward_calls": 96,
+    "proposed_maximum_forward_input_tokens": 73728,
+    "proposed_maximum_sequence_length": 768,
+    "positions_per_input": 32,
+    "proposed_raw_logit_bytes": 1866989568,
+    "new_generation_tokens": 0,
+    "use_cache": false,
+    "effective_sliding_window": null,
+    "sampling": false,
+    "seed": 42,
+    "selection_ko": "기존 결과 확인 후 새로 작성한 고정16문맥. 모델 출력을 보고 선택하지 않음. 구현 확인용 선택 밖 패널이며 통계적 무작위 표본·MATH 공식 난도·H1 독립 확증 자료가 아님.",
+    "acceptance_comparisons": [
+      [
+        "B",
+        "S"
+      ],
+      [
+        "Q",
+        "C"
+      ],
+      [
+        "C",
+        "Cw"
+      ]
+    ],
+    "proposed_acceptance_bounds": {
+      "mean_filtered_tv_max": 0.01,
+      "maximum_filtered_tv_max": 0.05,
+      "final_anchor_eos_support_mismatches_max": 0
+    },
+    "acceptance_scope_ko": "고정 패널의 한 단계 분포 영향 한도 제안. 평균 토큰 집합 확률 오차1%p, 각 관측위치5%p 이내 및 완성 답 anchor EOS 후보 여부 일치. 보편적 기준·H1 한도·자연 종료/정답 동등성 보증이 아님. 과거 결과 재판정에 적용하지 않음.",
+    "population_equivalence_test": false,
+    "sequence_equivalence_certified": false,
+    "h1_h2_tested": false,
+    "old_results_reclassified": false,
+    "user_execution": "NOT_STARTED",
+    "model_ready": false,
+    "output_directory": "results/local/functional_holdout_v01",
+    "assistant_validation": {
+      "new_cpu_tests_passed": 8,
+      "test_file": "tests/test_functional_holdout.py",
+      "manually_written_answers_independently_recomputed": true,
+      "exact_normalized_old_prompt_overlap": 0,
+      "unapproved_execute_rejected_before_heavy_import_or_output": true,
+      "actual_token_lengths_measured": false,
+      "tokenizer_or_gpu_execution": false,
+      "torch_transformers_available": false,
+      "old_tests_rerun": false
+    },
+    "excluded_scope": [
+      "new_generation",
+      "calibration_search",
+      "network_download",
+      "automatic_retry",
+      "R1",
+      "MATH-500",
+      "new_Pile",
+      "KL_matching",
+      "long_context",
+      "H1_H2",
+      "7B"
+    ]
   }
 }
