@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "status": "USER_SUMMARY_REVIEWED_INPUT_REFERENCE_NOT_RUN_APPROVAL",
+  "review_document": "docs/R0_DETAIL_REVIEW_20260929_KO.md",
+  "reported_summary_code_head": "7067e5a3832bd0e405003d7fa38db0ffd8182860",
+  "source_run_commit": "5a88f69c4981f105384e0198166f7f24b6ca01c3",
+  "source_attachment_sha256": "6f70f7c17d0f2bff77624e8d713b4b407671bedbd6da797a2f344a73b3d796b6",
+  "verification_scope": "제출된 터미널 요약 첨부를 직접 읽고 구조와 집계를 대조했다. 아래 사용자 보고 원본 파일 해시는 바이트 독립 검증이 아니라 향후 입력 대조 참조다.",
+  "original_result_files_independently_read": false,
+  "source_files": [
+    {
+      "file": "run.json",
+      "sha256": "423d5be0c0c7125ec9ea6c4768d2aebfaed8cf822a3ffdae3cc32a7523624a1d"
+    },
+    {
+      "file": "awq_layer_000.json",
+      "sha256": "98d0d0fda1c148503f79dcc06032b1dfcc5e23b5f58884b8817816cc9f915649"
+    },
+    {
+      "file": "awq_layer_001.json",
+      "sha256": "8248ad3e3d56874e4cf725e903d5834d621ddeb65b5bf90c6e47c21182dc17dc"
+    },
+    {
+      "file": "awq_layer_002.json",
+      "sha256": "b77d8a950ab362f63a4f263c5c5b7fffe1d82dfd16468346be29b9df9bebb9e4"
+    },
+    {
+      "file": "awq_layer_003.json",
+      "sha256": "3d79eda91d6b3ff478af478b42e2b0803c0cfccc03c51c16cc4ff7b9eb73d7d2"
+    },
+    {
+      "file": "awq_layer_004.json",
+      "sha256": "4ad04d704c26b20cc1d854979ce3512e36fee10a8102862b3cab0094bfbe03f0"
+    },
+    {
+      "file": "awq_layer_005.json",
+      "sha256": "de7a4355c71a10c6c907ecc9685011e2d5bc0b8b459afe8eb166df30f893a127"
+    },
+    {
+      "file": "awq_layer_006.json",
+      "sha256": "a7534d903e5b9e305d8aaa3e32f5a14631a263f0d88e1a5e32bd9d8ec560f432"
+    },
+    {
+      "file": "awq_layer_007.json",
+      "sha256": "6aca7c0533eed6dbe76310c0736cfe48d2d692dda67af2e120cb1c20ba825976"
+    },
+    {
+      "file": "awq_layer_008.json",
+      "sha256": "79051af26b17858c8ecb4e1aec82f27142d9551dc254e63bd52ff8f0858260a2"
+    },
+    {
+      "file": "awq_layer_009.json",
+      "sha256": "f80ebc42ffbcd519148abcfc4f3a5a113db429e1a722e50d4323f027b8b8cf5e"
+    },
+    {
+      "file": "awq_layer_010.json",
+      "sha256": "4ec263b24dd82cb075120bbd7686fd1d1ba4bae2897d188f697a0c4472d08805"
+    },
+    {
+      "file": "awq_layer_011.json",
+      "sha256": "8975610567ab55962a88d7d3a80c839eeba4a075b9db4cc873dfc9f780ca6818"
+    },
+    {
+      "file": "awq_layer_012.json",
+      "sha256": "368c09189aebf9cca45a636245114713dbd04442326bb1c6ddb0f24aee8444e6"
+    },
+    {
+      "file": "awq_layer_013.json",
+      "sha256": "05d6706ee1fa08565d7fd0e79e312795d8231c8323be1f2bc30fa8cce67e30f8"
+    },
+    {
+      "file": "awq_layer_014.json",
+      "sha256": "fb2f524f105da04805e4fcbb844cfe4d7076f372a672d139641206f3281bee15"
+    },
+    {
+      "file": "awq_layer_015.json",
+      "sha256": "6d69fa2d715aef816d242ca5b0d34063fe210f5f32fea5de94bb63ce1ca63293"
+    },
+    {
+      "file": "awq_layer_016.json",
+      "sha256": "c8638ccf32cb0a640cd823449789c2006093c046505bb4c3b9ac5e5820a5fd3b"
+    },
+    {
+      "file": "awq_layer_017.json",
+      "sha256": "eb0463f992901d38675c9123c35ca76f2a146e45ffc8c6832053c4404c81385a"
+    },
+    {
+      "file": "awq_layer_018.json",
+      "sha256": "d9a222ae4142e482f8892c7386aa5c092908a40780301a31dd7b582c175f4451"
+    },
+    {
+      "file": "awq_layer_019.json",
+      "sha256": "3dd39adb41ca97cf49731a83d71af79dd72b3643d460663be52ee339f17d045f"
+    },
+    {
+      "file": "awq_layer_020.json",
+      "sha256": "a3977ed85a40fab055631d4000a3560e62a26eacffcbd3abaf359fbde9fc8411"
+    },
+    {
+      "file": "awq_layer_021.json",
+      "sha256": "606b8826206c5a8fd821e435e47251fcea18207a471bf8dfb6b68d07e453a5b9"
+    },
+    {
+      "file": "awq_layer_022.json",
+      "sha256": "7506c65f717d926f858b1d5043db4633bbbd49c62d7eda13396d58f97dcad8a0"
+    },
+    {
+      "file": "awq_layer_023.json",
+      "sha256": "8053e2121e806bec0b9e95d444939082231e61a11dde13a6d32a550e113b85eb"
+    },
+    {
+      "file": "awq_layer_024.json",
+      "sha256": "340fc2cca56918b8af661ec238cc615f03f31ec5147d5ac6de519aaca1ef8940"
+    },
+    {
+      "file": "awq_layer_025.json",
+      "sha256": "79e5d25541f809793ebfc9a44ea02d6967abb78bfb91665b79129de15e146b36"
+    },
+    {
+      "file": "awq_layer_026.json",
+      "sha256": "e0e6f2a21fc82d5018687380fbac9838b3821343a1c1710729687b1b5894fff4"
+    },
+    {
+      "file": "awq_layer_027.json",
+      "sha256": "ad7aca09768e5b3b9e861871344c799a3cd8d2a8485122e92834e02729920202"
+    }
+  ]
+}
