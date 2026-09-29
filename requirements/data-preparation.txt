@@ -1,0 +1,4 @@
+# 기존 PyTorch·NumPy·Transformers를 교체하지 않는 데이터 준비용 추가 패키지
+pyarrow==20.0.0
+zstandard==0.23.0
+

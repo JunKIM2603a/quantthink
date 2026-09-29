@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "status": "IMPLEMENTATION_CANDIDATE_NOT_ACCEPTED",
+  "base_manifest_sha256": "98ff733b0d8391c3a33aa2f561e2d389bd6e482ee53b1b680c1bb6e7e6b6201f",
+  "inspection_refs_sha256": "97f5b7bf6cb6888c716a3838f21c224e7920b1df05c5996efe1321d39cd15276",
+  "source_paths": {
+    "development": "main/train-00000-of-00001.parquet",
+    "confirmation": "test.jsonl",
+    "awq_calibration": "val.jsonl.zst"
+  },
+  "expected_development_rows": 7473,
+  "expected_confirmation_rows": 500,
+  "max_dataset_download_bytes": 536870912,
+  "calibration": {
+    "source_split": "validation",
+    "selection": "smallest SHA256(seed + newline + zero-based physical row index) among eligible documents",
+    "seed": 42,
+    "max_document_tokens": 512,
+    "pool_documents": 1024,
+    "blocks": 128,
+    "block_size": 512,
+    "preprocessing": "text.strip(); add_special_tokens=False; no document separators",
+    "max_source_rows": 1000000,
+    "max_text_characters": 65536
+  },
+  "upstream": {
+    "repository": "ruikangliu/Quantized-Reasoning-Models",
+    "revision": "bf947e29f52e3f666e3263efac149dae0ac18d00",
+    "files": [
+      {
+        "path": "LICENSE",
+        "git_blob_sha1": "4044a11a3640dc9fe5f95b8ec04d8dbfa43c9cec"
+      },
+      {
+        "path": "methods/awq/auto_scale.py",
+        "git_blob_sha1": "8e59e2e3d852e3ac682bbc715236f17fb9496cd7"
+      },
+      {
+        "path": "methods/awq/auto_clip.py",
+        "git_blob_sha1": "d72942888930ab1955b07742d4c325da79bfbb40"
+      },
+      {
+        "path": "methods/awq/quantizer.py",
+        "git_blob_sha1": "43daed76f2a46bd19e9c16f134bae718f3098a71"
+      },
+      {
+        "path": "methods/awq/qmodule.py",
+        "git_blob_sha1": "722664f4af54b2b58b27493c0d25394563bf001b"
+      },
+      {
+        "path": "methods/awq/module.py",
+        "git_blob_sha1": "ebb46ac72810b4f6dfa27a6685d5b76062006c9e"
+      }
+    ]
+  },
+  "runtime": {
+    "transformers": "4.51.3",
+    "torch_observed": "2.7.1+cu118",
+    "attention_implementation": "sdpa",
+    "weight_dtype": "bfloat16",
+    "quantization": "upstream AWQ W3 g128 asymmetric, dequantized BF16",
+    "search_input_propagation": "reference pre-transform layer outputs, matching inspected upstream traversal"
+  },
+  "notes": [
+    "validation split·문서 선택 방식·구분 토큰 정책은 이번 구현 후보이며 원 논문의 정확한 calibration 재현으로 주장하지 않음",
+    "현재 후보·점검 참조 스냅샷과 연구 승인 상태는 변경하지 않음"
+  ],
+  "synthetic_check": {
+    "seed": 0,
+    "vocab_size": 256,
+    "hidden_size": 128,
+    "intermediate_size": 256,
+    "num_hidden_layers": 1,
+    "num_attention_heads": 2,
+    "num_key_value_heads": 1,
+    "sequence_length": 512,
+    "max_relative_rms": 0.05,
+    "interpretation": "작은 무작위 모델의 느슨한 구현 점검 한도. 실제 BF16 모델 동등성 기준 또는 H1 경계가 아님."
+  }
+}

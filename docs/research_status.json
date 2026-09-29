@@ -52,7 +52,7 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "새 CPU 준비 테스트 32개를 기존 quantthink 환경에서 실행: python -m unittest discover -s tests -p 'test_reproduction_v02.py' -v. 토크나이저 재실행은 불필요. 다음 구현은 출처를 인증하는 데이터 로더와 실제 Qwen2 AWQ 어댑터이며, 모델 실행 전 프로토콜·연구 실행 조건을 기록해야 함.",
+  "next_local_environment_step": "기존 quantthink 환경에서 v0.3 단위 테스트를 실행하고 고정 AWQ 원본을 준비한 뒤 check_awq_adapter.py로 작은 무작위 Qwen2 CUDA 연결을 검사한다. 사전학습 가중치·벤치마크 사용 없음. 상세 명령은 docs/REPRODUCTION_PREPARATION_V03_KO.md 참조. 기존 토크나이저 재검사는 불필요.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
@@ -61,7 +61,9 @@
     "followup_document": "docs/REPRODUCTION_PLAN_V01.md",
     "calibration_finding": "The pileval loader's n_samples counts source documents, then concatenates and splits them; 128 documents do not ensure 128 blocks of 512 tokens.",
     "followup_v02_document": "docs/REPRODUCTION_PREPARATION_V02_KO.md",
-    "followup_v02_scope": "동일 고정 commit의 pre_quant.py, auto_scale.py, auto_clip.py, quantizer.py, calib_data.py, run_awq.py, requirements.txt와 Transformers v4.51.3 Qwen2 코드를 읽음. 원본 코드·모델 실행은 없음."
+    "followup_v02_scope": "동일 고정 commit의 pre_quant.py, auto_scale.py, auto_clip.py, quantizer.py, calib_data.py, run_awq.py, requirements.txt와 Transformers v4.51.3 Qwen2 코드를 읽음. 원본 코드·모델 실행은 없음.",
+    "followup_v03_document": "docs/REPRODUCTION_PREPARATION_V03_KO.md",
+    "followup_v03_scope": "고정 AWQ 모듈 5개와 LICENSE의 blob SHA를 확인하고 함수 연결 코드를 작성함. 실제 원본 함수·Qwen2 실행은 현재 환경에서 미검증. Hugging Face Hub v0.36.2 파일 메타데이터 타입과 Qwen2 4.51.3 코드를 읽음."
   },
   "session01_followup": {
     "owner_instruction": "Proceed with the next research step; treated as authorization for continued preparation, not evidence of academic approval or acceptance of newly proposed settings",
@@ -116,7 +118,7 @@
     "Integrate the newly inspected primary text of 2609.23125v1 and 2609.06473v1 with the earlier collision table and make a scoped contribution decision; their primary-text access blockers are resolved, not the overall novelty gate.",
     "Complete scoped novelty decision beyond generic matched-noise control design, compression verbosity and termination measurement",
     "Review and accept the concrete candidate reproduction plan and record required research-run approval",
-    "토크나이저 검토와 합성 CPU 준비 도구 검사 완료. 실제 AWQ 어댑터·calibration 출처, 출처가 인증된 분리 ID, 실제 생성문 평가기·판정 검증, 생성/종료 연결과 장문맥 검증은 미완료."
+    "실제 AWQ 어댑터·출처 검증 로더·R0 실행기 후보는 v0.3에 구현됨. 사용자 환경의 합성 CUDA 연결, 실제 고정 데이터 다운로드·ID 검토, 실모델 좌표·logit 검증, 실제 생성문 평가·판정 검증 및 장문맥은 미검증."
   ],
   "allowed_now": [
     "literature_review",
@@ -124,7 +126,9 @@
     "cpu_unit_tests",
     "local_environment_inspection",
     "public_asset_metadata_collection",
-    "cpu_tokenizer_asset_inspection"
+    "cpu_tokenizer_asset_inspection",
+    "synthetic_random_model_engineering_checks",
+    "public_dataset_provenance_preparation"
   ],
   "not_yet_authorized_by_gates": [
     "scientific_model_runs",
@@ -242,6 +246,50 @@
     "long_context_validation": "NOT_RUN",
     "new_model_or_tokenizer_execution": false,
     "original_h1_h2_changed": false,
+    "scientific_gate_states_changed": false
+  },
+  "reproduction_preparation_v03": {
+    "status": "IMPLEMENTED_PARTIALLY_CPU_TESTED_NOT_MODEL_READY",
+    "document": "docs/REPRODUCTION_PREPARATION_V03_KO.md",
+    "audited_base_commit": "3e78771b43f5024d844eef741f24f2c6feef8b43",
+    "policy": "configs/runtime_preparation_v03.json",
+    "implemented": [
+      "고정 원본 AWQ 함수와 Qwen2 계층·RoPE 입력 연결",
+      "작은 무작위 Qwen2 CUDA 점검 명령",
+      "고정 Hub revision 파일 바이트 검증·데이터 및 calibration 준비",
+      "승인 조건을 먼저 확인하는 BF16/AWQ 합성 R0 실행기"
+    ],
+    "new_cpu_tests": {
+      "discovered": 32,
+      "passed": 29,
+      "skipped": 3,
+      "failed": 0,
+      "skip_reason": "PyTorch·Transformers가 없어 실제 Qwen2 CPU 연결 검사 미실행"
+    },
+    "v02_regression_tests": {
+      "passed": 32,
+      "failed": 0
+    },
+    "test_environment": {
+      "python": "3.12.14",
+      "numpy": "2.3.5",
+      "zstandard": "0.25.0",
+      "torch": null,
+      "transformers": null,
+      "pyarrow": null,
+      "huggingface_hub": null
+    },
+    "validation_scope": "모의 Hub 응답·합성 파일·압축 JSONL·오프라인 CLI·준비 경로 연동. 원격 데이터 다운로드·실제 Parquet 읽기·원본 AWQ 함수 실행은 미검증. 구문 검사 통과.",
+    "actual_awq_adapter": "IMPLEMENTED_NOT_EXECUTED",
+    "source_provenance_loader": "IMPLEMENTED_MOCK_TESTED_NOT_RUN_ON_REAL_SOURCES",
+    "synthetic_cuda_adapter_check": "NOT_RUN",
+    "real_dataset_file_hashes": "NOT_RETRIEVED",
+    "actual_calibration_ids": "NOT_SELECTED",
+    "actual_development_ids": "NOT_SELECTED",
+    "pretrained_r0": "NOT_RUN",
+    "new_model_or_tokenizer_execution": false,
+    "original_h1_h2_changed": false,
+    "manifest_snapshots_changed": false,
     "scientific_gate_states_changed": false
   }
 }

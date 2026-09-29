@@ -8,7 +8,8 @@
 
 ## 먼저 읽을 문서
 
-- [재현 준비 v0.2 — 한글 구현 설명과 실행 안내](docs/REPRODUCTION_PREPARATION_V02_KO.md)
+- [재현 준비 v0.3 — 실제 AWQ 연결과 출처 검증](docs/REPRODUCTION_PREPARATION_V03_KO.md)
+- [재현 준비 v0.2 — 좌표 검사·평가기·문제 분리 기록](docs/REPRODUCTION_PREPARATION_V02_KO.md)
 - [토크나이저 계약 검토 — 한글](docs/TOKENIZER_CONTRACT_REVIEW_20260929.md)
 - [현재 연구 상태](docs/research_status.json)
 - [세션별 계획과 종료 조건](docs/SESSION_PLAN.md)
@@ -27,10 +28,12 @@
 기존 quantthink 환경에서 다음 명령을 실행한다.
 
 ~~~bash
-python -m unittest discover -s tests -p 'test_reproduction_v02.py' -v
+python -m unittest discover -s tests -p 'test_runtime_preparation_v03.py' -v
 ~~~
 
-새 테스트 32개는 표준 라이브러리와 NumPy를 사용한다. 모델·데이터셋 다운로드나 CUDA 실행을 하지 않는다. AWQ 좌표 변환, GSM8K 수치 평가기, 개발 문제 목록과 평가 입력의 연결을 합성 자료로 검사한다. 실제 AWQ 모델 호환성이나 데이터 출처 인증을 대신하지 않는다.
+새 v0.3 테스트는 합성 파일의 출처 해시·데이터 분리·R0 입력과 종료 연결을 검사한다. 작성 환경에서 32개 중 29개가 통과했고, PyTorch·Transformers가 필요한 Qwen2 CPU 연결 검사 3개는 건너뛰었다. 기존 v0.2 검사 32개도 재실행해 통과했다. 단위 테스트는 모델·데이터셋 다운로드나 CUDA를 실행하지 않는다.
+
+다음 실제 연결 점검은 사전학습 가중치를 사용하지 않는 작은 무작위 Qwen2의 CUDA 검사다. 고정 AWQ 소스 준비와 실행 명령은 v0.3 한글 안내를 따른다. 실제 모델·calibration 실행 검증은 아직 완료하지 않았다.
 
 사용자가 제출한 CPU 토크나이저 PASS는 검토 완료했으므로 다시 실행할 필요가 없다. 현재 패키지를 최신 버전 묶음으로 교체할 필요도 없다.
 
