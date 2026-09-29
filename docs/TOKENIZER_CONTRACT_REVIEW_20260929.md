@@ -1,53 +1,53 @@
-# Tokenizer contract review — 2026-09-29
+# 토크나이저 계약 검토 — 2026-09-29
 
-**USER-REPORTED PASS; REPOSITORY HASHES AND SUBMITTED FIELDS CONSISTENT.**
+**사용자 보고 PASS를 검토했고, 저장소 해시와 제출 필드의 일관성을 확인했다.**
 
-This records the report supplied by the user with timestamp `2026-09-29T00:13:10.027340+00:00`. Its reported status is `TOKENIZER_CONTRACT_PASS_NOT_MODEL_READY`. The reviewed repository head is `8335ef867b7a48132e32badd3f60308e8fa15c4f`; the report does not contain its generating Git commit, so that provenance is not inferred.
+사용자가 제출한 보고 시각은 2026-09-29T00:13:10.027340+00:00이며, 보고 상태는 TOKENIZER_CONTRACT_PASS_NOT_MODEL_READY이다. 최초 검토 시 저장소 커밋은 8335ef867b7a48132e32badd3f60308e8fa15c4f였다. 보고서를 생성한 Git 커밋은 출력에 없으므로 추정하지 않는다. 이 문서는 기존 검토 기록의 한글판이며 새로운 토크나이저 실행 결과가 아니다.
 
-## Verification actually performed
+## 실제로 확인한 범위
 
-The assistant recomputed canonical JSON hashes from the repository files and compared them with the submitted fields:
+저장소 파일에서 정규화 JSON 해시를 다시 계산해 제출 필드와 비교했다.
 
-| Reference | Recomputed hash / result |
+| 기준 | 확인 결과 |
 |---|---|
-| `configs/reproduction_candidate.json` | `98ff733b0d8391c3a33aa2f561e2d389bd6e482ee53b1b680c1bb6e7e6b6201f` — matches |
-| `configs/asset_inspection_refs.json` | `97f5b7bf6cb6888c716a3838f21c224e7920b1df05c5996efe1321d39cd15276` — matches |
-| Reference model revision | `ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562` — matches |
-| Declared inspection package versions | Transformers 4.51.3 and Jinja2 3.1.6 — match |
-| Submitted input arrays | Counts 22 and 33; one BOS each; neither contains EOS |
-| Candidate generation fields | R0 cap 128; T=0.6, top-p=0.95, top-k=0, repetition penalty 1.0 — match |
+| configs/reproduction_candidate.json | 98ff733b0d8391c3a33aa2f561e2d389bd6e482ee53b1b680c1bb6e7e6b6201f — 일치 |
+| configs/asset_inspection_refs.json | 97f5b7bf6cb6888c716a3838f21c224e7920b1df05c5996efe1321d39cd15276 — 일치 |
+| 참조 모델 revision | ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562 — 일치 |
+| 선언된 점검 패키지 | Transformers 4.51.3, Jinja2 3.1.6 — 일치 |
+| 제출 입력 배열 | 각각 22·33 토큰. 실제 BOS는 각 1개이며 EOS는 없음 |
+| 후보 생성 설정 | R0 상한 128, T=0.6, top-p=0.95, top-k=0, repetition penalty=1.0 — 일치 |
 
-The two repository configuration files remain unchanged so the report's references stay valid. Their historical pending-check labels describe the inspection snapshot, not the latest milestone; current evidence lives in `docs/research_status.json`.
+두 설정 파일은 보고서의 참조가 유효하도록 그대로 유지한다. 파일 안의 과거 미완료 표시는 점검 당시의 스냅샷이며, 최신 상태는 [research_status.json](research_status.json)에 기록한다.
 
-Verification used a local transcription of selected submitted fields. It is not an independent rerun, inspection of the user's original file bytes, a tokenizer-vocabulary hash audit, or evidence that the complete preceding shell command chain passed. No raw diagnostic report is committed.
+검증에는 사용자가 붙여 넣은 일부 필드의 로컬 전사를 사용했다. 사용자의 원본 파일 바이트, 토크나이저 전체 어휘 해시, 앞선 셸 명령 전체의 성공을 확인한 것은 아니다. 토크나이저를 독립 재실행하지 않았으며 로컬 진단 원문을 공개 저장소에 올리지 않았다.
 
-## Rules for the future generation implementation
+## 앞으로의 생성 구현에 적용할 조건
 
-| Observed report evidence | Implementation consequence |
+| 관찰된 보고 내용 | 구현 조건 |
 |---|---|
-| Tokenizer BOS=151646; model config BOS=151643 | Use the pinned tokenizer's actual input IDs. Preserve the source discrepancy in provenance. |
-| Actual BOS count=1; adding special tokens again gives 2 | Use direct chat-template tokenization, or tokenize rendered text with `add_special_tokens=False`. |
-| EOS=PAD=151643; left-padding check passes | Preserve tokenizer-produced attention masks. Token identity alone cannot distinguish active content from padding. |
-| `</think>` maps to 151649 | Use it as the reasoning boundary. Whole-response EOS remains 151643; retain the final-answer region. |
-| Opening `<think>` is already in the input prefix | Do not append another opening marker or count the prefilled marker as generated reasoning. |
-| Inherited top-k=50; explicit candidate top-k=0 | Pass the candidate overrides explicitly in future generation; do not rely on the model generation file alone. |
-| Tokenizer metadata=16384; model capacity=131072; candidate budget=40960 | These metadata do not certify a 40960-token runtime. Long-context feasibility is still untested. |
+| 토크나이저 BOS=151646, 모델 설정 BOS=151643 | 고정한 토크나이저의 실제 input IDs를 사용하고, 설정 간 차이를 출처 기록에 보존한다. |
+| 실제 BOS 1개, special token을 다시 추가하면 2개 | chat template에서 직접 토큰화하거나, 렌더링된 텍스트에는 add_special_tokens=False를 적용한다. |
+| EOS=PAD=151643, 왼쪽 패딩 검사 PASS | 토크나이저가 만든 attention mask를 보존한다. 토큰 ID만으로 패딩을 판별하지 않는다. |
+| 종료 think 태그 ID=151649 | 추론 경계로 사용한다. 전체 응답의 EOS는 151643이며 최종 답변 영역을 유지한다. |
+| 입력에 시작 think 태그가 이미 있음 | 시작 태그를 다시 추가하거나 생성 추론 토큰으로 세지 않는다. |
+| 상속 top-k=50, 명시 후보 top-k=0 | 앞으로의 생성 호출에 후보 설정을 명시한다. |
+| 토크나이저 한도 16,384, 모델 용량 131,072, 후보 총 길이 40,960 | 40,960 토큰 실행 가능성을 메타데이터만으로 인정하지 않는다. 장문맥 실행은 아직 미검증이다. |
 
-The report records `LlamaTokenizerFast`, tokenizers 0.21.4, huggingface-hub 0.36.2 and NumPy 1.26.4. These are observed tokenizer-inspection versions, not an accepted AWQ/inference environment lock.
+보고된 클래스는 LlamaTokenizerFast이다. tokenizers 0.21.4, huggingface-hub 0.36.2, NumPy 1.26.4도 기록됐다. 이는 토크나이저 점검 환경이며, 수락된 AWQ·추론 환경 명세를 의미하지 않는다.
 
-## Readiness after this milestone
+## 이 결과 이후의 준비 상태
 
-| Preparation item | Current evidence / remaining action |
+| 항목 | 현재 근거와 남은 작업 |
 |---|---|
-| Public asset references | Reviewed metadata and pinned inspection references |
-| Input format and CPU tokenizer | User-reported pass, checked against the repository |
-| Scientific contribution scope | Final integration/decision remains open |
-| BF16/AWQ runtime and transformation | Select an executable adapter/version plan, then validate scale folding and canonical weight-error space under the approved run plan |
-| Calibration and data separation | Record exact token blocks and disjoint example manifests |
-| Evaluation | Complete answer-parser fixtures and blinded overthinking rubric |
-| R0/R1 plan | Candidate exists; acceptance and required research-run approval are not recorded |
-| Long context, model generation, H1/H2 | No new execution or hypothesis evidence |
+| 공개 자산 참조 | 메타데이터 검토와 점검용 revision 고정 완료 |
+| 입력 형식·CPU 토크나이저 | 사용자 PASS 보고를 저장소와 대조 완료 |
+| 연구 기여 범위 | 선행연구 비교를 통합한 최종 판단 필요 |
+| BF16/AWQ 실행 | 실제 어댑터·버전 연결 및 실모델 스케일 변환 검증 필요 |
+| Calibration·데이터 분리 | 실제 출처·정확한 토큰 블록·서로 분리된 문제 ID 필요 |
+| 평가기 | 합성 CPU 검사 이후 실제 생성문 감사와 수동 판정 검증 필요 |
+| R0/R1 계획 | 후보 존재. 수락과 연구 실행 승인 기록은 아직 없음 |
+| 장문맥·모델 생성·H1/H2 | 새로운 실행이나 가설 검정 근거 없음 |
 
-The immediate local tokenizer task is complete; no rerun or fresh metadata resolution is requested. The next preparation deliverable is the executable reproduction specification covering the remaining runtime, AWQ, data and evaluator items. Existing `REPRODUCTION_PLAN_V01.md` remains a candidate.
+토크나이저 점검은 완료했으므로 재실행이나 메타데이터 재수집을 요청하지 않는다. 후속 CPU 도구와 현재 실행 안내는 [재현 준비 v0.2 한글 문서](REPRODUCTION_PREPARATION_V02_KO.md)에 있다.
 
-Session 01 remains open under `AGENTS.md` and `SESSION_PLAN.md`. This report does not authorize a model experiment, freeze the candidate, or change the original hypotheses. R0 is the next model-level engineering check only after the relevant gates are satisfied.
+AGENTS.md와 SESSION_PLAN.md의 종료 조건에 따라 세션 01을 유지한다. 이 보고서로 모델 실험을 승인하거나 후보를 동결하지 않는다. R0는 관련 조건이 충족된 뒤 수행할 다음 모델 수준의 공학 점검이다.

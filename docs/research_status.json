@@ -52,14 +52,16 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "Tokenizer-only audit completed with user-reported PASS and repository hash consistency. No rerun or new metadata resolution requested. Next prepare the executable reproduction specification (runtime/AWQ adapter, canonical weight-error validation, evaluator/rubric, disjoint data and context budgets) and resolve the remaining scientific gates.",
+  "next_local_environment_step": "새 CPU 준비 테스트 32개를 기존 quantthink 환경에서 실행: python -m unittest discover -s tests -p 'test_reproduction_v02.py' -v. 토크나이저 재실행은 불필요. 다음 구현은 출처를 인증하는 데이터 로더와 실제 Qwen2 AWQ 어댑터이며, 모델 실행 전 프로토콜·연구 실행 조건을 기록해야 함.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
     "scope": "README, AWQ/inference wrappers and inference.py inspected; follow-up also inspected methods/awq/run_awq.py, calib_data.py and pre_quant.py. No upstream code executed and no exact Lotfi runtime provenance claim.",
     "review_document": "docs/REPRODUCTION_READINESS_REVIEW.md",
     "followup_document": "docs/REPRODUCTION_PLAN_V01.md",
-    "calibration_finding": "The pileval loader's n_samples counts source documents, then concatenates and splits them; 128 documents do not ensure 128 blocks of 512 tokens."
+    "calibration_finding": "The pileval loader's n_samples counts source documents, then concatenates and splits them; 128 documents do not ensure 128 blocks of 512 tokens.",
+    "followup_v02_document": "docs/REPRODUCTION_PREPARATION_V02_KO.md",
+    "followup_v02_scope": "동일 고정 commit의 pre_quant.py, auto_scale.py, auto_clip.py, quantizer.py, calib_data.py, run_awq.py, requirements.txt와 Transformers v4.51.3 Qwen2 코드를 읽음. 원본 코드·모델 실행은 없음."
   },
   "session01_followup": {
     "owner_instruction": "Proceed with the next research step; treated as authorization for continued preparation, not evidence of academic approval or acceptance of newly proposed settings",
@@ -114,7 +116,7 @@
     "Integrate the newly inspected primary text of 2609.23125v1 and 2609.06473v1 with the earlier collision table and make a scoped contribution decision; their primary-text access blockers are resolved, not the overall novelty gate.",
     "Complete scoped novelty decision beyond generic matched-noise control design, compression verbosity and termination measurement",
     "Review and accept the concrete candidate reproduction plan and record required research-run approval",
-    "Asset revision references, configuration hashes and user-reported tokenizer contracts are reviewed; executable quantizer/calibration provenance, evaluator/rubric, disjoint data IDs, generation/stop integration and long-context validation remain pending."
+    "토크나이저 검토와 합성 CPU 준비 도구 검사 완료. 실제 AWQ 어댑터·calibration 출처, 출처가 인증된 분리 ID, 실제 생성문 평가기·판정 검증, 생성/종료 연결과 장문맥 검증은 미완료."
   ],
   "allowed_now": [
     "literature_review",
@@ -161,8 +163,9 @@
     "source_code_executed": false,
     "new_model_or_tokenizer_execution": false,
     "original_hypotheses_or_candidate_changed": false,
-    "next_user_evidence": "Actual online tokenizer audit JSON using the existing reviewed metadata report",
-    "validation": "Documentation and JSON consistency checked; no code tests or model runs rerun in this continuation"
+    "next_user_evidence": null,
+    "validation": "Documentation and JSON consistency checked; no code tests or model runs rerun in this continuation",
+    "next_user_evidence_note": "기존 토크나이저 보고서 요청은 충족됐음. user_tokenizer_contract와 최신 v0.2 안내 참조."
   },
   "user_tokenizer_contract": {
     "status": "USER_REPORTED_PASS_REPOSITORY_HASHES_AND_FIELDS_CHECKED",
@@ -209,5 +212,36 @@
     "assistant_tokenizer_execution": false,
     "raw_report_committed": false,
     "interpretation": "Input-format milestone only; original hypotheses, candidate/inspection JSON snapshots, research gates and model execution states are unchanged."
+  },
+  "user_document_language": "ko",
+  "reproduction_preparation_v02": {
+    "status": "CPU_TOOLS_TESTED_NOT_MODEL_READY",
+    "document": "docs/REPRODUCTION_PREPARATION_V02_KO.md",
+    "audited_base_commit": "b7f9e11001f0ac29744fde71ab590a7f801af40c",
+    "implemented": [
+      "AWQ 스케일 기록 역변환과 원래 좌표의 오차 계산",
+      "GSM8K 최종 영역 수치 평가와 계획 전체의 누락 검사",
+      "문제 해시 기반 개발 후보 목록과 평가 입력 ID 대조"
+    ],
+    "test_command": "python -m unittest discover -s tests -p 'test_reproduction_v02.py' -v",
+    "test_result": "32_PASSED_IN_ASSISTANT_ENVIRONMENT",
+    "test_environment": {
+      "python": "3.12.14",
+      "numpy": "2.3.5"
+    },
+    "test_evidence_scope": "합성 배열·합성 JSONL·CLI 연동. 원격 데이터·모델·토크나이저·CUDA를 사용하지 않음. 기존 테스트 묶음 재실행·합산 없음.",
+    "user_environment_test": "NOT_YET_REPORTED",
+    "manifest_snapshots_changed": false,
+    "actual_awq_adapter": "NOT_IMPLEMENTED",
+    "actual_calibration_ids": "NOT_SELECTED",
+    "actual_development_ids": "NOT_SELECTED",
+    "source_provenance_loader": "NOT_IMPLEMENTED",
+    "real_generation_evaluator_audit": "NOT_RUN",
+    "math500_symbolic_evaluator": "NOT_IMPLEMENTED",
+    "overthinking_annotation_validation": "NOT_RUN",
+    "long_context_validation": "NOT_RUN",
+    "new_model_or_tokenizer_execution": false,
+    "original_h1_h2_changed": false,
+    "scientific_gate_states_changed": false
   }
 }

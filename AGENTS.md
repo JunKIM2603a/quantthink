@@ -12,6 +12,7 @@ Read `docs/research_status.json`, `docs/SESSION_PLAN.md`, and the relevant proto
 8. Do not launch scientific model runs before the source/novelty and smoke-protocol gates, and the required research approval, are recorded. Local environment inspection is allowed while review is open.
 9. Keep large artifacts, tokens, credentials, raw local diagnostics, and personal or workplace information out of this public repository. Do not publish full third-party manuscripts or restricted benchmark data.
 10. Prefer reviewable branch/PR changes. Do not force-push, merge, or change repository visibility without authorization.
+11. 사용자에게 전달하는 새 문서와 갱신 문서는 한국어로 작성한다. 코드 식별자, 파일명, 논문 제목, 원문 인용은 필요한 경우 원어를 유지한다. 기존 영문 문서는 과거 기록이며, 새 안내에서는 최신 한글 문서를 우선 연결한다.
 
 ## Session transitions
 

@@ -1,35 +1,43 @@
 # QuantThink
 
-Investigating why quantized reasoning models overthink through matched perturbation controls.
+양자화된 추론 모델의 추론 길이 증가와 정답 포기 현상을, 교란 크기를 맞춘 대조군으로 연구하는 프로젝트다.
 
-**Status: research-design review, not an established finding. No model experiment has been run or verified in this repository.**
+**현재 상태: 연구 설계 검토와 CPU 준비 도구 검증 단계. BF16/AWQ 모델 실험과 H1/H2 검정은 아직 실행하지 않았다.**
 
-The planned question is whether increases in reasoning length and overthinking under aggressive quantization can be reproduced by random weight perturbations matched on reference-prefix token-level divergence. A secondary question concerns local entropy and branching behavior. The initial model is DeepSeek-R1-Distill-Qwen-1.5B, with a planned 7B replication and MATH-500 as the primary benchmark.
+핵심 질문은 참조 모델의 공통 prefix에서 토큰 분포 KL을 맞춘 가우시안 가중치 교란이, 강한 양자화에서 관찰되는 길이 증가와 확인된 정답 포기를 재현하는지다. H2는 국소 엔트로피와 분기 행동에 관한 초안이다. 초기 모델은 DeepSeek-R1-Distill-Qwen-1.5B이며, 7B 재현과 MATH-500 확증 평가를 계획하고 있다.
 
-## Start here
+## 먼저 읽을 문서
 
-- [Current research status](docs/research_status.json)
-- [Session plan and exit criteria](docs/SESSION_PLAN.md)
-- [Initial evidence and novelty audit](docs/EVIDENCE_AUDIT.md)
-- [Protocol draft: unresolved choices are explicit](docs/PROTOCOL_DRAFT.md)
-- [Session handoff template](docs/HANDOFF_TEMPLATE.md)
-- [Research operating rules](AGENTS.md)
+- [재현 준비 v0.2 — 한글 구현 설명과 실행 안내](docs/REPRODUCTION_PREPARATION_V02_KO.md)
+- [토크나이저 계약 검토 — 한글](docs/TOKENIZER_CONTRACT_REVIEW_20260929.md)
+- [현재 연구 상태](docs/research_status.json)
+- [세션별 계획과 종료 조건](docs/SESSION_PLAN.md)
+- [선행연구 본문 후속 검토](docs/NOVELTY_FOLLOWUP_20260929.md)
+- [초기 근거·신규성 검토 기록](docs/EVIDENCE_AUDIT.md)
+- [프로토콜 초안과 미결정 항목](docs/PROTOCOL_DRAFT.md)
+- [세션 인계 양식](docs/HANDOFF_TEMPLATE.md)
+- [연구 운영 규칙](AGENTS.md)
 
-The broad matched-noise control idea already appears in activation-quantization research (arXiv:2609.23125). Its full-text overlap with the proposed reasoning study remains to be reviewed. Do not claim that a Gaussian-noise comparison is itself new.
+새로 전달하거나 갱신하는 안내 문서는 한국어로 작성한다. 과거 영문 문서는 검토 이력을 보존하기 위해 남겨 둔다.
 
-## Local preparation only
+가우시안 잡음 대조군이라는 발상 자체는 이미 활성 양자화 연구에 등장한다. 관련 논문 2609.23125v1과 2609.06473v1의 본문 후속 검토는 완료했으며, 최종 기여 범위 판정은 남아 있다. 평균 KL을 맞춘 대조군을 추가했다는 사실만으로 신규성을 주장하지 않는다.
 
-Python 3.10+ is required for the diagnostic script. It installs nothing, downloads no models, makes no remote uploads, and does not alter the software environment. It optionally imports an already installed PyTorch in a subprocess to inspect visible CUDA devices.
+## 현재 실행할 CPU 점검
 
-```bash
-python -m unittest discover -s tests -v
-python scripts/preflight.py --require-cuda --min-gpus 2
-```
+기존 quantthink 환경에서 다음 명령을 실행한다.
 
-The report is written to `results/local/preflight.json`, which is gitignored. Review it before sharing. Exit code 2 means the requested CUDA visibility check did not pass; the report is still written. `CUDA_VISIBLE` does not establish BF16 inference, memory capacity, AWQ compatibility, or research readiness. Existing reports are not overwritten unless `--overwrite` is supplied. Use `--skip-torch` for a metadata-only inspection; it cannot pass a required CUDA check.
+~~~bash
+python -m unittest discover -s tests -p 'test_reproduction_v02.py' -v
+~~~
 
-Do not install an arbitrary collection of latest inference packages before reviewing this report. A compatible, isolated inference environment and pinned versions will be selected during Session 02.
+새 테스트 32개는 표준 라이브러리와 NumPy를 사용한다. 모델·데이터셋 다운로드나 CUDA 실행을 하지 않는다. AWQ 좌표 변환, GSM8K 수치 평가기, 개발 문제 목록과 평가 입력의 연결을 합성 자료로 검사한다. 실제 AWQ 모델 호환성이나 데이터 출처 인증을 대신하지 않는다.
 
-## Scientific guardrails
+사용자가 제출한 CPU 토크나이저 PASS는 검토 완료했으므로 다시 실행할 필요가 없다. 현재 패키지를 최신 버전 묶음으로 교체할 필요도 없다.
 
-Long output, looping, truncation, and abandoning a correct intermediate answer are different outcomes. Mean-KL matching is a controlled comparison, not proof of a causal mechanism. Failed equivalence is not evidence of a quantization-specific cause. Fake/dequantized BF16 evaluation is not a measurement of native low-bit throughput. See the draft protocol before implementing model experiments.
+기존 환경 진단 도구 scripts/preflight.py는 별도 환경 점검용으로 유지한다. 보고서는 results/local에 기록되며 Git에서 제외된다. CUDA_VISIBLE이나 작은 BF16 행렬 계산 성공은 모델·AWQ·장문맥 실행 성공을 뜻하지 않는다.
+
+## 결과 해석 원칙
+
+긴 응답, 반복, 상한 도달, 올바른 중간 풀이를 버린 현상은 서로 구분한다. 평균 KL이 같아도 교란의 구조나 EOS 확률이 같다는 보장은 없다. 동등성을 입증하지 못한 결과를 곧바로 양자화 고유 메커니즘의 증거로 해석하지 않는다.
+
+가짜 양자화 후 BF16 실행은 native 저비트 처리량 측정이 아니다. 가설·동등성 경계·실험 설정은 아직 동결하지 않았으며, 모델 실험 전에 프로토콜과 실행 조건을 기록해야 한다.
