@@ -52,7 +52,7 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "실제 난도·길이를 반영한 입력 확장안을 구체화한다. MATH train 예비 표본·수학 답 평가기·출력/전체 문맥 예산과 calibration 밖 Pile 진단 입력을 준비하고, 기존 산수 2개만을 유일한 후속 입력으로 고정하지 않는다. 새 모델 실행은 아직 하지 않는다.",
+  "next_local_environment_step": "자체 D1~D5 각 4문제의 제한된 난도 시험을 사용자 GPU에서 실행하고, EOS·최종 답·두 시드 안정성 요약을 검토한다. 기존 R0/준비/토크나이저/합성 AWQ 반복은 하지 않는다.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
@@ -117,7 +117,7 @@
   "next_session_title": "QuantThink 03 — 교란 매칭·대조군 검증",
   "blocking_items": [
     "기존 R0 상세 요약은 검토했다. 두 LayerNorm의 56개 비영 잔차가 보고됐다. BF16 재적용 후 실제 파라미터 잔차와 전체 모델 logit·좌표 변환 영향은 미검증이다.",
-    "네 생성이 모두 128토큰에서 검열됐다. 자연 EOS 종료·후속 출력 예산·재현 판정 기준과 실제 생성문 평가·수동 판정 검증은 미완료다.",
+    "R0 네 생성은 모두 128토큰 검열. 새 자체 난도 시험 실행기는 준비됐지만 실모델/CUDA 재구성·4096토큰 완주·최종 생성문 수동 채점과 기능적 재현 판정은 아직 미완료다.",
     "R1·MATH-500·KL 매칭·장문맥·H1/H2·7B는 기존 R0 승인 범위 밖이고 미실행이다. 세션 03 전환 조건은 충족되지 않았다."
   ],
   "allowed_now": [
@@ -129,10 +129,11 @@
     "cpu_tokenizer_asset_inspection",
     "synthetic_random_model_engineering_checks",
     "public_dataset_provenance_preparation",
-    "approved_r0_synthetic_2_prompts_bf16_awq_w3_128_tokens"
+    "approved_r0_synthetic_2_prompts_bf16_awq_w3_128_tokens",
+    "user_requested_bounded_custom_difficulty_v01_pilot"
   ],
   "not_yet_authorized_by_gates": [
-    "scientific_model_runs_outside_approved_r0_scope",
+    "scientific_model_runs_outside_r0_and_user_requested_difficulty_v01_scope",
     "r1_100_question_evaluation",
     "math500_confirmation",
     "kl_matching_experiments",
@@ -575,14 +576,15 @@
     "model_execution_completed": false
   },
   "session02": {
-    "status": "R0_DETAIL_SUMMARY_REVIEWED_FULL_MODEL_DIAGNOSTICS_PENDING",
+    "status": "DIFFICULTY_PILOT_IMPLEMENTED_CPU_TESTED_USER_GPU_EXECUTION_PENDING",
     "handoff": "docs/HANDOFF_01_TO_02_KO.md",
-    "next_single_task": "실제 난도 입력 확장안에 따라 MATH train 개발 표본 출처·선택·평가기와 전체 모델 진단 실행기를 준비한다. 28문제·8,192토큰 예산은 제안이며 미수락·미실행이다.",
+    "next_single_task": "docs/DIFFICULTY_PILOT_V01_KO.md의 새 난도 시험 실행: 20문제×2조건×seed42/43, 응답당4096토큰. 작성 환경에서는 새 CPU 검사만 통과했고 모델 실행 근거는 아직 없다.",
     "r0_output_directory": "results/local/r0_v03",
     "exit_criteria_met": false,
     "latest_review_document": "docs/R0_DETAIL_REVIEW_20260929_KO.md",
     "diagnostic_followup_plan": "docs/R0_DIAGNOSTIC_FOLLOWUP_20260929_KO.md",
-    "realistic_input_plan": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md"
+    "realistic_input_plan": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md",
+    "difficulty_pilot_plan": "docs/DIFFICULTY_PILOT_V01_KO.md"
   },
   "snapshot_status_note": "configs의 기존 후보·정책·점검·준비 검토 JSON은 해시가 고정된 당시 스냅샷이다. 해당 파일의 과거 미승인 상태를 소급 수정하지 않으며, 현재 R0 승인은 research_approval_record와 R0_APPROVAL 문서로 기록한다. 상위 승인 상태 문자열은 approval_scope에 한정한다.",
   "approval_record_validation": {
@@ -822,7 +824,8 @@
       "validation_this_update": "첨부 JSON·29개 파일 참조의 구조·집계 범위·태그 위치 산술 및 문서/JSON 일관성 확인. 모델·토크나이저·GPU·기존 테스트 재실행 없음."
     },
     "input_scope_revision_document": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md",
-    "original_12_forward_plan_role": "기존 산수 2개를 재사용하는 최소 연결 점검 후보. 실제 난도 검증 전체를 대신하는 유일한 후속 경로로 사용하지 않음."
+    "original_12_forward_plan_role": "기존 산수 2개를 재사용하는 최소 연결 점검 후보. 실제 난도 검증 전체를 대신하는 유일한 후속 경로로 사용하지 않음.",
+    "replay_implementation": "scripts/replay_r0_awq.py: dtype/shape/파일 검사는 CPU 검증, 실모델 CUDA 경로 미검증. 전체 logit 진단 실행기는 계속 미구현."
   },
   "realistic_input_proposal": {
     "status": "DIRECTION_REQUESTED_SPECIFIC_PROTOCOL_NOT_ACCEPTED_NOT_RUN",
@@ -865,6 +868,67 @@
     "calibration_rebuilt": false,
     "approval_scope_changed": false,
     "new_model_execution": false,
-    "source_verification": "공식 논문 초록·원 저자 GitHub·데이터 페이지의 설명/필드 검토. 새 MATH 원본 파일·revision 고정·문제 선택·tokenizer 실행 없음."
+    "source_verification": "공식 논문 초록·원 저자 GitHub·데이터 페이지의 설명/필드 검토. 새 MATH 원본 파일·revision 고정·문제 선택·tokenizer 실행 없음.",
+    "current_next_action": "사용자의 추가 자체 문제 요청에 따라 difficulty_pilot v01을 구현했다. 이전 MATH train 28문제/8192 후보는 별도 초안으로 남기고 실행하지 않는다."
+  },
+  "difficulty_pilot": {
+    "status": "IMPLEMENTED_CPU_TESTED_NOT_MODEL_EXECUTED",
+    "authorization": "USER_REQUESTED_BOUNDED_DIFFICULTY_PILOT",
+    "request_recorded_at": "2026-09-29T18:58:01+09:00",
+    "user_request": "시험문제를 난이도에 따라서 여러개 만들어서, 어느 난이도 쯤에서 시험이 통과하는지 확인해보자. 그리고 다음 연구 단계에서 어떻게 해야할지 명령어도 함께 줘.",
+    "authorization_scope_note": "현재 요청을 제한된 자체 난도 시험의 수행 근거로 기록. 아래 숫자는 요청을 구현한 사전 기본값이며 사용자가 각 숫자를 명시적으로 승인했다는 기록이 아님. 원 R0 승인 기록을 소급 변경하지 않음.",
+    "reviewed_head": "ddd759d54dcc21df0785b63abd3a919120ced660",
+    "document": "docs/DIFFICULTY_PILOT_V01_KO.md",
+    "config": "configs/difficulty_pilot_v01.json",
+    "config_sha256": "1a0b9ccd1a2863b7078368ec853461f2973015ce13386d338aa51af2c2ba22c6",
+    "suite": "fixtures/difficulty_ladder_v01.json",
+    "suite_sha256": "10fc1a73e263b1e8fa56849c27ce6748ab39bb8bea77858ada6d424dbe4ae961",
+    "problem_count": 20,
+    "levels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "per_level": 4,
+    "label_scope": "자체 임시 난도. MATH 공식 Level·실측 난도 아님.",
+    "arms": [
+      "bf16",
+      "awq_w3_replay"
+    ],
+    "seeds": [
+      42,
+      43
+    ],
+    "attempts": 80,
+    "max_new_tokens": 4096,
+    "maximum_generation_tokens": 327680,
+    "max_prompt_tokens": 768,
+    "max_total_context_tokens": 4864,
+    "awq_mode": "저장된 R0 scale/clip 재적용. 원 체크포인트와 바이트 동등성 미인증, calibration 탐색 없음.",
+    "evaluator": "EOS + think 종료 뒤 단일 boxed 정수/분수의 정확 비교. 실제 생성문 수동 검토 미완료.",
+    "level_pass_rule": "8개 응답 모두 EOS+파싱 가능일 때만 판정. 4문제 중 3개 이상이 두 시드 모두 최종 정답이면 PASS; 그 외 FAIL. 누락/오류/검열/모호한 답은 INCONCLUSIVE.",
+    "run_command": "scripts/run_difficulty_pilot.py --execute",
+    "summary_command": "scripts/summarize_difficulty_pilot.py",
+    "output_directory": "results/local/difficulty_v01",
+    "assistant_validation": {
+      "new_cpu_tests_passed": 17,
+      "new_cpu_tests_failed": 0,
+      "python": "3.12.14",
+      "torch_available": false,
+      "transformers_available": false,
+      "actual_model_or_tokenizer_execution": false,
+      "old_r0_or_preparation_tests_rerun": false,
+      "syntax_check": "PASSED_FOR_FOUR_NEW_RUNTIME_SCRIPTS"
+    },
+    "user_execution": "NOT_YET_REPORTED",
+    "model_ready": false,
+    "automatic_retry": false,
+    "automatic_budget_increase": false,
+    "h1_h2_changed": false,
+    "math500_used": false,
+    "raw_user_results_committed": false,
+    "question_document": "docs/DIFFICULTY_QUESTIONS_V01_KO.md"
   }
 }

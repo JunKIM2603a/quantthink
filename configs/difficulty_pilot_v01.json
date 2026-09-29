@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "pilot_id": "difficulty_ladder_v01",
+  "status": "USER_REQUESTED_BOUNDED_EXPLORATORY_PILOT",
+  "scope": "자체 5단계×4문제의 BF16/AWQ 재구성 탐색. 숫자 예산은 요청을 구현한 제한 기본값이며 원래 R0 승인 변경이 아님.",
+  "suite_path": "fixtures/difficulty_ladder_v01.json",
+  "suite_sha256": "10fc1a73e263b1e8fa56849c27ce6748ab39bb8bea77858ada6d424dbe4ae961",
+  "arms": [
+    "bf16",
+    "awq_w3_replay"
+  ],
+  "seeds": [
+    42,
+    43
+  ],
+  "max_new_tokens": 4096,
+  "max_prompt_tokens": 768,
+  "max_total_context_tokens": 4864,
+  "maximum_generation_tokens": 327680,
+  "expected_attempts": 80,
+  "decoding": {
+    "temperature": 0.6,
+    "top_p": 0.95,
+    "top_k": 0,
+    "repetition_penalty": 1.0
+  },
+  "level_pass_min_stable_problems": 3,
+  "level_verdict_rule": "8개 응답 모두 EOS+파싱 가능일 때만 판정. 4문제 중 3개 이상이 두 시드 모두 최종 정답이면 PASS; 그 외 FAIL. 누락/오류/검열/모호한 답은 INCONCLUSIVE.",
+  "awq_source": "configs/r0_diagnostic_input_review_v01.json",
+  "awq_replay_status": "REPLAY_FROM_SAVED_RECIPES_NOT_ORIGINAL_CHECKPOINT_CERTIFIED",
+  "automatic_budget_increase": false,
+  "automatic_retry": false,
+  "calibration_search": false,
+  "math500_used": false,
+  "h1_h2_test": false,
+  "network_required": false
+}
