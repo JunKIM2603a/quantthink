@@ -1,10 +1,10 @@
-# 세션 02 인계 — 고정 prefix 진단 승인·GPU 실행 결과 대기
+# 세션 02 인계 — 고정 prefix 결과 검토·저장 logits CPU 감사
 
 **현재 세션 이름: QuantThink 02 — 환경 구축·BF16/AWQ 재현**
 
 새 채팅에서도 세션 02를 계속한다. 세션 01은 명시적 사용자 승인으로 완료됐고, 이후 R0 실행 결과 요약도 제출됐다. 초기 검토는 [R0 결과 검토](R0_RESULT_REVIEW_20260929_KO.md), 최신 상세 값은 [상세 요약 검토](R0_DETAIL_REVIEW_20260929_KO.md), 승인 범위는 [승인 기록](R0_APPROVAL_20260929_KO.md)을 따른다.
 
-이후 자체 난도20문제의80개 응답 요약과 원본/백업 묶음을 받아 [최신 원본 근거 검토](DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md)를 기록했다. 이후 [설치 코드의 CPU 마스크 결과](SDPA_MASK_REVIEW_20260929_KO.md)도 검토 완료했다. **현재 다음 작업은 [승인된 고정 prefix 진단 v01](FIXED_PREFIX_DIAGNOSTIC_V01_KO.md)을 사용자 GPU에서 실행하고 결과를 검토하는 것**이다. 아래 R0 결과와 새 난도 시험 결과를 구분한다.
+이후 자체 난도20문제의80개 응답 요약과 원본/백업 묶음을 받아 [최신 원본 근거 검토](DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md)를 기록했다. 이후 [설치 코드의 CPU 마스크 결과](SDPA_MASK_REVIEW_20260929_KO.md)도 검토 완료했다. 이후 승인된 고정 prefix 진단12회 완료 run.json을 받아 [결과 검토](FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md)를 기록했다. **현재 다음 작업은 저장된12개 `.npy`의 CPU 감사**다. 아래 R0 결과와 새 난도 시험 결과를 구분한다.
 
 ## 현재 인계 상태
 
@@ -46,11 +46,13 @@
 
 캐시 설정의 use_sliding_window=false·sliding_window=4096 조합과 고정 소스의 마스크 경로가 주의 대상이다. 전체 문맥4096을 넘은 응답은44개이며, 경계 이전 공통3986 생성 토큰까지만 보아도 EOS는 BF16 24/40·AWQ12/40이다. [수신 CPU 마스크 결과](SDPA_MASK_REVIEW_20260929_KO.md)에서 query4094/4095/4096/4204의 차단0/0/1/109개와 window=None 대조의 전부0개를 확인했다. 스크립트 및 설치 소스4개 해시가 저장소/공식 원본과 일치한다. 실제 모델·SDPA·GPU·생성 영향 검증은 아니다. CPU 점검도 반복하지 않는다. 기존 내보내기·생성·재개·준비·R0·토크나이저 검사를 반복하지 않는다.
 
-B/S/Q/C/Cw 실행기 후보를 준비했다. D2-03/D3-01 BF16 seed42의 생성 앞2048토큰을 고정 재사용해 문맥2119/2127·최대12회 forward·새생성0의 범위다. 진단용 config 복사본만 window=None으로 두며 원본 결과와 설정은 보존한다. 새 CPU 계약/수치 검사7개가 통과했고 실제 첨부 prefix 해시를 대조했다. 실제 GPU 경로의 결과는 아직 없지만 2026-09-30 사용자 진행 지시를 [실행 승인](FIXED_PREFIX_APPROVAL_20260930_KO.md)으로 기록해 authorization=APPROVED다. B 반복이 비동일하면4회에서 중단하며 비영 차이에 임의 허용치를 적용해 PASS로 바꾸지 않는다. 일반 기능적 허용치·cache/문맥 영향·평가 일반 타당도는 남아 model_ready=false·세션02를 유지한다.
+B/S/Q/C/Cw 실행기 후보를 준비했다. D2-03/D3-01 BF16 seed42의 생성 앞2048토큰을 고정 재사용해 문맥2119/2127·최대12회 forward·새생성0의 범위다. 진단용 config 복사본만 window=None으로 두며 원본 결과와 설정은 보존한다. 새 CPU 계약/수치 검사7개가 통과했고 실제 첨부 prefix 해시를 대조했다. 2026-09-30 사용자 진행 지시를 [실행 승인](FIXED_PREFIX_APPROVAL_20260930_KO.md)으로 기록했고, 이후 commit907ca61의12회 완료 보고를 검토했다. 승인 예산은 이미 소진됐으며 authorization=APPROVED는 당시 승인 기록이다. B 반복이 비동일하면4회에서 중단하며 비영 차이에 임의 허용치를 적용해 PASS로 바꾸지 않는다. 일반 기능적 허용치·cache/문맥 영향·평가 일반 타당도는 남아 model_ready=false·세션02를 유지한다.
+
+고정 prefix 결과의 코드10개·설정·실행 당시 연구 상태·고정 입력·위치별 수치 집계가 일치한다. B 반복은 정확 일치로 보고됐고 B→Q22/258, B→S1/258, Q→C3/258, C→Cw1/258의 top-1 변경이 있다. Q→C의2곳과 C→Cw의1곳은 기준 공동1위다. 두 norm의 BF16 재적용 상대 RMS는 약0.13555%/0.13392%다. T=1 EOS 확률은 AWQ에서234/258곳 증가했지만 최대 약3.46e-8로 작으며 실제 생성 필터·종료를 검증한 것이 아니다. 원시 `.npy`와 가중치를 직접 받지는 않았으므로 기능적 동등성은 미인증이다.
 
 ## 새 채팅에서 이어갈 때
 
-최신 근거: review_evidence_v01.json, SHA-256 f9e30e7ad4b7638689e62a4f9f3368d61b5ac21d735a60cb08054019757baad4. 원본 ID/텍스트·재개 백업을 직접 대조했으며 검사 결과는 configs/difficulty_evidence_review_v01.json에 있다. 추가 첨부 sdpa_mask_review_v01.json의 SHA-256은 bd18f808619c03859653d43c6ad956f3aea7c9d816a27e8387ff0b7fe3b81b0c이며 설치 코드의 CPU 마스크 확인을 완료했다. 다음 명령은 FIXED_PREFIX_DIAGNOSTIC_V01_KO.md의 --execute다. 최대12회 고정 범위는 승인됐고 실행 코드/설정은 제안과 같다. 기존 R0와 이번 고정 prefix 범위의 승인을 다시 묻지 않는다.
+최신 근거: review_evidence_v01.json, SHA-256 f9e30e7ad4b7638689e62a4f9f3368d61b5ac21d735a60cb08054019757baad4. 원본 ID/텍스트·재개 백업을 직접 대조했으며 검사 결과는 configs/difficulty_evidence_review_v01.json에 있다. 추가 첨부 sdpa_mask_review_v01.json의 SHA-256은 bd18f808619c03859653d43c6ad956f3aea7c9d816a27e8387ff0b7fe3b81b0c이며 설치 코드의 CPU 마스크 확인을 완료했다. 최신 fixed_prefix_v01/run.json의 SHA-256은68ff918d9c4b9a43ae154b1d08b2e5fcc93028d66d1fe67d4338001094097fb7이다. 다음 명령은 FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md의 python scripts/audit_fixed_prefix_logits.py다. 저장 배열의 해시/수치와 float64 T=0.6·top-p=.95 필터를 확인하며 GPU/새 생성은0이다. 새 CPU 검사9개가 통과했고 실제 run.json 참조 대조도 완료했다. 기존 R0·고정 prefix 실행 또는 승인을 반복하지 않는다.
 
 아래 내용을 그대로 복사한다.
 
@@ -80,6 +82,8 @@ B/S/Q/C/Cw 실행기 후보를 준비했다. D2-03/D3-01 BF16 seed42의 생성 �
 - docs/FIXED_PREFIX_DIAGNOSTIC_V01_KO.md
 - configs/fixed_prefix_diagnostic_v01.json
 - docs/FIXED_PREFIX_APPROVAL_20260930_KO.md
+- docs/FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md
+- configs/fixed_prefix_result_review_v01.json
 
 세션 01은 완료됐다. 제한된 기여 범위와 합성 2문제 × BF16/AWQ,
 응답당 최대 128토큰의 R0 계획은 내가 명시적으로 승인했다.
@@ -140,11 +144,21 @@ D2-03/D3-01 BF16 seed42의 앞2048생성토큰을 모든 B/S/Q/C/Cw 상태에 �
 2026-09-30 00:41:13 한국시간에 “다음 연구 단계 진행해줘.”라고 지시해
 FIXED_PREFIX_APPROVAL_20260930_KO.md에 이 고정 범위의 승인을 기록했다.
 authorization=APPROVED이며 코드/설정 해시는 제안 commit8785736과 같다.
-다음은 run_fixed_prefix_diagnostic.py --execute로 사용자 GPU에서 실행한 뒤
-results/local/fixed_prefix_v01/run.json을 검토하는 것이다. 실제 GPU 결과는 아직 없다.
+이후 commit907ca612d7138dab939505a4dc940b3fa27ea70d의12회 완료 run.json을 받았다.
+SHA-256: 68ff918d9c4b9a43ae154b1d08b2e5fcc93028d66d1fe67d4338001094097fb7
+실행 코드10개·설정·당시 연구 상태·고정 입력·위치별 집계가 일치한다.
+BF16 반복 정확 일치 보고, B→Q22/258·B→S1/258·Q→C3/258·C→Cw1/258 top-1 변경.
+Q→C 변경2곳과 C→Cw 변경1곳은 기준 동점이다.
+T=1 EOS 확률은AWQ에서234/258곳 증가했으나 절대값이 작다. 종료 원인 판정은 아니다.
+원시 .npy/가중치 배열은 미첨부이며 동등성은 미인증이다.
+다음은 python scripts/audit_fixed_prefix_logits.py로 기존12개배열만 CPU 감사한다.
+T=1 수치 재계산·T=0.6/top-p=.95 float64 수학적 필터·동점 민감도를 구분한다.
+새 CPU 검사9개·실제 run.json 참조 대조 완료. GPU/forward/새 생성은0이다.
+후속 파일은 results/local/fixed_prefix_v01/logits_audit_v01.json이다.
 같은 범위의 승인을 다시 요청하거나 세션03으로 넘어가지 마라.
 기존내보내기·실행·재개·동일요약요청을 반복하지 마라.
-좌표/norm·전체 logit 검증은 남아 있다. model_ready=false로 세션02를 유지한다.
+좌표/norm·전체 logit 보고 검토는 완료했지만 원시 배열 대조·기능적 수락 판단은 남아 있다.
+model_ready=false로 세션02를 유지한다.
 기존 MATH train 28문제/8192토큰 후보는 별도 미실행 초안으로 보존한다.
 MATH-500은 확인용으로 보존하고, Pile은 calibration과 문서가 겹치지 않는
 수치 진단 입력으로 쓴다. 기존 R1 후보·R0 승인·H1/H2를 소급 변경하지 않는다.

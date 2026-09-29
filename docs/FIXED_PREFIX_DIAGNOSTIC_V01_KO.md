@@ -1,6 +1,6 @@
-# 고정 prefix 좌표·logit 진단 v01 — 실행 승인 완료
+# 고정 prefix 좌표·logit 진단 v01 — 수집 완료·결과 검토
 
-**2026-09-30 사용자 진행 지시를 [실행 승인](FIXED_PREFIX_APPROVAL_20260930_KO.md)으로 기록했다. 고정 범위의 GPU 실행이 허용됐으며 결과는 아직 받지 않았다.** 기존 R0 승인 및 완료한 자체20문제 시험과 구분한다. 이 문서는 과거 산수2개의12회 forward 후보를 현재 D2·D3 입력으로 구체화한 새 범위다.
+**2026-09-30 사용자 [실행 승인](FIXED_PREFIX_APPROVAL_20260930_KO.md) 후 12회 완료 run.json을 받아 [결과 검토](FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md)를 기록했다. 현재 다음 작업은 저장 logits의 CPU 감사이며 GPU 진단을 다시 실행하지 않는다.** 기존 R0 승인 및 완료한 자체20문제 시험과 구분한다. 이 문서는 과거 산수2개의12회 forward 후보를 현재 D2·D3 입력으로 구체화한 새 범위다.
 
 관련 파일: [설정](../configs/fixed_prefix_diagnostic_v01.json), [계약·수치 집계](../scripts/fixed_prefix_diagnostic_contracts.py), [실행기](../scripts/run_fixed_prefix_diagnostic.py), [CPU 마스크 검토](SDPA_MASK_REVIEW_20260929_KO.md).
 
@@ -27,7 +27,7 @@
 | C | Q를 float64 원래 좌표로 역변환한 뒤 GPU BF16 파라미터로 복사 | Q↔C: 좌표 복원 영향 |
 | Cw | C의 선형 weight를 유지하고 원래 B의 norm/bias를 복사 | C↔Cw: 양자화 대상 밖 잔차의 영향. 주 AWQ 조건을 자동 교체하지 않음 |
 
-최대 **2입력×6회=12회 full-sequence forward**, 입력 처리 합계 **25,476토큰**, 최대 문맥 **2,127토큰**, **새 생성 0토큰**이다. B 반복이 비동일하면4회에서 중단한다. 모델 로딩·파라미터 해시·28계층 변환/재구성·좌표 복원 비용은 forward 횟수 외에 있으며 시간·GPU peak는 아직 측정하지 않았다. 무료 계산이라는 의미가 아니다.
+최대 **2입력×6회=12회 full-sequence forward**, 입력 처리 합계 **25,476토큰**, 최대 문맥 **2,127토큰**, **새 생성 0토큰**이다. B 반복이 비동일하면4회에서 중단한다. 모델 로딩·파라미터 해시·28계층 변환/재구성·좌표 복원 비용은 forward 횟수와 별도다. 준비 시점에는 시간·GPU peak를 측정하지 않았고 이후 실행 보고값은 결과 검토에 기록했다. 무료 계산이라는 의미가 아니다.
 
 가중치는 한 모델씩 유지한다. 비교를 위해 BF16 logit을 FP32로 바꿔 12개의 `.npy`에 저장한다. 데이터 본체 최대940,787,712바이트(약897MiB)와 JSON/배열 헤더 공간이 필요하다. 모델/데이터를 다운로드하거나 AWQ calibration을 다시 탐색하지 않는다. 오류·중단·기존 출력 폴더 발견 시 자동 재시도/재개하지 않는다.
 
@@ -52,19 +52,19 @@ top-1 margin이 `2×max_abs_logit_delta`보다 큰데 argmax가 달라지는 것
 
 ## 현재 사용할 명령
 
-현재 `authorization=APPROVED`다. [승인 기록](FIXED_PREFIX_APPROVAL_20260930_KO.md)에 제안 당시 설정/실행 코드 해시와 사용자의 진행 지시를 연결했다. 같은 범위의 승인을 다시 요청하지 않는다. 아래 명령으로 사용자 GPU에서 실행한다.
+`authorization=APPROVED`는 역사적 승인 기록으로 유지하며 승인된12회는 이미 수집됐다. 실행 commit907ca61의 코드/설정/연구 상태 해시가 일치한다. BF16 반복0/258, B→Q22/258, Q→C3/258의 top-1 변경을 검토했다. 아래 명령은 저장 배열만 읽는 CPU 후속이며 새로운 forward·생성은 없다. 같은 범위의 승인을 다시 요청하지 않는다.
 
 ```bash
 conda activate quantthink
 cd ~/quantthink
 git switch setup/session-01-research-gates &&
 git pull --ff-only &&
-python scripts/run_fixed_prefix_diagnostic.py --execute
+python scripts/audit_fixed_prefix_logits.py
 ```
 
-계획 조회만 필요하면 `--execute` 대신 `--plan`을 사용할 수 있다. 앞서 실제 수신 파일의 입력/위치 해시를 확인했으므로 계획 출력 재제출은 필요 없다.
+기존 실행기의 `--execute`·`--plan` 출력 재제출은 필요 없다. [CPU 감사의 수치 정의·동점 처리·판정](FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md)을 따른다.
 
-후속 검토 파일은 `results/local/fixed_prefix_v01/run.json`이다. 약0.94GB logit 배열은 로컬에서 보존한다. 기존20문제·R0 결과와 별도 폴더이며 원본 결과/원시배열을 공개 Git에 올리지 않는다. 기존 출력 폴더가 있거나 중단되면 결과를 지우거나 자동 반복하지 말고 현재 run.json과 로그를 검토한다.
+수신 run.json 검토는 완료했다. 다음 검토 파일은 `results/local/fixed_prefix_v01/logits_audit_v01.json`이다. 약0.94GB logit 배열은 로컬에서 보존한다. 기존20문제·R0 결과와 별도 폴더이며 원본 결과/원시배열을 공개 Git에 올리지 않는다. 기존 출력 폴더가 있거나 중단되면 결과를 지우거나 자동 반복하지 말고 현재 run.json과 로그를 검토한다.
 
 정상 수집 상태는 `FIXED_PREFIX_DIAGNOSTICS_COLLECTED_PENDING_REVIEW`다. `BASELINE_REPEAT_DIFFERENCE_REQUIRES_REVIEW`이면 BF16 반복4회 결과부터 검토한다. 어느 상태도 실모델 동등성 PASS나 세션03 전환을 뜻하지 않는다. 이 대화 환경에서 사용자 GPU 실행을 시작한 것은 아니다.
 
@@ -72,4 +72,4 @@ python scripts/run_fixed_prefix_diagnostic.py --execute
 
 새 CPU 검사7개가 입력/위치·근거 해시 보호, 새로운 실행 범위 gate, 모델 import 없는 계획 조회, 알려진 KL/TV/EOS 분포, logit 상수 이동과 argmax, 비유한 값·shape 오류·0인 참조 RMS를 다뤘다. 준비 시점에 실제 첨부2개로 prefix/예산을 대조하고 당시 미승인 `--execute`의 조기 거부도 확인했다. 승인 기록 갱신에서는 코드/설정이 그대로인지와 순수 Python 승인 조건만 대조했다. 고정 Qwen2 소스가 tensor형 `logits_to_keep`와 명시적 위치 인자를 받는지 대조했다.
 
-**PyTorch/Transformers가 없는 작성 환경이므로 새 실행기의 실모델/CUDA 경로는 검증하지 못했다.** 기존 준비·토크나이저·합성 AWQ·R0 검사는 반복하지 않았다. 이 문서는 실행 성공 보고가 아니다.
+**PyTorch/Transformers가 없는 작성 환경이므로 새 실행기의 실모델/CUDA 경로는 검증하지 못했다.** 기존 준비·토크나이저·합성 AWQ·R0 검사는 반복하지 않았다. 이 절은 작성 당시의 검사 기록이다. 이후 사용자12회 수집 보고를 검토했으며 원시 logit 감사·기능적 수락 판단은 별도로 남아 있다.

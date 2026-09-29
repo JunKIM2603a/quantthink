@@ -4,7 +4,7 @@
   "timezone": "Asia/Seoul",
   "current_session": "02",
   "current_session_title": "QuantThink 02 — 환경 구축·BF16/AWQ 재현",
-  "audited_base_commit": "5048d4146a3f2ea82c99a4dd4fef6103bed530d4",
+  "audited_base_commit": "907ca612d7138dab939505a4dc940b3fa27ea70d",
   "source_audit": "SCOPED_PRIMARY_FULLTEXT_FOLLOWUP_COMPLETED",
   "novelty_gate": "SCOPED_CONTRIBUTION_ACCEPTED",
   "protocol_gate": "ACCEPTED",
@@ -52,7 +52,7 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "FIXED_PREFIX_APPROVAL_20260930_KO.md에 사용자 진행 지시와 고정 prefix_v01 범위 승인을 기록함. 사용자 GPU에서 python scripts/run_fixed_prefix_diagnostic.py --execute 실행 후 results/local/fixed_prefix_v01/run.json 검토. 최대12회 forward·D2/D3 고정 prefix2개·새 생성0·window=None. 아직 GPU 실행 결과 미수신. 기존 CPU 마스크/80개 시험/R0/준비는 반복하지 않고 동일 승인도 다시 요청하지 않음.",
+  "next_local_environment_step": "수신 fixed_prefix_v01/run.json의12회·코드/설정/실행당시연구상태·고정입력·집계를 검토 완료. 다음은 python scripts/audit_fixed_prefix_logits.py로 기존12개 .npy 해시/수치를 CPU 감사하고 T=0.6/top-p=.95 float64 수학적 필터·EOS/동점을 확인. 후속 파일 results/local/fixed_prefix_v01/logits_audit_v01.json. GPU/새forward/생성0. 기존 고정prefix/마스크/80개시험/R0/준비를 재실행하거나 승인을 다시 요청하지 않음.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
@@ -108,15 +108,15 @@
     "tokenizer_execution_review_document": "docs/TOKENIZER_CONTRACT_REVIEW_20260929.md"
   },
   "assistant_cpu_diagnostic_tests": "7_PASSED_PREVIOUS_TURN_NOT_RERUN_IN_THIS_UPDATE",
-  "bf16_reproduction": "R0_EXECUTED_USER_REPORTED_BENCHMARK_REPRODUCTION_NOT_RUN",
-  "awq_reproduction": "R0_EXECUTED_USER_REPORTED_EQUIVALENCE_UNCERTIFIED_BENCHMARK_NOT_RUN",
+  "bf16_reproduction": "R0_AND_DIFFICULTY_REVIEWED_FIXED_PREFIX_REPEAT_REPORTED_EXACT_BENCHMARK_NOT_RUN",
+  "awq_reproduction": "DIFFICULTY_AND_FIXED_PREFIX_REPORTS_REVIEWED_EQUIVALENCE_UNCERTIFIED_BENCHMARK_NOT_RUN",
   "kl_matching": "NOT_RUN",
   "h1": "UNTESTED",
   "h2": "UNTESTED",
   "next_session_ready": false,
   "next_session_title": "QuantThink 03 — 교란 매칭·대조군 검증",
   "blocking_items": [
-    "기존R0의두LayerNorm56개비영잔차, BF16재적용파라미터잔차와B/S/Q/C/Cw전체모델logit영향은계속미검증이다.",
+    "고정prefix12회 보고 검토 완료: B반복정확일치, B→Q22/258·B→S1/258·Q→C3/258·C→Cw1/258 top-1변경. 두norm BF16재적용비영잔차56개. 원시 .npy/가중치 독립 검증·기능적 수락 한도는 남음. 기존 수치에 맞춘 소급PASS 없음.",
     "난도80개원본의입력/종료/집계·12개/31개재개백업·실행코드/상태해시대조완료. 형식미판정4개는수동정답. v01자동난도판정은보존하며43개검열의최종정오는미관측이다.",
     "고정 use_sliding_window=false·sliding_window=4096의 CPU 마스크에서 query4096부터 이전 키 차단을 관측했고4개 설치소스 해시가 공식 원본과 일치한다. 당시 생성 cache/마스크 및 실제 인과 영향은 미검증이다. 경계 전 EOS24/40 대12/40 차이도 남는다.",
     "기능적양자화검증·평가기의일반타당도·후속재현기준이미완료라model_ready=false·세션02유지. R1/MATH-500/새Pile/KL매칭/장문맥/H1/H2/7B와자동재실행/예산확대는진행하지않는다."
@@ -132,7 +132,8 @@
     "public_dataset_provenance_preparation",
     "approved_r0_synthetic_2_prompts_bf16_awq_w3_128_tokens",
     "user_requested_bounded_custom_difficulty_v01_pilot",
-    "approved_fixed_prefix_diagnostic_v01_maximum_12_forward_calls_zero_generation"
+    "approved_fixed_prefix_diagnostic_v01_maximum_12_forward_calls_zero_generation",
+    "read_only_saved_fixed_prefix_logits_cpu_audit_and_float64_filter_diagnostics"
   ],
   "not_yet_authorized_by_gates": [
     "scientific_model_runs_outside_r0_difficulty_v01_and_fixed_prefix_v01_scope",
@@ -578,17 +579,18 @@
     "model_execution_completed": false
   },
   "session02": {
-    "status": "FIXED_PREFIX_DIAGNOSTIC_APPROVED_AWAITING_USER_GPU_EXECUTION",
+    "status": "FIXED_PREFIX_REPORT_REVIEWED_SAVED_LOGIT_AUDIT_PENDING",
     "handoff": "docs/HANDOFF_01_TO_02_KO.md",
-    "next_single_task": "FIXED_PREFIX_APPROVAL_20260930_KO.md에 사용자 진행 지시와 고정 prefix_v01 범위 승인을 기록함. 사용자 GPU에서 python scripts/run_fixed_prefix_diagnostic.py --execute 실행 후 results/local/fixed_prefix_v01/run.json 검토. 최대12회 forward·D2/D3 고정 prefix2개·새 생성0·window=None. 아직 GPU 실행 결과 미수신. 기존 CPU 마스크/80개 시험/R0/준비는 반복하지 않고 동일 승인도 다시 요청하지 않음.",
+    "next_single_task": "수신 fixed_prefix_v01/run.json의12회·코드/설정/실행당시연구상태·고정입력·집계를 검토 완료. 다음은 python scripts/audit_fixed_prefix_logits.py로 기존12개 .npy 해시/수치를 CPU 감사하고 T=0.6/top-p=.95 float64 수학적 필터·EOS/동점을 확인. 후속 파일 results/local/fixed_prefix_v01/logits_audit_v01.json. GPU/새forward/생성0. 기존 고정prefix/마스크/80개시험/R0/준비를 재실행하거나 승인을 다시 요청하지 않음.",
     "r0_output_directory": "results/local/r0_v03",
     "exit_criteria_met": false,
-    "latest_review_document": "docs/SDPA_MASK_REVIEW_20260929_KO.md",
+    "latest_review_document": "docs/FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md",
     "diagnostic_followup_plan": "docs/R0_DIAGNOSTIC_FOLLOWUP_20260929_KO.md",
     "realistic_input_plan": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md",
     "difficulty_pilot_plan": "docs/DIFFICULTY_PILOT_V01_KO.md",
     "fixed_prefix_diagnostic_plan": "docs/FIXED_PREFIX_DIAGNOSTIC_V01_KO.md",
-    "fixed_prefix_approval_record": "docs/FIXED_PREFIX_APPROVAL_20260930_KO.md"
+    "fixed_prefix_approval_record": "docs/FIXED_PREFIX_APPROVAL_20260930_KO.md",
+    "fixed_prefix_result_reference": "configs/fixed_prefix_result_review_v01.json"
   },
   "snapshot_status_note": "configs의 기존 후보·정책·점검·준비 검토 JSON은 해시가 고정된 당시 스냅샷이다. 해당 파일의 과거 미승인 상태를 소급 수정하지 않으며, 현재 R0 승인은 research_approval_record와 R0_APPROVAL 문서로 기록한다. 상위 승인 상태 문자열은 approval_scope에 한정한다.",
   "approval_record_validation": {
@@ -665,7 +667,7 @@
     "latest_detail_review_document": "docs/R0_DETAIL_REVIEW_20260929_KO.md"
   },
   "r0_diagnostic_followup": {
-    "status": "DETAIL_REVIEWED_INPUT_COVERAGE_EXPANSION_PROPOSED",
+    "status": "FIXED_PREFIX_V01_REPORT_REVIEWED_RAW_LOGIT_AUDIT_PENDING",
     "reviewed_head": "69af9e9a8fcdad590ca884d9583171f2f9cac3ad",
     "document": "docs/R0_DIAGNOSTIC_FOLLOWUP_20260929_KO.md",
     "read_only_script": "scripts/summarize_r0_diagnostics.py",
@@ -684,7 +686,7 @@
       "existing_gpu_or_preparation_tests_rerun": false,
       "model_or_tokenizer_execution": false
     },
-    "future_model_diagnostics": "PROPOSED_NOT_AUTHORIZED_NOT_RUN",
+    "future_model_diagnostics": "FIXED_PREFIX_V01_EXECUTED_REVIEWED_ADDITIONAL_GENERATION_NOT_AUTHORIZED",
     "functional_numeric_acceptance_margin": "UNDEFINED_NO_RETROSPECTIVE_PASS",
     "proposed_eos_followup": {
       "status": "PROPOSED_NOT_AUTHORIZED_NOT_RUN",
@@ -704,7 +706,7 @@
     "raw_user_result_or_token_arrays_committed": false,
     "latest_detail_review_document": "docs/R0_DETAIL_REVIEW_20260929_KO.md",
     "input_review_reference": "configs/r0_diagnostic_input_review_v01.json",
-    "future_model_runner_implementation": "CANDIDATE_IMPLEMENTED_FIXED_PREFIX_V01_CPU_CONTRACTS_TESTED_GPU_NOT_RUN",
+    "future_model_runner_implementation": "USER_REPORTED_12_FIXED_PREFIX_FORWARDS_REVIEWED_RAW_ARRAY_AUDIT_PENDING",
     "detail_review": {
       "reported_summary_head": "7067e5a3832bd0e405003d7fa38db0ffd8182860",
       "source_attachment_sha256": "6f70f7c17d0f2bff77624e8d713b4b407671bedbd6da797a2f344a73b3d796b6",
@@ -829,7 +831,8 @@
     },
     "input_scope_revision_document": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md",
     "original_12_forward_plan_role": "기존 산수 2개를 재사용하는 최소 연결 점검 후보. 실제 난도 검증 전체를 대신하는 유일한 후속 경로로 사용하지 않음.",
-    "replay_implementation": "기존 replay는 난도 시험28계층 재구성 기록/해시를 검토함. 새 B/S/Q/C/Cw 실행기는 scripts/run_fixed_prefix_diagnostic.py에 준비했으나 고정 prefix_v01 실행은 승인됐고 실모델/CUDA 실행 결과는 미수신."
+    "replay_implementation": "고정prefix_v01의12회 완료 run.json을 수신·검토함. B/Q파라미터해시는기존난도시험기록과일치. 원시가중치/.npy 및 원R0체크포인트 동일성은 독립검증하지 않음. 저장 배열 CPU 감사가 다음 작업.",
+    "latest_fixed_prefix_review_document": "docs/FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md"
   },
   "realistic_input_proposal": {
     "status": "DIRECTION_REQUESTED_SPECIFIC_PROTOCOL_NOT_ACCEPTED_NOT_RUN",
@@ -1246,7 +1249,7 @@
     }
   },
   "fixed_prefix_diagnostic": {
-    "status": "APPROVED_AWAITING_USER_GPU_EXECUTION",
+    "status": "REPORT_REVIEWED_SAVED_LOGIT_AUDIT_PENDING",
     "authorization": "APPROVED",
     "authorization_reason_ko": "구체적인 입력·12회 상한·생성0·진단용 window=None·코드/설정 해시를 제시한 뒤 사용자 진행 지시를 받음. 같은 범위의 승인을 재요청하지 않음.",
     "document": "docs/FIXED_PREFIX_DIAGNOSTIC_V01_KO.md",
@@ -1281,7 +1284,7 @@
       "gpu_or_model_execution": false,
       "old_tests_rerun": false
     },
-    "user_execution": "AWAITING_EXECUTION_REPORT",
+    "user_execution": "12_COMPLETED_FORWARD_RECORDS_RECEIVED_REPORT_REVIEWED",
     "model_ready": false,
     "authorization_record": "docs/FIXED_PREFIX_APPROVAL_20260930_KO.md",
     "approved_at": "2026-09-30T00:41:13+09:00",
@@ -1296,6 +1299,59 @@
       "runtime_code_or_protocol_changed": false,
       "existing_tests_rerun": false,
       "model_or_gpu_execution": false
+    },
+    "execution_budget_consumed": true,
+    "remaining_forward_calls": 0,
+    "automatic_rerun": false,
+    "latest_review_document": "docs/FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md",
+    "result_review_reference": "configs/fixed_prefix_result_review_v01.json",
+    "next_read_only_command": "python scripts/audit_fixed_prefix_logits.py",
+    "result_review": {
+      "execution_commit": "907ca612d7138dab939505a4dc940b3fa27ea70d",
+      "source_run_sha256": "68ff918d9c4b9a43ae154b1d08b2e5fcc93028d66d1fe67d4338001094097fb7",
+      "source_run_bytes": 1280105,
+      "execution_research_status_sha256": "24188770101a037b656be9b80dbea2ab4a72d88198f75acbc74f1080baefd28d",
+      "reported_forward_calls": 12,
+      "forward_input_tokens": 25476,
+      "new_generation_tokens": 0,
+      "implementation_config_status_hashes_match": true,
+      "internal_aggregates_recomputed_match": true,
+      "raw_logits_independently_read": false,
+      "raw_parameters_independently_read": false,
+      "reported_B_and_Q_parameter_hashes_match_prior_pilot": true,
+      "reported_C_to_Cw_linear_hash_unchanged": true,
+      "functional_equivalence_verdict": "NOT_CERTIFIED",
+      "pooled_top1_changes": {
+        "B_to_B_repeat": 0,
+        "B_to_S": 1,
+        "B_to_Q": 22,
+        "Q_to_C": 3,
+        "C_to_Cw": 1
+      },
+      "positions_per_comparison": 258
+    },
+    "read_only_saved_logit_audit": {
+      "script": "scripts/audit_fixed_prefix_logits.py",
+      "script_sha256": "ab9b164c32413cdc4a2d8015c531b7a15bac0b76ebe7a5b7d9bc14894a2f5abd",
+      "command": "python scripts/audit_fixed_prefix_logits.py",
+      "output": "results/local/fixed_prefix_v01/logits_audit_v01.json",
+      "status": "IMPLEMENTED_CPU_FIXTURES_TESTED_REAL_ARRAYS_NOT_RECEIVED",
+      "new_cpu_tests_passed": 9,
+      "gpu_or_model_execution": false,
+      "old_tests_rerun": false,
+      "original_files_modified": false,
+      "analytical_filter": {
+        "temperature": 0.6,
+        "top_p": 0.95,
+        "dtype": "float64",
+        "tie_order": "ascending_token_id",
+        "original_gpu_sampling_replay": false
+      },
+      "t1_recalculation_tolerance": {
+        "rtol": 1e-10,
+        "atol": 1e-12,
+        "functional_equivalence_tolerance": false
+      }
     }
   }
 }

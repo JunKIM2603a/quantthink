@@ -29,9 +29,9 @@
 | `runtime_contracts.py` | `ca514a25f560b8912edd90de83cb8d4a18aed0cd97d8769f5b9f1627cc8924ee` |
 | `reproduction_contracts.py` | `04923d60075be31ca7b14b7566dd0040b474bb4f1e009d416ee66819401e45bb` |
 
-## 실행 명령
+## 승인 당시 실행 명령 이력 — 재실행하지 않음
 
-사용자 GPU PC의 기존 캐시·R0 recipe·첨부 근거 파일을 그대로 사용한다. 이 대화 환경에서 사용자 GPU 실행을 시작하거나 관찰한 것은 아니다.
+아래는 승인 당시 제공한 명령의 이력이다. 이후 사용자12회 완료 보고를 받아 [결과 검토](FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md)를 마쳤다. 현재 명령은 해당 검토 문서의 CPU 원시 배열 감사이며 아래 GPU 명령을 다시 실행하지 않는다. 이 대화 환경에서 사용자 GPU 실행을 시작하거나 직접 관찰한 것은 아니다.
 
 ```bash
 conda activate quantthink
@@ -45,6 +45,6 @@ python scripts/run_fixed_prefix_diagnostic.py --execute
 
 ## 승인과 결과의 구분
 
-현재 상태는 `APPROVED_AWAITING_USER_GPU_EXECUTION`이다. 고정 코드/설정 해시와 순수 Python 승인 조건을 대조했으며 GPU forward·새 생성·기존 모델/준비 검사 재실행은 하지 않았다. 준비 시점의 새 CPU 검사7개 통과 기록은 그대로 유지한다. 실제 모델/CUDA 경로의 성공은 사용자 실행 결과로 확인해야 한다.
+승인 기록 작성 당시 상태는 `APPROVED_AWAITING_USER_GPU_EXECUTION`이었다. 당시 코드/설정과 순수 Python 승인 조건을 대조했으며 GPU 실행은 하지 않았다. 이후 실행 commit907ca61의 12회 완료 run.json을 받았고 승인 해시와 일치함을 확인했다. 현재 상태는 `REPORT_REVIEWED_SAVED_LOGIT_AUDIT_PENDING`이며 승인 예산12회는 소진됐다. 원시 `.npy`와 가중치 배열의 독립 검증 또는 기능적 동등성 인증과 구분한다. 준비 시점 CPU 검사7개 기록은 그대로 유지한다.
 
 수집 완료는 기능적 동등성 PASS가 아니다. `model_ready=false`, `next_session_ready=false`, 세션02를 유지한다. 기존 R0/20문제 결과·자동 점수·H1/H2는 변경하지 않는다. R1·MATH-500·새 Pile 추론·KL 매칭·4096 경계 영향 실험·7B·추가 생성이나 자동 예산 확대는 이번 승인에 포함하지 않는다.
