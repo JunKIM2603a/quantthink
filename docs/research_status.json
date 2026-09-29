@@ -52,7 +52,7 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "conda activate quantthink 후 cd ~/quantthink, 기존 작업 브랜치를 pull하고 승인된 R0를 실행한다. docs/HANDOFF_01_TO_02_KO.md의 명령을 사용한다. 기존 데이터 준비·토크나이저·합성 GPU 점검은 반복하지 않는다.",
+  "next_local_environment_step": "기존 R0 결과에서 누락된 좌표 잔차 등의 필요한 항목을 정해 읽기 전용으로 확인한다. R0·데이터 준비·토크나이저·합성 GPU 재실행은 요청하지 않는다. 출력 예산 확대나 새 모델 실험의 범위는 후속 계획에서 따로 정한다.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
@@ -108,17 +108,17 @@
     "tokenizer_execution_review_document": "docs/TOKENIZER_CONTRACT_REVIEW_20260929.md"
   },
   "assistant_cpu_diagnostic_tests": "7_PASSED_PREVIOUS_TURN_NOT_RERUN_IN_THIS_UPDATE",
-  "bf16_reproduction": "NOT_RUN",
-  "awq_reproduction": "NOT_RUN",
+  "bf16_reproduction": "R0_EXECUTED_USER_REPORTED_BENCHMARK_REPRODUCTION_NOT_RUN",
+  "awq_reproduction": "R0_EXECUTED_USER_REPORTED_EQUIVALENCE_UNCERTIFIED_BENCHMARK_NOT_RUN",
   "kl_matching": "NOT_RUN",
   "h1": "UNTESTED",
   "h2": "UNTESTED",
   "next_session_ready": false,
   "next_session_title": "QuantThink 03 — 교란 매칭·대조군 검증",
   "blocking_items": [
-    "세션 02의 첫 작업인 승인된 실모델 R0 실행·결과 검토가 아직 남아 있다.",
-    "실모델 기능·좌표·logit 검증과 실제 생성문 평가·수동 판정의 타당도를 확인하고, 후속 R1 재현 기준·출력 예산·프로토콜을 별도로 확정해야 한다.",
-    "R1·MATH-500·KL 매칭·장문맥·H1/H2·7B는 이번 R0 승인 범위 밖이며 아직 미실행이다. 세션 03 전환 조건은 충족되지 않았다."
+    "R0 결과는 제출됐다. 계층 좌표·가중치/norm·bias 잔차와 전체 모델 logit 등 기능적 동등성 진단의 추가 검토가 필요하다.",
+    "네 생성이 모두 128토큰에서 검열됐다. 자연 EOS 종료·후속 출력 예산·재현 판정 기준과 실제 생성문 평가·수동 판정 검증은 미완료다.",
+    "R1·MATH-500·KL 매칭·장문맥·H1/H2·7B는 기존 R0 승인 범위 밖이고 미실행이다. 세션 03 전환 조건은 충족되지 않았다."
   ],
   "allowed_now": [
     "literature_review",
@@ -255,7 +255,7 @@
     "scientific_gate_states_changed": false
   },
   "reproduction_preparation_v03": {
-    "status": "R0_PROTOCOL_ACCEPTED_EXECUTION_APPROVED_NOT_RUN",
+    "status": "USER_REPORTED_PRETRAINED_R0_EXECUTED_REVIEW_PENDING",
     "document": "docs/REPRODUCTION_PREPARATION_V03_KO.md",
     "audited_base_commit": "3e78771b43f5024d844eef741f24f2c6feef8b43",
     "policy": "configs/runtime_preparation_v03.json",
@@ -286,13 +286,13 @@
       "huggingface_hub": null
     },
     "validation_scope": "작성 당시 검증은 모의 Hub 응답·합성 파일·압축 JSONL·오프라인 CLI·준비 경로 연동 및 구문 검사였다. 위 new_cpu_tests와 test_environment는 당시 기록이다. 이후 사용자 GPU 근거는 user_synthetic_awq_adapter, 실제 Pile 바이트·전체 JSONL 읽기와 오류 수정은 user_data_preparation_attempt에 별도로 기록했다. 최신 데이터 검토는 user_prepared_assets에 별도로 기록했다.",
-    "actual_awq_adapter": "SYNTHETIC_CUDA_PASS_USER_REPORTED_PRETRAINED_NOT_RUN",
+    "actual_awq_adapter": "USER_REPORTED_PRETRAINED_28_LAYER_TRANSFORM_NOT_EQUIVALENCE_CERTIFIED",
     "source_provenance_loader": "PINNED_3_SOURCE_FILES_INDEPENDENTLY_VERIFIED",
     "synthetic_cuda_adapter_check": "USER_REPORTED_PASS_REPOSITORY_HASHES_CHECKED",
     "real_dataset_file_hashes": "ALL_3_ASSISTANT_VERIFIED_AND_USER_REPORT_MATCHED",
     "actual_calibration_ids": "USER_REPORTED_261_DOCUMENTS_TOKEN_HASH_REVIEWED",
     "actual_development_ids": "INDEPENDENTLY_RECONSTRUCTED_3_ARTIFACT_HASHES_MATCH",
-    "pretrained_r0": "NOT_RUN",
+    "pretrained_r0": "USER_REPORTED_EXECUTED_DIAGNOSTICS_PENDING_REVIEW",
     "new_model_or_tokenizer_execution": true,
     "original_h1_h2_changed": false,
     "manifest_snapshots_changed": false,
@@ -302,7 +302,8 @@
     "latest_data_preparation_review_document": "docs/DATA_PREPARATION_REVIEW_20260929_KO.md",
     "latest_r0_review_document": "docs/R0_REVIEW_PACKET_20260929_KO.md",
     "prepared_asset_review_reference": "configs/prepared_assets_review_v03.json",
-    "latest_approval_document": "docs/R0_APPROVAL_20260929_KO.md"
+    "latest_approval_document": "docs/R0_APPROVAL_20260929_KO.md",
+    "latest_r0_result_review_document": "docs/R0_RESULT_REVIEW_20260929_KO.md"
   },
   "user_command_environment": {
     "activation_command": "conda activate quantthink",
@@ -516,7 +517,7 @@
   },
   "r0_review_packet": {
     "document": "docs/R0_REVIEW_PACKET_20260929_KO.md",
-    "status": "ACCEPTED_R0_EXECUTION_APPROVED_NOT_RUN",
+    "status": "ACCEPTED_R0_REPORTED_EXECUTED_DIAGNOSTICS_PENDING_REVIEW",
     "source_scope": "저장소의 초기 검토·재현 계획·후속 관련 본문 검토를 통합. 이번 갱신에서 새 원문 대조나 체계적 검색을 수행하지 않음.",
     "proposed_contribution": "동일 BF16 참조 prefix에서 출력 KL을 맞춘 고정 Gaussian 가중치 교란이 AWQ-W3의 길이·종료·검증된 정답 포기 변화를 함께 재현하는지 평가.",
     "r0_scope": "합성 2문제 × BF16/AWQ-W3, seed 42, 응답당 최대 128토큰, 총 4회 생성. 전체 계층 AWQ calibration 비용은 별도.",
@@ -562,7 +563,7 @@
       "전체 모델 벤치마크 행렬"
     ],
     "document": "docs/R0_APPROVAL_20260929_KO.md",
-    "execution_status": "NOT_RUN"
+    "execution_status": "USER_REPORTED_R0_EXECUTED_DIAGNOSTICS_PENDING_REVIEW"
   },
   "session01_completion": {
     "status": "COMPLETED",
@@ -574,11 +575,12 @@
     "model_execution_completed": false
   },
   "session02": {
-    "status": "R0_APPROVED_AWAITING_LOCAL_EXECUTION",
+    "status": "R0_REPORTED_COMPLETE_FURTHER_DIAGNOSTIC_REVIEW_PENDING",
     "handoff": "docs/HANDOFF_01_TO_02_KO.md",
-    "next_single_task": "기존 quantthink 환경에서 승인 기록을 pull한 뒤 고정 합성 입력의 BF16/AWQ R0를 실행하고 run.json·계층 진단을 검토한다.",
+    "next_single_task": "제출 R0 진단의 남은 좌표·logit·종료 검증 요구와 후속 범위·판정 기준을 구체화한다. 필요한 값은 기존 run.json·계층 파일에서 먼저 확인한다.",
     "r0_output_directory": "results/local/r0_v03",
-    "exit_criteria_met": false
+    "exit_criteria_met": false,
+    "latest_review_document": "docs/R0_RESULT_REVIEW_20260929_KO.md"
   },
   "snapshot_status_note": "configs의 기존 후보·정책·점검·준비 검토 JSON은 해시가 고정된 당시 스냅샷이다. 해당 파일의 과거 미승인 상태를 소급 수정하지 않으며, 현재 R0 승인은 research_approval_record와 R0_APPROVAL 문서로 기록한다. 상위 승인 상태 문자열은 approval_scope에 한정한다.",
   "approval_record_validation": {
@@ -588,5 +590,69 @@
     "affected_gate_tests_passed": 3,
     "runtime_implementation_changed": false,
     "test_change_reason": "미승인 실행 차단 검사가 실제 저장소를 계속 미승인으로 가정하지 않도록 명시적인 미승인 입력으로 수정함."
+  },
+  "r0_execution": "USER_REPORTED_EXECUTED_DIAGNOSTICS_REVIEW_INCOMPLETE",
+  "user_r0_result": {
+    "review_document": "docs/R0_RESULT_REVIEW_20260929_KO.md",
+    "evidence_source": "사용자 제출 터미널 요약. 원본 run.json·계층 파일 바이트·전체 생성 ID는 전달받지 않았으며 작성 환경의 GPU 재실행 없음.",
+    "reported_status": "R0_EXECUTED_DIAGNOSTICS_PENDING_REVIEW",
+    "recorded_at_utc": "2026-09-29T06:56:37.483147+00:00",
+    "time_interpretation": "코드상 실행 보고 생성 시각이며 완료 시각은 미제공",
+    "repository": {
+      "commit": "5a88f69c4981f105384e0198166f7f24b6ca01c3",
+      "tracked_dirty": false
+    },
+    "packages": {
+      "torch": "2.7.1+cu118",
+      "transformers": "4.51.3",
+      "huggingface-hub": "0.36.2",
+      "numpy": "1.26.4"
+    },
+    "python": "3.11.16",
+    "reported_hashes": {
+      "candidate_sha256": "98ff733b0d8391c3a33aa2f561e2d389bd6e482ee53b1b680c1bb6e7e6b6201f",
+      "policy_sha256": "36ca463c20f278562f5e21d5a28040b636c7d8dad1551e3f46fd4b0e2c545a4a",
+      "preparation_report_sha256": "70a37c43a4ab7049b1c068670a8102a764e2668a6bf90784c0a3cc3112e6d904",
+      "prepared_assets_review_sha256": "70027712fdac6b02127c810f829bba231e6e96900c4be74ee3bea4a3a45f8689",
+      "research_status_sha256": "00059b1c26f85be281c4f38f213c56aaa768111213be15e6781fd56cc614a239"
+    },
+    "hash_review": "후보·정책·준비 검토 참조·당시 연구 상태의 정규화 해시 4개 일치. 준비 보고 해시는 이전 제출 내용의 구조 재구성과 일치. 원본 로컬 파일 바이트 검증 아님.",
+    "completed_awq_layers": 28,
+    "awq_status": "AWQ_TRANSFORM_APPLIED_NOT_EQUIVALENCE_CERTIFIED",
+    "model_ready": false,
+    "generation_summary": {
+      "attempts": 4,
+      "bf16_attempts": 2,
+      "awq_attempts": 2,
+      "fixture_input_token_counts": [
+        22,
+        33
+      ],
+      "seed": 42,
+      "generated_tokens_per_attempt": 128,
+      "finish_reason_counts": {
+        "length": 4,
+        "eos": 0
+      },
+      "right_censored_attempts": 4,
+      "interpretation": "자연 종료 길이·길이 증가·최종 정답률·정답 포기 판정 불가. 입력별 중간 계산 정답이 보이는 것은 최종 답 평가를 대신하지 않음."
+    },
+    "layer_summary": {
+      "scale_only_max_relative_rms": 0.005685803660580144,
+      "scale_only_max_relative_rms_layer": 0,
+      "canonicalized_max_relative_rms": 0.006007767435596503,
+      "canonicalized_max_relative_rms_layer": 1,
+      "canonicalized_max_abs": 32.0,
+      "canonicalized_max_abs_layer": 2,
+      "equivalence_certified": false
+    },
+    "raw_report_or_generated_text_committed": false,
+    "remaining_review": [
+      "기존 계층 파일의 가중치·norm/bias 좌표 잔차",
+      "전체 모델 logit·함수 동등성 검증 계획",
+      "EOS 종료 관측과 후속 출력 예산·판정 기준",
+      "평가·수동 판정 및 후속 R1 기준"
+    ],
+    "new_model_or_test_execution_by_assistant": false
   }
 }
