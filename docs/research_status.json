@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "as_of_local_date": "2026-09-29",
+  "as_of_local_date": "2026-09-30",
   "timezone": "Asia/Seoul",
   "current_session": "02",
   "current_session_title": "QuantThink 02 — 환경 구축·BF16/AWQ 재현",
@@ -52,7 +52,7 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "CPU 마스크 첨부 검토 완료. docs/FIXED_PREFIX_DIAGNOSTIC_V01_KO.md의 D2/D3 고정 prefix 2개·최대12회 forward·새 생성0 범위 검토 후 새 GPU 진단 실행 여부 결정. 실행기/계약 준비·새 CPU 검사7개 통과. 현재 authorization=PENDING으로 모델 실행 전 차단. 기존 CPU 마스크/원본 내보내기/80회 시험/R0/준비는 반복하지 않음.",
+  "next_local_environment_step": "FIXED_PREFIX_APPROVAL_20260930_KO.md에 사용자 진행 지시와 고정 prefix_v01 범위 승인을 기록함. 사용자 GPU에서 python scripts/run_fixed_prefix_diagnostic.py --execute 실행 후 results/local/fixed_prefix_v01/run.json 검토. 최대12회 forward·D2/D3 고정 prefix2개·새 생성0·window=None. 아직 GPU 실행 결과 미수신. 기존 CPU 마스크/80개 시험/R0/준비는 반복하지 않고 동일 승인도 다시 요청하지 않음.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
@@ -131,18 +131,18 @@
     "synthetic_random_model_engineering_checks",
     "public_dataset_provenance_preparation",
     "approved_r0_synthetic_2_prompts_bf16_awq_w3_128_tokens",
-    "user_requested_bounded_custom_difficulty_v01_pilot"
+    "user_requested_bounded_custom_difficulty_v01_pilot",
+    "approved_fixed_prefix_diagnostic_v01_maximum_12_forward_calls_zero_generation"
   ],
   "not_yet_authorized_by_gates": [
-    "scientific_model_runs_outside_r0_and_user_requested_difficulty_v01_scope",
+    "scientific_model_runs_outside_r0_difficulty_v01_and_fixed_prefix_v01_scope",
     "r1_100_question_evaluation",
     "math500_confirmation",
     "kl_matching_experiments",
     "long_context_experiments",
     "confirmatory_hypothesis_tests",
     "7b_extension",
-    "full_model_benchmark_matrix",
-    "fixed_prefix_diagnostic_v01_maximum_12_forward_calls"
+    "full_model_benchmark_matrix"
   ],
   "novelty_followup": {
     "review_document": "docs/NOVELTY_FOLLOWUP_20260929.md",
@@ -578,16 +578,17 @@
     "model_execution_completed": false
   },
   "session02": {
-    "status": "SDPA_CPU_MASK_REVIEWED_FIXED_PREFIX_DIAGNOSTIC_PREPARED_PENDING_APPROVAL",
+    "status": "FIXED_PREFIX_DIAGNOSTIC_APPROVED_AWAITING_USER_GPU_EXECUTION",
     "handoff": "docs/HANDOFF_01_TO_02_KO.md",
-    "next_single_task": "CPU 마스크 첨부 검토 완료. docs/FIXED_PREFIX_DIAGNOSTIC_V01_KO.md의 D2/D3 고정 prefix 2개·최대12회 forward·새 생성0 범위 검토 후 새 GPU 진단 실행 여부 결정. 실행기/계약 준비·새 CPU 검사7개 통과. 현재 authorization=PENDING으로 모델 실행 전 차단. 기존 CPU 마스크/원본 내보내기/80회 시험/R0/준비는 반복하지 않음.",
+    "next_single_task": "FIXED_PREFIX_APPROVAL_20260930_KO.md에 사용자 진행 지시와 고정 prefix_v01 범위 승인을 기록함. 사용자 GPU에서 python scripts/run_fixed_prefix_diagnostic.py --execute 실행 후 results/local/fixed_prefix_v01/run.json 검토. 최대12회 forward·D2/D3 고정 prefix2개·새 생성0·window=None. 아직 GPU 실행 결과 미수신. 기존 CPU 마스크/80개 시험/R0/준비는 반복하지 않고 동일 승인도 다시 요청하지 않음.",
     "r0_output_directory": "results/local/r0_v03",
     "exit_criteria_met": false,
     "latest_review_document": "docs/SDPA_MASK_REVIEW_20260929_KO.md",
     "diagnostic_followup_plan": "docs/R0_DIAGNOSTIC_FOLLOWUP_20260929_KO.md",
     "realistic_input_plan": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md",
     "difficulty_pilot_plan": "docs/DIFFICULTY_PILOT_V01_KO.md",
-    "fixed_prefix_diagnostic_plan": "docs/FIXED_PREFIX_DIAGNOSTIC_V01_KO.md"
+    "fixed_prefix_diagnostic_plan": "docs/FIXED_PREFIX_DIAGNOSTIC_V01_KO.md",
+    "fixed_prefix_approval_record": "docs/FIXED_PREFIX_APPROVAL_20260930_KO.md"
   },
   "snapshot_status_note": "configs의 기존 후보·정책·점검·준비 검토 JSON은 해시가 고정된 당시 스냅샷이다. 해당 파일의 과거 미승인 상태를 소급 수정하지 않으며, 현재 R0 승인은 research_approval_record와 R0_APPROVAL 문서로 기록한다. 상위 승인 상태 문자열은 approval_scope에 한정한다.",
   "approval_record_validation": {
@@ -828,7 +829,7 @@
     },
     "input_scope_revision_document": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md",
     "original_12_forward_plan_role": "기존 산수 2개를 재사용하는 최소 연결 점검 후보. 실제 난도 검증 전체를 대신하는 유일한 후속 경로로 사용하지 않음.",
-    "replay_implementation": "기존 replay는 난도 시험28계층 재구성 기록/해시를 검토함. 새 B/S/Q/C/Cw 실행기는 scripts/run_fixed_prefix_diagnostic.py에 준비했으나 실모델/CUDA 실행은 미검증·미승인."
+    "replay_implementation": "기존 replay는 난도 시험28계층 재구성 기록/해시를 검토함. 새 B/S/Q/C/Cw 실행기는 scripts/run_fixed_prefix_diagnostic.py에 준비했으나 고정 prefix_v01 실행은 승인됐고 실모델/CUDA 실행 결과는 미수신."
   },
   "realistic_input_proposal": {
     "status": "DIRECTION_REQUESTED_SPECIFIC_PROTOCOL_NOT_ACCEPTED_NOT_RUN",
@@ -1245,9 +1246,9 @@
     }
   },
   "fixed_prefix_diagnostic": {
-    "status": "IMPLEMENTATION_CANDIDATE_CPU_CONTRACTS_TESTED_NOT_RUN",
-    "authorization": "PENDING",
-    "authorization_reason_ko": "기존 R0/자체 난도 시험에 포함되지 않은 새 GPU forward·문맥 설정 변경. AGENTS.md 8번 및 사용자의 자동 예산 확대 금지를 적용. 기존 승인 재요청 아님.",
+    "status": "APPROVED_AWAITING_USER_GPU_EXECUTION",
+    "authorization": "APPROVED",
+    "authorization_reason_ko": "구체적인 입력·12회 상한·생성0·진단용 window=None·코드/설정 해시를 제시한 뒤 사용자 진행 지시를 받음. 같은 범위의 승인을 재요청하지 않음.",
     "document": "docs/FIXED_PREFIX_DIAGNOSTIC_V01_KO.md",
     "config": "configs/fixed_prefix_diagnostic_v01.json",
     "config_sha256": "5d24000bfa9d7b15d398b978f671d94be816918bd9c5881a458448bced488fd6",
@@ -1280,7 +1281,21 @@
       "gpu_or_model_execution": false,
       "old_tests_rerun": false
     },
-    "user_execution": "NOT_RUN",
-    "model_ready": false
+    "user_execution": "AWAITING_EXECUTION_REPORT",
+    "model_ready": false,
+    "authorization_record": "docs/FIXED_PREFIX_APPROVAL_20260930_KO.md",
+    "approved_at": "2026-09-30T00:41:13+09:00",
+    "approval_user_message": "다음 연구 단계 진행해줘.",
+    "approval_basis": "직전 최대12회 fixed_prefix_v01 진단 제안에 대한 진행 지시로 해당 범위를 수락. 무제한 예산 확대 또는 세션03/R1/H1/H2 승인이 아님.",
+    "approved_implementation_commit": "8785736bce854c54e2644fab55b5f4f3ccc6e217",
+    "execution_command": "python scripts/run_fixed_prefix_diagnostic.py --execute",
+    "output_directory": "results/local/fixed_prefix_v01",
+    "approval_record_validation": {
+      "config_hash_matches": true,
+      "implementation_hashes_match": true,
+      "runtime_code_or_protocol_changed": false,
+      "existing_tests_rerun": false,
+      "model_or_gpu_execution": false
+    }
   }
 }

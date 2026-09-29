@@ -1,6 +1,6 @@
-# 고정 prefix 좌표·logit 진단 v01 — 실행 전 검토안
+# 고정 prefix 좌표·logit 진단 v01 — 실행 승인 완료
 
-**실행기 후보와 입력·예산·판정 규칙을 준비했다. 새 GPU 실행은 미승인·미실행이다.** 기존 R0 승인 및 완료한 자체20문제 시험과 구분한다. 이 문서는 과거 산수2개의12회 forward 후보를 현재 D2·D3 입력으로 구체화한 새 범위다.
+**2026-09-30 사용자 진행 지시를 [실행 승인](FIXED_PREFIX_APPROVAL_20260930_KO.md)으로 기록했다. 고정 범위의 GPU 실행이 허용됐으며 결과는 아직 받지 않았다.** 기존 R0 승인 및 완료한 자체20문제 시험과 구분한다. 이 문서는 과거 산수2개의12회 forward 후보를 현재 D2·D3 입력으로 구체화한 새 범위다.
 
 관련 파일: [설정](../configs/fixed_prefix_diagnostic_v01.json), [계약·수치 집계](../scripts/fixed_prefix_diagnostic_contracts.py), [실행기](../scripts/run_fixed_prefix_diagnostic.py), [CPU 마스크 검토](SDPA_MASK_REVIEW_20260929_KO.md).
 
@@ -52,19 +52,7 @@ top-1 margin이 `2×max_abs_logit_delta`보다 큰데 argmax가 달라지는 것
 
 ## 현재 사용할 명령
 
-아래 명령은 계획 조회뿐이다. 작성 환경에서도 실제 수신 파일로 입력/위치 해시를 확인했으므로 같은 출력의 재제출은 필요 없다.
-
-```bash
-conda activate quantthink
-cd ~/quantthink
-git switch setup/session-01-research-gates &&
-git pull --ff-only &&
-python scripts/run_fixed_prefix_diagnostic.py --plan
-```
-
-**실제 실행은 이 새 범위의 승인 후** `research_status.json`에 설정/실행 코드 해시를 연결해 허용한다. 현재 `authorization=PENDING`이며 `--execute`는 모델 import·GPU·출력 폴더 생성 전에 거부된다. 기존 R0/난도 시험 승인만으로 이 gate를 열지 않는다. 이는 AGENTS.md 8번과 사용자의 자동 예산 확대 금지를 반영한다.
-
-아래는 승인 기록 반영 후 사용할 실행 명령의 명세다. 지금 실행하라는 요청이 아니다.
+현재 `authorization=APPROVED`다. [승인 기록](FIXED_PREFIX_APPROVAL_20260930_KO.md)에 제안 당시 설정/실행 코드 해시와 사용자의 진행 지시를 연결했다. 같은 범위의 승인을 다시 요청하지 않는다. 아래 명령으로 사용자 GPU에서 실행한다.
 
 ```bash
 conda activate quantthink
@@ -74,10 +62,14 @@ git pull --ff-only &&
 python scripts/run_fixed_prefix_diagnostic.py --execute
 ```
 
-후속 검토 파일은 `results/local/fixed_prefix_v01/run.json`이다. 약0.94GB logit 배열은 로컬에서 보존한다. 기존20문제·R0 결과와 별도 폴더이며 원본 결과/원시배열을 공개 Git에 올리지 않는다.
+계획 조회만 필요하면 `--execute` 대신 `--plan`을 사용할 수 있다. 앞서 실제 수신 파일의 입력/위치 해시를 확인했으므로 계획 출력 재제출은 필요 없다.
+
+후속 검토 파일은 `results/local/fixed_prefix_v01/run.json`이다. 약0.94GB logit 배열은 로컬에서 보존한다. 기존20문제·R0 결과와 별도 폴더이며 원본 결과/원시배열을 공개 Git에 올리지 않는다. 기존 출력 폴더가 있거나 중단되면 결과를 지우거나 자동 반복하지 말고 현재 run.json과 로그를 검토한다.
+
+정상 수집 상태는 `FIXED_PREFIX_DIAGNOSTICS_COLLECTED_PENDING_REVIEW`다. `BASELINE_REPEAT_DIFFERENCE_REQUIRES_REVIEW`이면 BF16 반복4회 결과부터 검토한다. 어느 상태도 실모델 동등성 PASS나 세션03 전환을 뜻하지 않는다. 이 대화 환경에서 사용자 GPU 실행을 시작한 것은 아니다.
 
 ## 작성 환경에서 확인한 범위
 
-새 CPU 검사7개가 입력/위치·근거 해시 보호, 새로운 실행 범위 gate, 모델 import 없는 계획 조회, 알려진 KL/TV/EOS 분포, logit 상수 이동과 argmax, 비유한 값·shape 오류·0인 참조 RMS를 다뤘다. 실제 첨부2개로 prefix/예산을 대조하고 미승인 `--execute`의 조기 거부도 확인했다. 고정 Qwen2 소스가 tensor형 `logits_to_keep`와 명시적 위치 인자를 받는지 대조했다.
+새 CPU 검사7개가 입력/위치·근거 해시 보호, 새로운 실행 범위 gate, 모델 import 없는 계획 조회, 알려진 KL/TV/EOS 분포, logit 상수 이동과 argmax, 비유한 값·shape 오류·0인 참조 RMS를 다뤘다. 준비 시점에 실제 첨부2개로 prefix/예산을 대조하고 당시 미승인 `--execute`의 조기 거부도 확인했다. 승인 기록 갱신에서는 코드/설정이 그대로인지와 순수 Python 승인 조건만 대조했다. 고정 Qwen2 소스가 tensor형 `logits_to_keep`와 명시적 위치 인자를 받는지 대조했다.
 
 **PyTorch/Transformers가 없는 작성 환경이므로 새 실행기의 실모델/CUDA 경로는 검증하지 못했다.** 기존 준비·토크나이저·합성 AWQ·R0 검사는 반복하지 않았다. 이 문서는 실행 성공 보고가 아니다.

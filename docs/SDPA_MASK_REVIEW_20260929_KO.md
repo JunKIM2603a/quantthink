@@ -46,6 +46,6 @@
 
 [고정 prefix 진단 v01](FIXED_PREFIX_DIAGNOSTIC_V01_KO.md)에 실제 D2·D3 응답의 고정 prefix 2개, B/S/Q/C/Cw와 BF16 반복, 최대12회 full-sequence forward를 준비했다. 새 생성 0토큰이며 저장된 recipe만 재적용한다. 새 진단에 한해 full attention을 명시하려고 원본 설정의 복사본에서 `sliding_window=None`을 적용하고 원본/유효 설정 해시를 각각 기록한다. 기존 난도 실행기나 결과를 바꾸지 않는다.
 
-이 GPU 계산은 새 범위이며 아직 실행하지 않았다. 저장소 AGENTS.md 8번의 연구 실행 gate와 사용자의 자동 예산 확대 금지에 따라 범위를 검토한 뒤 실행한다. 기존 R0나 완료한 80개 시험의 재승인을 요구하는 것이 아니다. `--plan`은 모델·토크나이저·GPU 없이 열람할 수 있다. 추가 CPU 마스크 반복·의존성 업데이트·flash-attn 설치·20문제 재시험은 다음 명령에 포함하지 않는다.
+이후 2026-09-30 사용자 진행 지시로 이 최대12회 범위를 [승인](FIXED_PREFIX_APPROVAL_20260930_KO.md)받았다. 현재는 사용자 GPU의 실행 결과를 기다리는 단계이며 승인 요청을 반복하지 않는다. 실행 명령은 고정 prefix 진단 문서의 `--execute`다. `--plan`은 모델·토크나이저·GPU 없이 열람할 수 있다. 추가 CPU 마스크 반복·의존성 업데이트·flash-attn 설치·20문제 재시험은 다음 명령에 포함하지 않는다.
 
 기능적 좌표/양자화 검증, 생성 cache 및 문맥 경계의 실제 영향, 일반 평가 타당도와 재현 기준은 남아 있다. **세션02, model_ready=false, next_session_ready=false를 유지한다.**
