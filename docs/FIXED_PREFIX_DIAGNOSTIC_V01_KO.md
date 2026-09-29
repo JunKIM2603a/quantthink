@@ -1,6 +1,6 @@
 # 고정 prefix 좌표·logit 진단 v01 — 수집 완료·결과 검토
 
-**2026-09-30 사용자 [실행 승인](FIXED_PREFIX_APPROVAL_20260930_KO.md) 후 12회 완료 run.json을 받아 [결과 검토](FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md)를 기록했다. 현재 다음 작업은 저장 logits의 CPU 감사이며 GPU 진단을 다시 실행하지 않는다.** 기존 R0 승인 및 완료한 자체20문제 시험과 구분한다. 이 문서는 과거 산수2개의12회 forward 후보를 현재 D2·D3 입력으로 구체화한 새 범위다.
+**2026-09-30 사용자 [실행 승인](FIXED_PREFIX_APPROVAL_20260930_KO.md) 후 12회 완료 run.json을 받아 [결과 검토](FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md)를 기록했다. 이후 [저장 logits의 CPU 감사](LOGITS_AUDIT_REVIEW_20260930_KO.md)도 수신·검토 완료했다. GPU 진단이나 같은 CPU 감사를 다시 실행하지 않는다.** 기존 R0 승인 및 완료한 자체20문제 시험과 구분한다. 이 문서는 과거 산수2개의12회 forward 후보를 현재 D2·D3 입력으로 구체화한 새 범위다.
 
 관련 파일: [설정](../configs/fixed_prefix_diagnostic_v01.json), [계약·수치 집계](../scripts/fixed_prefix_diagnostic_contracts.py), [실행기](../scripts/run_fixed_prefix_diagnostic.py), [CPU 마스크 검토](SDPA_MASK_REVIEW_20260929_KO.md).
 
@@ -50,21 +50,21 @@ logit RMS·상대 RMS·max_abs·최대 위치, top-1/2 margin과 flip, KL(Baseli
 
 top-1 margin이 `2×max_abs_logit_delta`보다 큰데 argmax가 달라지는 것은 수학적 경계와 모순되므로 구현 오류로 중단한다. 이 검사는 기능적 허용오차를 대신하지 않는다. 정확히 같다는 판정도 선택된 위치에 한정한다. 비영 차이를 기존R0 RMS나 합성5%에 맞춰 소급 PASS로 처리하지 않는다. 실용적 동등성 한도·다른 prefix·cache 경로까지의 수락 기준은 아직 미정이며 이번 진단 후 별도 독립 점검 전에 정해야 한다. 항상 model_ready=false를 남긴다.
 
-## 현재 사용할 명령
+## 현재 상태와 별도 후속 후보
 
-`authorization=APPROVED`는 역사적 승인 기록으로 유지하며 승인된12회는 이미 수집됐다. 실행 commit907ca61의 코드/설정/연구 상태 해시가 일치한다. BF16 반복0/258, B→Q22/258, Q→C3/258의 top-1 변경을 검토했다. 아래 명령은 저장 배열만 읽는 CPU 후속이며 새로운 forward·생성은 없다. 같은 범위의 승인을 다시 요청하지 않는다.
+`authorization=APPROVED`는 역사적 승인 기록으로 유지하며 승인된12회는 이미 수집됐다. 실행 commit907ca61의 코드/설정/연구 상태 해시가 일치한다. BF16 반복0/258, B→Q22/258, Q→C3/258의 top-1 변경을 검토했다. 사용자 로컬의12개 배열·10개 비교 감사 보고도 일치했다. 다음 후보는 [종료 직전 경로6회 진단](TERMINATION_PREFIX_V01_KO.md)이며 별도 승인 전이다. 아래는 선택적인 계획 조회로 GPU 실행이 없다. 같은 기존 범위의 승인을 다시 요청하지 않는다.
 
 ```bash
 conda activate quantthink
 cd ~/quantthink
 git switch setup/session-01-research-gates &&
 git pull --ff-only &&
-python scripts/audit_fixed_prefix_logits.py
+python scripts/run_termination_prefix_diagnostic.py --plan
 ```
 
 기존 실행기의 `--execute`·`--plan` 출력 재제출은 필요 없다. [CPU 감사의 수치 정의·동점 처리·판정](FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md)을 따른다.
 
-수신 run.json 검토는 완료했다. 다음 검토 파일은 `results/local/fixed_prefix_v01/logits_audit_v01.json`이다. 약0.94GB logit 배열은 로컬에서 보존한다. 기존20문제·R0 결과와 별도 폴더이며 원본 결과/원시배열을 공개 Git에 올리지 않는다. 기존 출력 폴더가 있거나 중단되면 결과를 지우거나 자동 반복하지 말고 현재 run.json과 로그를 검토한다.
+수신 run.json과 `results/local/fixed_prefix_v01/logits_audit_v01.json` 검토는 완료했다. 계획 조회도 실제 첨부에서 확인했으므로 재제출은 필요 없다. 약0.94GB logit 배열은 로컬에서 보존한다. 기존20문제·R0 결과와 별도 폴더이며 원본 결과/원시배열을 공개 Git에 올리지 않는다. 기존 출력 폴더가 있거나 중단되면 결과를 지우거나 자동 반복하지 말고 현재 run.json과 로그를 검토한다.
 
 정상 수집 상태는 `FIXED_PREFIX_DIAGNOSTICS_COLLECTED_PENDING_REVIEW`다. `BASELINE_REPEAT_DIFFERENCE_REQUIRES_REVIEW`이면 BF16 반복4회 결과부터 검토한다. 어느 상태도 실모델 동등성 PASS나 세션03 전환을 뜻하지 않는다. 이 대화 환경에서 사용자 GPU 실행을 시작한 것은 아니다.
 

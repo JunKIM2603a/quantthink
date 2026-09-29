@@ -1,0 +1,251 @@
+{
+  "schema_version": 1,
+  "status": "USER_LOCAL_ARRAY_AUDIT_RECEIVED_AND_REVIEWED",
+  "review_date": "2026-09-30",
+  "reviewed_repository_head": "e152856657ad95e8e6a9f0cb0e34f571d380b27f",
+  "document": "docs/LOGITS_AUDIT_REVIEW_20260930_KO.md",
+  "source_attachment_sha256": "266ff9aedcd99f95d64f5a7e4e85a0963b4ec3686f4d46dab166f0eb5d4bccd1",
+  "source_attachment_bytes": 2788862,
+  "all_internal_checks_match": true,
+  "pooled_comparisons": [
+    {
+      "reference": "B",
+      "observed": "B_repeat",
+      "positions": 258,
+      "argmax_changes": 0,
+      "both_unique_argmax_reversals": 0,
+      "argmax_changes_with_proven_maximizer_overlap": 0,
+      "mean_total_variation": 0.0,
+      "max_total_variation": 0.0,
+      "mean_jensen_shannon_nats": 0.0,
+      "support_changed_positions": 0,
+      "infinite_kl_positions": 0,
+      "boundary_tie_sensitive_positions": 4,
+      "same_support_nonzero_tv_positions": 0
+    },
+    {
+      "reference": "B",
+      "observed": "S",
+      "positions": 258,
+      "argmax_changes": 1,
+      "both_unique_argmax_reversals": 0,
+      "argmax_changes_with_proven_maximizer_overlap": 1,
+      "mean_total_variation": 0.0062663048511986,
+      "max_total_variation": 0.09327460476313201,
+      "mean_jensen_shannon_nats": 0.0006645967725188928,
+      "support_changed_positions": 10,
+      "infinite_kl_positions": 8,
+      "boundary_tie_sensitive_positions": 7,
+      "same_support_nonzero_tv_positions": 54
+    },
+    {
+      "reference": "B",
+      "observed": "Q",
+      "positions": 258,
+      "argmax_changes": 22,
+      "both_unique_argmax_reversals": 18,
+      "argmax_changes_with_proven_maximizer_overlap": 2,
+      "mean_total_variation": 0.08766320830293821,
+      "max_total_variation": 0.8700240156548873,
+      "mean_jensen_shannon_nats": 0.0306470661439191,
+      "support_changed_positions": 62,
+      "infinite_kl_positions": 29,
+      "boundary_tie_sensitive_positions": 6,
+      "same_support_nonzero_tv_positions": 30
+    },
+    {
+      "reference": "Q",
+      "observed": "C",
+      "positions": 258,
+      "argmax_changes": 3,
+      "both_unique_argmax_reversals": 0,
+      "argmax_changes_with_proven_maximizer_overlap": 3,
+      "mean_total_variation": 0.00525541175810501,
+      "max_total_variation": 0.05801853511342795,
+      "mean_jensen_shannon_nats": 0.0002898969941254661,
+      "support_changed_positions": 4,
+      "infinite_kl_positions": 2,
+      "boundary_tie_sensitive_positions": 3,
+      "same_support_nonzero_tv_positions": 67
+    },
+    {
+      "reference": "C",
+      "observed": "Cw",
+      "positions": 258,
+      "argmax_changes": 1,
+      "both_unique_argmax_reversals": 0,
+      "argmax_changes_with_proven_maximizer_overlap": 1,
+      "mean_total_variation": 0.005444922821182722,
+      "max_total_variation": 0.06848930239196827,
+      "mean_jensen_shannon_nats": 0.0005909652703803075,
+      "support_changed_positions": 8,
+      "infinite_kl_positions": 5,
+      "boundary_tie_sensitive_positions": 2,
+      "same_support_nonzero_tv_positions": 61
+    }
+  ],
+  "per_state": [
+    {
+      "state": "B",
+      "positions": 258,
+      "eos_retained_positions": 0,
+      "eos_boundary_tie_sensitive_positions": 0,
+      "maximum_eos_probability_before_top_p_at_temperature_0_6": 1.1242733028348208e-13,
+      "retained_count_range": [
+        1,
+        12
+      ],
+      "split_boundary_tie_positions": 4,
+      "minimum_cumulative_distance_to_cutoff": 0.00014264863390242577
+    },
+    {
+      "state": "B_repeat",
+      "positions": 258,
+      "eos_retained_positions": 0,
+      "eos_boundary_tie_sensitive_positions": 0,
+      "maximum_eos_probability_before_top_p_at_temperature_0_6": 1.1242733028348208e-13,
+      "retained_count_range": [
+        1,
+        12
+      ],
+      "split_boundary_tie_positions": 4,
+      "minimum_cumulative_distance_to_cutoff": 0.00014264863390242577
+    },
+    {
+      "state": "S",
+      "positions": 258,
+      "eos_retained_positions": 0,
+      "eos_boundary_tie_sensitive_positions": 0,
+      "maximum_eos_probability_before_top_p_at_temperature_0_6": 1.1918333762093587e-13,
+      "retained_count_range": [
+        1,
+        12
+      ],
+      "split_boundary_tie_positions": 4,
+      "minimum_cumulative_distance_to_cutoff": 4.923084557241497e-05
+    },
+    {
+      "state": "Q",
+      "positions": 258,
+      "eos_retained_positions": 0,
+      "eos_boundary_tie_sensitive_positions": 0,
+      "maximum_eos_probability_before_top_p_at_temperature_0_6": 4.009806355523409e-13,
+      "retained_count_range": [
+        1,
+        11
+      ],
+      "split_boundary_tie_positions": 3,
+      "minimum_cumulative_distance_to_cutoff": 0.001125275015490937
+    },
+    {
+      "state": "C",
+      "positions": 258,
+      "eos_retained_positions": 0,
+      "eos_boundary_tie_sensitive_positions": 0,
+      "maximum_eos_probability_before_top_p_at_temperature_0_6": 3.6147354876400415e-13,
+      "retained_count_range": [
+        1,
+        11
+      ],
+      "split_boundary_tie_positions": 2,
+      "minimum_cumulative_distance_to_cutoff": 7.760480813338161e-05
+    },
+    {
+      "state": "Cw",
+      "positions": 258,
+      "eos_retained_positions": 0,
+      "eos_boundary_tie_sensitive_positions": 0,
+      "maximum_eos_probability_before_top_p_at_temperature_0_6": 3.613297454804858e-13,
+      "retained_count_range": [
+        1,
+        11
+      ],
+      "split_boundary_tie_positions": 0,
+      "minimum_cumulative_distance_to_cutoff": 0.00018289646847053503
+    }
+  ],
+  "coordinate_flip_details": [
+    {
+      "reference_state": "B",
+      "observed_state": "S",
+      "problem_id": "D3-01",
+      "position": 590,
+      "reference_margin": 0.125,
+      "observed_margin": 0.0,
+      "reference_maximizer_count": 1,
+      "observed_maximizer_count": 2,
+      "observed_argmax_is_reference_maximizer": false,
+      "reference_argmax_is_observed_maximizer": true
+    },
+    {
+      "reference_state": "Q",
+      "observed_state": "C",
+      "problem_id": "D3-01",
+      "position": 1230,
+      "reference_margin": 0.0,
+      "observed_margin": 0.0,
+      "reference_maximizer_count": 3,
+      "observed_maximizer_count": 2,
+      "observed_argmax_is_reference_maximizer": true,
+      "reference_argmax_is_observed_maximizer": false
+    },
+    {
+      "reference_state": "Q",
+      "observed_state": "C",
+      "problem_id": "D3-01",
+      "position": 1342,
+      "reference_margin": 0.125,
+      "observed_margin": 0.0,
+      "reference_maximizer_count": 1,
+      "observed_maximizer_count": 3,
+      "observed_argmax_is_reference_maximizer": false,
+      "reference_argmax_is_observed_maximizer": true
+    },
+    {
+      "reference_state": "Q",
+      "observed_state": "C",
+      "problem_id": "D3-01",
+      "position": 1390,
+      "reference_margin": 0.0,
+      "observed_margin": 0.125,
+      "reference_maximizer_count": 2,
+      "observed_maximizer_count": 1,
+      "observed_argmax_is_reference_maximizer": true,
+      "reference_argmax_is_observed_maximizer": false
+    },
+    {
+      "reference_state": "C",
+      "observed_state": "Cw",
+      "problem_id": "D3-01",
+      "position": 1342,
+      "reference_margin": 0.0,
+      "observed_margin": 0.125,
+      "reference_maximizer_count": 3,
+      "observed_maximizer_count": 1,
+      "observed_argmax_is_reference_maximizer": true,
+      "reference_argmax_is_observed_maximizer": false
+    }
+  ],
+  "unique_state_positions": 1548,
+  "recorded_at_utc": "2026-09-29T20:58:17.830165+00:00",
+  "source_run_sha256": "68ff918d9c4b9a43ae154b1d08b2e5fcc93028d66d1fe67d4338001094097fb7",
+  "source_review_reference_sha256": "faf627cc766376846e64428179b8c0a47bb207a96003c65db60ec4e2b694152b",
+  "audit_script_sha256": "ab9b164c32413cdc4a2d8015c531b7a15bac0b76ebe7a5b7d9bc14894a2f5abd",
+  "numpy_version": "1.26.4",
+  "user_local_raw_array_audit_completed_reported": true,
+  "reported_raw_files_verified": 12,
+  "reported_t1_comparisons_recomputed_match": 10,
+  "audit_script_reference_and_raw_file_hashes_match": true,
+  "assistant_raw_npy_or_weights_directly_read": false,
+  "verification_scope_ko": "수신 감사 JSON을 직접 읽고 공개 실행코드/동결검토참조/원run/12개배열 해시 참조 및 위치별 집계를 대조했다. NumPy1.26.4 사용자 로컬에서 원시 배열 대조가 완료된 보고다. 이 환경에서 원시 .npy·가중치 바이트를 직접 읽은 것은 아니다.",
+  "new_forward_calls": 0,
+  "new_generation_tokens": 0,
+  "old_tests_rerun": false,
+  "original_gpu_sampling_replay": false,
+  "functional_equivalence_verdict": "NOT_CERTIFIED",
+  "model_ready": false,
+  "session02_exit_criteria_met": false,
+  "raw_results_committed": false,
+  "next_proposal": "configs/termination_prefix_v01.json",
+  "next_proposal_authorization": "PENDING"
+}

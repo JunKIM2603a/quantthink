@@ -4,7 +4,7 @@
   "timezone": "Asia/Seoul",
   "current_session": "02",
   "current_session_title": "QuantThink 02 — 환경 구축·BF16/AWQ 재현",
-  "audited_base_commit": "907ca612d7138dab939505a4dc940b3fa27ea70d",
+  "audited_base_commit": "e152856657ad95e8e6a9f0cb0e34f571d380b27f",
   "source_audit": "SCOPED_PRIMARY_FULLTEXT_FOLLOWUP_COMPLETED",
   "novelty_gate": "SCOPED_CONTRIBUTION_ACCEPTED",
   "protocol_gate": "ACCEPTED",
@@ -52,7 +52,7 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "수신 fixed_prefix_v01/run.json의12회·코드/설정/실행당시연구상태·고정입력·집계를 검토 완료. 다음은 python scripts/audit_fixed_prefix_logits.py로 기존12개 .npy 해시/수치를 CPU 감사하고 T=0.6/top-p=.95 float64 수학적 필터·EOS/동점을 확인. 후속 파일 results/local/fixed_prefix_v01/logits_audit_v01.json. GPU/새forward/생성0. 기존 고정prefix/마스크/80개시험/R0/준비를 재실행하거나 승인을 다시 요청하지 않음.",
+  "next_local_environment_step": "고정prefix의 CPU 감사 결과 수신·검토 완료: 사용자 로컬12개배열/10비교일치, 수학적top-p에서 EOS전부제외. 같은 감사/기존실험 반복 없음. 종료 직전 BF16·동일길이 AWQ 경로의 추가6회 forward 후보를 구현·CPU검사/실제첨부입력 대조 완료. TERMINATION_PREFIX_V01_KO.md의 구체적 범위에 대한 별도 승인 전 GPU 실행 차단. 새 생성0·문맥2495·처리입력14970·원시배열470393856바이트 제안. model_ready=false·세션02유지.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
@@ -116,7 +116,7 @@
   "next_session_ready": false,
   "next_session_title": "QuantThink 03 — 교란 매칭·대조군 검증",
   "blocking_items": [
-    "고정prefix12회 보고 검토 완료: B반복정확일치, B→Q22/258·B→S1/258·Q→C3/258·C→Cw1/258 top-1변경. 두norm BF16재적용비영잔차56개. 원시 .npy/가중치 독립 검증·기능적 수락 한도는 남음. 기존 수치에 맞춘 소급PASS 없음.",
+    "고정prefix12회와사용자CPU원시배열12개/10비교감사보고검토완료. BF16반복정확일치; B/S·Q/C·C/Cw의argmax변경5건모두공동최댓값집합교집합확인. 분포차이는비영이며 기능적수락한도·독립확인은남음. 선택초기prefix에서EOS는모든상태top-p후보밖이라종료지연원인미확정.",
     "난도80개원본의입력/종료/집계·12개/31개재개백업·실행코드/상태해시대조완료. 형식미판정4개는수동정답. v01자동난도판정은보존하며43개검열의최종정오는미관측이다.",
     "고정 use_sliding_window=false·sliding_window=4096의 CPU 마스크에서 query4096부터 이전 키 차단을 관측했고4개 설치소스 해시가 공식 원본과 일치한다. 당시 생성 cache/마스크 및 실제 인과 영향은 미검증이다. 경계 전 EOS24/40 대12/40 차이도 남는다.",
     "기능적양자화검증·평가기의일반타당도·후속재현기준이미완료라model_ready=false·세션02유지. R1/MATH-500/새Pile/KL매칭/장문맥/H1/H2/7B와자동재실행/예산확대는진행하지않는다."
@@ -579,18 +579,20 @@
     "model_execution_completed": false
   },
   "session02": {
-    "status": "FIXED_PREFIX_REPORT_REVIEWED_SAVED_LOGIT_AUDIT_PENDING",
+    "status": "SAVED_LOGIT_AUDIT_REVIEWED_TERMINATION_PREFIX_PENDING_APPROVAL",
     "handoff": "docs/HANDOFF_01_TO_02_KO.md",
-    "next_single_task": "수신 fixed_prefix_v01/run.json의12회·코드/설정/실행당시연구상태·고정입력·집계를 검토 완료. 다음은 python scripts/audit_fixed_prefix_logits.py로 기존12개 .npy 해시/수치를 CPU 감사하고 T=0.6/top-p=.95 float64 수학적 필터·EOS/동점을 확인. 후속 파일 results/local/fixed_prefix_v01/logits_audit_v01.json. GPU/새forward/생성0. 기존 고정prefix/마스크/80개시험/R0/준비를 재실행하거나 승인을 다시 요청하지 않음.",
+    "next_single_task": "고정prefix의 CPU 감사 결과 수신·검토 완료: 사용자 로컬12개배열/10비교일치, 수학적top-p에서 EOS전부제외. 같은 감사/기존실험 반복 없음. 종료 직전 BF16·동일길이 AWQ 경로의 추가6회 forward 후보를 구현·CPU검사/실제첨부입력 대조 완료. TERMINATION_PREFIX_V01_KO.md의 구체적 범위에 대한 별도 승인 전 GPU 실행 차단. 새 생성0·문맥2495·처리입력14970·원시배열470393856바이트 제안. model_ready=false·세션02유지.",
     "r0_output_directory": "results/local/r0_v03",
     "exit_criteria_met": false,
-    "latest_review_document": "docs/FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md",
+    "latest_review_document": "docs/LOGITS_AUDIT_REVIEW_20260930_KO.md",
     "diagnostic_followup_plan": "docs/R0_DIAGNOSTIC_FOLLOWUP_20260929_KO.md",
     "realistic_input_plan": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md",
     "difficulty_pilot_plan": "docs/DIFFICULTY_PILOT_V01_KO.md",
     "fixed_prefix_diagnostic_plan": "docs/FIXED_PREFIX_DIAGNOSTIC_V01_KO.md",
     "fixed_prefix_approval_record": "docs/FIXED_PREFIX_APPROVAL_20260930_KO.md",
-    "fixed_prefix_result_reference": "configs/fixed_prefix_result_review_v01.json"
+    "fixed_prefix_result_reference": "configs/fixed_prefix_result_review_v01.json",
+    "logits_audit_review_reference": "configs/logits_audit_review_v01.json",
+    "termination_prefix_proposal": "docs/TERMINATION_PREFIX_V01_KO.md"
   },
   "snapshot_status_note": "configs의 기존 후보·정책·점검·준비 검토 JSON은 해시가 고정된 당시 스냅샷이다. 해당 파일의 과거 미승인 상태를 소급 수정하지 않으며, 현재 R0 승인은 research_approval_record와 R0_APPROVAL 문서로 기록한다. 상위 승인 상태 문자열은 approval_scope에 한정한다.",
   "approval_record_validation": {
@@ -667,7 +669,7 @@
     "latest_detail_review_document": "docs/R0_DETAIL_REVIEW_20260929_KO.md"
   },
   "r0_diagnostic_followup": {
-    "status": "FIXED_PREFIX_V01_REPORT_REVIEWED_RAW_LOGIT_AUDIT_PENDING",
+    "status": "FIXED_PREFIX_AND_ARRAY_AUDIT_REVIEWED_TERMINATION_SCOPE_PROPOSED",
     "reviewed_head": "69af9e9a8fcdad590ca884d9583171f2f9cac3ad",
     "document": "docs/R0_DIAGNOSTIC_FOLLOWUP_20260929_KO.md",
     "read_only_script": "scripts/summarize_r0_diagnostics.py",
@@ -706,7 +708,7 @@
     "raw_user_result_or_token_arrays_committed": false,
     "latest_detail_review_document": "docs/R0_DETAIL_REVIEW_20260929_KO.md",
     "input_review_reference": "configs/r0_diagnostic_input_review_v01.json",
-    "future_model_runner_implementation": "USER_REPORTED_12_FIXED_PREFIX_FORWARDS_REVIEWED_RAW_ARRAY_AUDIT_PENDING",
+    "future_model_runner_implementation": "FIXED_PREFIX_12_FORWARDS_AND_LOCAL_ARRAY_AUDIT_REVIEWED_TERMINATION_6_FORWARD_CANDIDATE_PENDING_APPROVAL",
     "detail_review": {
       "reported_summary_head": "7067e5a3832bd0e405003d7fa38db0ffd8182860",
       "source_attachment_sha256": "6f70f7c17d0f2bff77624e8d713b4b407671bedbd6da797a2f344a73b3d796b6",
@@ -831,8 +833,8 @@
     },
     "input_scope_revision_document": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md",
     "original_12_forward_plan_role": "기존 산수 2개를 재사용하는 최소 연결 점검 후보. 실제 난도 검증 전체를 대신하는 유일한 후속 경로로 사용하지 않음.",
-    "replay_implementation": "고정prefix_v01의12회 완료 run.json을 수신·검토함. B/Q파라미터해시는기존난도시험기록과일치. 원시가중치/.npy 및 원R0체크포인트 동일성은 독립검증하지 않음. 저장 배열 CPU 감사가 다음 작업.",
-    "latest_fixed_prefix_review_document": "docs/FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md"
+    "replay_implementation": "고정prefix_v01의12회 결과 및 사용자로컬12개원시배열/10비교CPU감사보고를 검토함. B/Q파라미터해시는기존난도시험기록과일치. 이환경의원시가중치/.npy직접검증및원R0체크포인트동일성인증은아님. 현재후속은별도미승인종료prefix6회후보.",
+    "latest_fixed_prefix_review_document": "docs/LOGITS_AUDIT_REVIEW_20260930_KO.md"
   },
   "realistic_input_proposal": {
     "status": "DIRECTION_REQUESTED_SPECIFIC_PROTOCOL_NOT_ACCEPTED_NOT_RUN",
@@ -1249,7 +1251,7 @@
     }
   },
   "fixed_prefix_diagnostic": {
-    "status": "REPORT_REVIEWED_SAVED_LOGIT_AUDIT_PENDING",
+    "status": "RAW_LOGIT_AUDIT_REVIEWED_FUNCTIONAL_ACCEPTANCE_PENDING",
     "authorization": "APPROVED",
     "authorization_reason_ko": "구체적인 입력·12회 상한·생성0·진단용 window=None·코드/설정 해시를 제시한 뒤 사용자 진행 지시를 받음. 같은 범위의 승인을 재요청하지 않음.",
     "document": "docs/FIXED_PREFIX_DIAGNOSTIC_V01_KO.md",
@@ -1303,9 +1305,9 @@
     "execution_budget_consumed": true,
     "remaining_forward_calls": 0,
     "automatic_rerun": false,
-    "latest_review_document": "docs/FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md",
+    "latest_review_document": "docs/LOGITS_AUDIT_REVIEW_20260930_KO.md",
     "result_review_reference": "configs/fixed_prefix_result_review_v01.json",
-    "next_read_only_command": "python scripts/audit_fixed_prefix_logits.py",
+    "next_read_only_command": null,
     "result_review": {
       "execution_commit": "907ca612d7138dab939505a4dc940b3fa27ea70d",
       "source_run_sha256": "68ff918d9c4b9a43ae154b1d08b2e5fcc93028d66d1fe67d4338001094097fb7",
@@ -1335,7 +1337,7 @@
       "script_sha256": "ab9b164c32413cdc4a2d8015c531b7a15bac0b76ebe7a5b7d9bc14894a2f5abd",
       "command": "python scripts/audit_fixed_prefix_logits.py",
       "output": "results/local/fixed_prefix_v01/logits_audit_v01.json",
-      "status": "IMPLEMENTED_CPU_FIXTURES_TESTED_REAL_ARRAYS_NOT_RECEIVED",
+      "status": "USER_RESULT_RECEIVED_REVIEWED",
       "new_cpu_tests_passed": 9,
       "gpu_or_model_execution": false,
       "old_tests_rerun": false,
@@ -1351,7 +1353,57 @@
         "rtol": 1e-10,
         "atol": 1e-12,
         "functional_equivalence_tolerance": false
-      }
-    }
+      },
+      "user_result_sha256": "266ff9aedcd99f95d64f5a7e4e85a0963b4ec3686f4d46dab166f0eb5d4bccd1",
+      "user_result_bytes": 2788862,
+      "user_local_raw_array_audit_completed_reported": true,
+      "reported_raw_files_verified": 12,
+      "reported_t1_comparisons_match": 10,
+      "assistant_raw_arrays_directly_read": false,
+      "latest_review_document": "docs/LOGITS_AUDIT_REVIEW_20260930_KO.md",
+      "repeat_required": false
+    },
+    "latest_audit_reference": "configs/logits_audit_review_v01.json"
+  },
+  "termination_prefix_diagnostic": {
+    "status": "IMPLEMENTED_CPU_TESTED_PENDING_APPROVAL",
+    "authorization": "PENDING",
+    "authorization_reason_ko": "완료한고정prefix12회예산에추가6회는포함되지않음. 현재첨부는기존CPU감사결과제출이며새GPU실행승인으로해석하지않음.",
+    "document": "docs/TERMINATION_PREFIX_V01_KO.md",
+    "config": "configs/termination_prefix_v01.json",
+    "config_sha256": "073986759aa41f29e54dfdf2835e7877aa2a2dccdb7347878a696451bdc2b1b3",
+    "script": "scripts/run_termination_prefix_diagnostic.py",
+    "implementation_sha256": {
+      "run_termination_prefix_diagnostic.py": "a65f5e0484e03fc64eef698f81d24c1b3db6a9e1012e2c1d1f9f6216b44b270e",
+      "audit_fixed_prefix_logits.py": "ab9b164c32413cdc4a2d8015c531b7a15bac0b76ebe7a5b7d9bc14894a2f5abd",
+      "run_fixed_prefix_diagnostic.py": "8c0c5d72984c8ba366e2209657f2bacbede196cbb52c1f341a08d4f942f326ff",
+      "fixed_prefix_diagnostic_contracts.py": "bafc0997feac28d93a2fc5b30910fe487edea85ccb56f9adfeaf4a14fc00c31d",
+      "replay_r0_awq.py": "b01e0124eb97a7e1145c886842d894966084ac8b1f7b47f538c647d7e1fb574a",
+      "qwen2_awq_adapter.py": "ea7d9e3c35443fc889480c667a826a9eca793c7592fb03be778b150d094b59c5",
+      "awq_weight_space.py": "230b604c0f436696b9118753c8ddbbd383029a3ca9a2aa89aab6478b1bd23b6b",
+      "runtime_assets.py": "d647bb31a0a72a373a95bf1561603c8eff2563ff598eff60516bd54dbedca130",
+      "run_difficulty_pilot.py": "809b14475e7eac56ce6667b52b85839e674f766106130407b6802aafe9fdaec7",
+      "difficulty_pilot_contracts.py": "d14b79ea22069dc6666fce2e70edc17557ef97029158eafdd51ebb306c460446",
+      "runtime_contracts.py": "ca514a25f560b8912edd90de83cb8d4a18aed0cd97d8769f5b9f1627cc8924ee",
+      "reproduction_contracts.py": "04923d60075be31ca7b14b7566dd0040b474bb4f1e009d416ee66819401e45bb"
+    },
+    "proposed_maximum_forward_calls": 6,
+    "proposed_forward_input_tokens": 14970,
+    "proposed_maximum_sequence_length": 2495,
+    "proposed_raw_logit_bytes": 470393856,
+    "new_generation_tokens": 0,
+    "remaining_forward_calls": 0,
+    "use_cache": false,
+    "effective_sliding_window": null,
+    "output_directory": "results/local/termination_prefix_v01",
+    "assistant_validation": {
+      "new_cpu_tests_passed": 6,
+      "actual_attachment_input_hashes_checked": true,
+      "unapproved_execute_rejected_before_heavy_import_or_output": true,
+      "gpu_model_or_tokenizer_execution": false,
+      "old_tests_rerun": false
+    },
+    "user_execution": "NOT_RUN",
+    "model_ready": false
   }
 }

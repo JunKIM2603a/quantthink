@@ -2,7 +2,7 @@
 
 **승인된 12회 forward의 수집 완료를 확인했다. BF16 반복은 정확히 일치한다고 기록됐으며, 동일 prefix의 BF16–AWQ logit 차이가 관측됐다. 스케일 적용·좌표 복원도 완전히 동일하지 않으므로 기능적 동등성은 미인증이다. 세션02를 유지한다.**
 
-다음 작업은 저장된 `.npy`의 CPU 감사다. 고정 prefix 추론·20문제·CPU 마스크·R0·준비 검사를 다시 실행하지 않는다. 승인·실행 범위는 [승인 기록](FIXED_PREFIX_APPROVAL_20260930_KO.md), 설계는 [v01 프로토콜](FIXED_PREFIX_DIAGNOSTIC_V01_KO.md), 공개 집계 참조는 [결과 검토 JSON](../configs/fixed_prefix_result_review_v01.json)에 있다.
+후속으로 [저장 `.npy`의 CPU 감사 결과](LOGITS_AUDIT_REVIEW_20260930_KO.md)를 받아 검토 완료했다. 아래 원시 배열 미수신/감사 준비 내용은 이 문서 작성 당시의 검증 깊이이며, 사용자 로컬 감사 보고와 구분해 보존한다. 고정 prefix 추론·20문제·CPU 마스크·R0·준비 검사를 다시 실행하지 않는다. 승인·실행 범위는 [승인 기록](FIXED_PREFIX_APPROVAL_20260930_KO.md), 설계는 [v01 프로토콜](FIXED_PREFIX_DIAGNOSTIC_V01_KO.md), 공개 집계 참조는 [결과 검토 JSON](../configs/fixed_prefix_result_review_v01.json)에 있다.
 
 ## 근거와 검증 깊이
 
@@ -73,7 +73,7 @@ B→Q에서 EOS log-probability 변화의 평균은 +1.55035이며234/258곳에�
 
 진단은 window=None·use_cache=false·최대2127문맥으로 실행됐다. 기존4096 경계의 실제 생성 cache/마스크 영향을 해소한 실험도 아니다.
 
-## 다음 작업: 기존 배열만 읽는 CPU 감사
+## 작성 당시 후속: 기존 배열만 읽는 CPU 감사 — 이후 완료
 
 [audit_fixed_prefix_logits.py](../scripts/audit_fixed_prefix_logits.py)는 다음을 수행한다.
 
@@ -92,9 +92,9 @@ git pull --ff-only &&
 python scripts/audit_fixed_prefix_logits.py
 ```
 
-검토할 파일은 **`results/local/fixed_prefix_v01/logits_audit_v01.json`** 하나다. 약0.94GB 원시 `.npy`는 로컬에 보존하고 공개 Git에 올리지 않는다. 파일 누락·해시 불일치가 나면 해당 오류를 검토하며 추론을 자동 재실행하지 않는다. 저장 자료의 읽기 전용 감사이므로 새 모델 실행 승인이나 기존 승인 재확인이 필요하지 않다.
+위 명령은 당시 안내 이력이며 재실행할 필요 없다. **`results/local/fixed_prefix_v01/logits_audit_v01.json`**은 이미 받아 검토했다. 약0.94GB 원시 `.npy`는 로컬에 보존하고 공개 Git에 올리지 않는다. 파일 누락·해시 불일치가 나면 해당 오류를 검토하며 추론을 자동 재실행하지 않는다. 저장 자료의 읽기 전용 감사이므로 새 모델 실행 승인이나 기존 승인 재확인이 필요하지 않다.
 
-## 후속 판정과 세션 유지
+## 후속 판정 기준과 세션 유지
 
 | 감사 결과 | 이어갈 판단 |
 |---|---|
