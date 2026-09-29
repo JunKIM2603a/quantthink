@@ -52,7 +52,7 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "기존 R0 결과에서 누락된 좌표 잔차 등의 필요한 항목을 정해 읽기 전용으로 확인한다. R0·데이터 준비·토크나이저·합성 GPU 재실행은 요청하지 않는다. 출력 예산 확대나 새 모델 실험의 범위는 후속 계획에서 따로 정한다.",
+  "next_local_environment_step": "기존 results/local/r0_v03의 JSON만 읽는 summarize_r0_diagnostics.py를 실행해 계층 weight·norm/bias 집계와 생성 ID 종료 계약을 검토한다. 새 모델 실행과 준비·R0 재실행은 하지 않는다.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
@@ -577,10 +577,11 @@
   "session02": {
     "status": "R0_REPORTED_COMPLETE_FURTHER_DIAGNOSTIC_REVIEW_PENDING",
     "handoff": "docs/HANDOFF_01_TO_02_KO.md",
-    "next_single_task": "제출 R0 진단의 남은 좌표·logit·종료 검증 요구와 후속 범위·판정 기준을 구체화한다. 필요한 값은 기존 run.json·계층 파일에서 먼저 확인한다.",
+    "next_single_task": "읽기 전용 요약 도구의 사용자 출력을 받아 기존 좌표 오차·보조 파라미터 잔차·생성 ID 종료 기록을 검토한다. 전체 모델 logit·종료 후속 계획은 미실행·미승인 초안이다.",
     "r0_output_directory": "results/local/r0_v03",
     "exit_criteria_met": false,
-    "latest_review_document": "docs/R0_RESULT_REVIEW_20260929_KO.md"
+    "latest_review_document": "docs/R0_RESULT_REVIEW_20260929_KO.md",
+    "diagnostic_followup_plan": "docs/R0_DIAGNOSTIC_FOLLOWUP_20260929_KO.md"
   },
   "snapshot_status_note": "configs의 기존 후보·정책·점검·준비 검토 JSON은 해시가 고정된 당시 스냅샷이다. 해당 파일의 과거 미승인 상태를 소급 수정하지 않으며, 현재 R0 승인은 research_approval_record와 R0_APPROVAL 문서로 기록한다. 상위 승인 상태 문자열은 approval_scope에 한정한다.",
   "approval_record_validation": {
@@ -654,5 +655,44 @@
       "평가·수동 판정 및 후속 R1 기준"
     ],
     "new_model_or_test_execution_by_assistant": false
+  },
+  "r0_diagnostic_followup": {
+    "status": "READ_ONLY_SUMMARY_PREPARED_USER_DETAIL_PENDING",
+    "reviewed_head": "69af9e9a8fcdad590ca884d9583171f2f9cac3ad",
+    "document": "docs/R0_DIAGNOSTIC_FOLLOWUP_20260929_KO.md",
+    "read_only_script": "scripts/summarize_r0_diagnostics.py",
+    "code_findings": [
+      "계층 파라미터 오차는 float64 역변환 배열 기준이며 출력 진단은 BF16 재적용 기준",
+      "보조 파라미터는 절대 RMS만 저장해 상대오차·max_abs·위치를 기존 JSON에서 복구할 수 없음",
+      "R0 실행기는 전체 모델 logit·AWQ 체크포인트·전체 파라미터 해시·생성 RNG 상태를 저장하지 않음"
+    ],
+    "original_user_result_files_inspected": false,
+    "new_user_result_values_received": false,
+    "assistant_validation": {
+      "new_cpu_tests_passed": 6,
+      "new_cpu_tests_failed": 0,
+      "python": "3.12.14",
+      "scope": "표준 라이브러리·합성 JSON에 한정한 집계/검열/오류 처리 및 원본 파일 불변 확인",
+      "existing_gpu_or_preparation_tests_rerun": false,
+      "model_or_tokenizer_execution": false
+    },
+    "future_model_diagnostics": "PROPOSED_NOT_AUTHORIZED_NOT_RUN",
+    "functional_numeric_acceptance_margin": "UNDEFINED_NO_RETROSPECTIVE_PASS",
+    "proposed_eos_followup": {
+      "status": "PROPOSED_NOT_AUTHORIZED_NOT_RUN",
+      "prompts": 2,
+      "arms": [
+        "bf16",
+        "awq_w3"
+      ],
+      "sampling_seed": 42,
+      "max_new_tokens_per_attempt": 512,
+      "attempts": 4,
+      "max_new_generated_tokens_total": 2048,
+      "automatic_further_budget_increase": false
+    },
+    "approval_scope_changed": false,
+    "session02_exit_criteria_met": false,
+    "raw_user_result_or_token_arrays_committed": false
   }
 }
