@@ -1,8 +1,8 @@
-# 종료 직전·AWQ 경로의 고정 prefix 진단 v01 — 추가6회 승인·실행 대기
+# 종료 직전·AWQ 경로의 고정 prefix 진단 v01 — 수집 보고 검토 완료
 
-**상태: 2026-09-30 06:27:01 한국시간 사용자 “진행해줘”를 제안된 추가 최대6회의 [실행 승인](TERMINATION_PREFIX_APPROVAL_20260930_KO.md)으로 기록했다. 사용자 GPU 실행 결과 대기 중이며 이 환경에서 모델을 실행하지 않았다.**
+**상태: 사용자 실행 commit b57d9d7의6회 완료 보고를 받아 [결과 검토](TERMINATION_PREFIX_RESULT_REVIEW_20260930_KO.md)를 마쳤다. 승인 예산은 소진됐으며 같은 진단을 반복하지 않는다. 세션02·model_ready=false를 유지한다.**
 
-[기존 CPU 감사](LOGITS_AUDIT_REVIEW_20260930_KO.md)는 완료됐다. 초기 BF16 prefix258위치에서 모든 상태의 EOS가 수학적 top-p 후보 밖이었다. 이 구간만으로 자연 종료 차이를 설명할 수 없으므로, 이미 저장된 종료 직전과 AWQ 경로를 비교하는 제한된 탐색을 진행한다.
+[기존 CPU 감사](LOGITS_AUDIT_REVIEW_20260930_KO.md)는 완료됐다. 초기 BF16 prefix258위치에서 모든 상태의 EOS가 수학적 top-p 후보 밖이었다. 이 구간만으로 자연 종료 차이를 설명할 수 없어 이미 저장된 종료 직전과 AWQ 경로를 비교하는 제한된 탐색을 제안했고, 이후 실행 보고의 검토까지 마쳤다.
 
 설정: [termination_prefix_v01.json](../configs/termination_prefix_v01.json). 실행기: [run_termination_prefix_diagnostic.py](../scripts/run_termination_prefix_diagnostic.py). 설정 정규화 SHA-256: `073986759aa41f29e54dfdf2835e7877aa2a2dccdb7347878a696451bdc2b1b3`.
 
@@ -40,7 +40,7 @@ D2-03 seed42의 BF16 응답은 생성2,425번째 토큰에서 EOS로 끝났고 A
 | AWQ | 기존 scale/clip/W3 g128 recipe 재적용. 새 calibration 탐색 없음 |
 | 원본 보존 | 기존 결과/설정 수정 없음. 새 폴더 `results/local/termination_prefix_v01` |
 
-TF32를 끄고 float32 matmul precision=highest, deterministic_algorithms=false를 유지한다. B/Q 전체 파라미터 해시가 이전 난도 시험 및12회 진단과 같아야 해당 forward를 진행한다. 실제 model.config 해시도 앞선 진단과 비교한다. 모델 로딩·28계층 recipe 재적용·해시·배열 저장 비용은 위 forward 횟수와 별도이며 실행 시간은 아직 실측하지 않았다.
+TF32를 끄고 float32 matmul precision=highest, deterministic_algorithms=false를 유지한다. B/Q 전체 파라미터 해시가 이전 난도 시험 및12회 진단과 같아야 해당 forward를 진행한다. 실제 model.config 해시도 앞선 진단과 비교한다. 모델 로딩·28계층 recipe 재적용·해시·배열 저장 비용은 위 forward 횟수와 별도이며 이후 실행 보고의 기록 구간·peak 값은 결과 검토에 남겼다.
 
 새 S/C/Cw 반복, 자유 생성, 문항 추가, MATH-500·Pile, 경계/cache 실험, KL 매칭·H1/H2·7B는 포함하지 않는다. 원 R0 체크포인트와 바이트 동일성을 새로 인증하는 실험도 아니다.
 
@@ -62,21 +62,13 @@ T=1·top-p 전 전체 어휘 지표와 T=0.6·top-p=.95 float64 수학적 필터
 
 위 규칙은 관측 분류이며 기능적 동등성의 수치 허용치 또는 H1 판정 기준이 아니다. 한 문제·한 시드의 사후 선택 탐색이며 독립 확인 데이터로 다시 사용하지 않는다. 두 경로의 후반부에서도 종료 지연의 전체 원인은 남을 수 있다. 결과가 불명확해도 자동 반복·위치 추가·생성 예산 확대는 하지 않는다.
 
-## 승인 상태와 명령
+## 현재 상태와 다음 작업
 
-기존 승인12회는 수집 완료로 소진됐다. 이후 제시한 추가6회 범위에 대한 사용자 진행 지시를 [새 승인 기록](TERMINATION_PREFIX_APPROVAL_20260930_KO.md)에 남겼다. `termination_prefix_diagnostic.authorization=APPROVED`, `remaining_forward_calls=6`이며 설정·구현12개 해시는 제안 commit `f8fb2ee7fb084c3534f52cf20bca458ed104aa0d`와 같다. 같은 범위의 승인을 다시 요청하지 않는다. 설정 JSON의 `PROPOSED_NOT_AUTHORIZED_NOT_RUN`은 해시가 고정된 제안 당시 스냅샷이며 현재 실행 gate는 연구 상태의 승인을 읽는다.
+[승인 기록](TERMINATION_PREFIX_APPROVAL_20260930_KO.md)은 유지하며, 실행 commit `b57d9d7be24d8d8f7e1ebfdbb24c17dca983b636`의6회 완료 보고를 검토했다. 코드12개·설정·당시 연구 상태·입력·위치별 집계가 일치한다. `authorization=APPROVED`는 당시 승인 기록이며 `remaining_forward_calls=0`이다. 설정 JSON의 제안 당시 상태는 해시 보존을 위해 변경하지 않는다.
 
-사용자 GPU 환경에서 아래 명령으로 승인된 진단을 1회 실행한다. 입력 계획은 이미 실제 첨부로 대조했으므로 `--plan`을 다시 실행하거나 제출할 필요는 없다.
+BF16 종료 직전 문맥에서는 B/Q 모두 필터 후 EOS 확률1, 같은 길이 AWQ 문맥에서는 양쪽0이다. 한 사례의 고정 문맥 비교이며 종료 지연 원인·실제 GPU sampling·기능적 동등성은 인증하지 않는다. [상세 결과](TERMINATION_PREFIX_RESULT_REVIEW_20260930_KO.md)를 따른다.
 
-```bash
-conda activate quantthink
-cd ~/quantthink
-git switch setup/session-01-research-gates &&
-git pull --ff-only &&
-python scripts/run_termination_prefix_diagnostic.py --execute
-```
-
-정상 수집 상태는 `TERMINATION_PREFIX_COLLECTED_PENDING_REVIEW`이며 `results/local/termination_prefix_v01/run.json`을 첨부한다. `.npy`는 로컬에 보존하고 공개 Git에는 올리지 않는다. B 반복이 다르면 `TERMINATION_PREFIX_BASELINE_REPEAT_DIFFERENCE`로 중단한다. 기존 출력 폴더가 있거나 오류/중단이 발생하면 파일을 지우거나 재실행하지 않고 현재 `run.json`과 로그를 검토한다. 결과 제출 전에는 실행 완료로 기록하지 않는다.
+사용자 `results/local/termination_prefix_v01/run.json`은 수신·검토 완료했다. 원시 `.npy`는 로컬에 보존하며 공개 Git에 올리지 않는다. 같은 `--execute`·`--plan` 또는 CPU 감사의 재실행·재제출은 필요 없다. 다음은 [수락 기준·독립 확인 설계](SESSION02_ACCEPTANCE_DESIGN_20260930_KO.md)다.
 
 ## 작성 환경 검증
 

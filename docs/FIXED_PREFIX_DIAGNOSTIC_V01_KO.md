@@ -50,26 +50,16 @@ logit RMS·상대 RMS·max_abs·최대 위치, top-1/2 margin과 flip, KL(Baseli
 
 top-1 margin이 `2×max_abs_logit_delta`보다 큰데 argmax가 달라지는 것은 수학적 경계와 모순되므로 구현 오류로 중단한다. 이 검사는 기능적 허용오차를 대신하지 않는다. 정확히 같다는 판정도 선택된 위치에 한정한다. 비영 차이를 기존R0 RMS나 합성5%에 맞춰 소급 PASS로 처리하지 않는다. 실용적 동등성 한도·다른 prefix·cache 경로까지의 수락 기준은 아직 미정이며 이번 진단 후 별도 독립 점검 전에 정해야 한다. 항상 model_ready=false를 남긴다.
 
-## 현재 상태와 승인된 별도 후속
+## 현재 상태와 후속 결과
 
-`authorization=APPROVED`는 역사적 승인 기록으로 유지하며 승인된12회는 이미 수집됐다. 실행 commit907ca61의 코드/설정/연구 상태 해시가 일치한다. BF16 반복0/258, B→Q22/258, Q→C3/258의 top-1 변경을 검토했다. 사용자 로컬의12개 배열·10개 비교 감사 보고도 일치했다. 다음은 [종료 직전 경로 추가6회 진단](TERMINATION_PREFIX_V01_KO.md)이다. 2026-09-30 사용자 “진행해줘”를 [제안된 범위의 실행 승인](TERMINATION_PREFIX_APPROVAL_20260930_KO.md)으로 기록했다. 아래 명령은 사용자 GPU에서 새 진단을 1회 실행한다. 기존12회를 다시 실행하거나 같은 승인을 다시 요청하지 않는다.
+승인된12회는 실행 commit907ca61에서 완료 보고를 받았고 사용자 로컬12개 원시 배열·10비교 CPU 감사 보고도 검토했다. 이후 별도로 승인한 [종료 prefix 추가6회](TERMINATION_PREFIX_V01_KO.md)도 commit b57d9d7에서 수집한 [결과 보고](TERMINATION_PREFIX_RESULT_REVIEW_20260930_KO.md)를 검토 완료했다. 두 승인 예산의 잔여 횟수는 모두0이다.
 
-```bash
-conda activate quantthink
-cd ~/quantthink
-git switch setup/session-01-research-gates &&
-git pull --ff-only &&
-python scripts/run_termination_prefix_diagnostic.py --execute
-```
+종료 prefix 결과에서 BF16 종료 직전 문맥은 B/Q 모두 필터 후 EOS1, 동일길이 AWQ 문맥은 양쪽0이었다. 원시 .npy/가중치를 이 환경에서 직접 재계산한 것은 아니다. 전체 동등성·종료 지연 원인은 미확정이다.
 
-새 실행 결과 `results/local/termination_prefix_v01/run.json`을 검토한다. 사용자 GPU 실행 결과는 아직 받지 않았다. 기존12회 실행기의 `--execute`·`--plan` 출력 재제출은 필요 없다. [CPU 감사의 수치 정의·동점 처리·판정](FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md)을 따른다.
-
-수신 run.json과 `results/local/fixed_prefix_v01/logits_audit_v01.json` 검토는 완료했다. 계획 조회도 실제 첨부에서 확인했으므로 재제출은 필요 없다. 약0.94GB logit 배열은 로컬에서 보존한다. 기존20문제·R0 결과와 별도 폴더이며 원본 결과/원시배열을 공개 Git에 올리지 않는다. 기존 출력 폴더가 있거나 중단되면 결과를 지우거나 자동 반복하지 말고 현재 run.json과 로그를 검토한다.
-
-정상 수집 상태는 `FIXED_PREFIX_DIAGNOSTICS_COLLECTED_PENDING_REVIEW`다. `BASELINE_REPEAT_DIFFERENCE_REQUIRES_REVIEW`이면 BF16 반복4회 결과부터 검토한다. 어느 상태도 실모델 동등성 PASS나 세션03 전환을 뜻하지 않는다. 이 대화 환경에서 사용자 GPU 실행을 시작한 것은 아니다.
+기존12회·추가6회·CPU 감사·계획 조회를 다시 실행하거나 재제출할 필요는 없다. 원본 결과/배열은 로컬에 보존한다. 다음은 [세션02 수락 기준·독립 확인 설계](SESSION02_ACCEPTANCE_DESIGN_20260930_KO.md)이며 세션02·model_ready=false를 유지한다.
 
 ## 작성 환경에서 확인한 범위
 
 새 CPU 검사7개가 입력/위치·근거 해시 보호, 새로운 실행 범위 gate, 모델 import 없는 계획 조회, 알려진 KL/TV/EOS 분포, logit 상수 이동과 argmax, 비유한 값·shape 오류·0인 참조 RMS를 다뤘다. 준비 시점에 실제 첨부2개로 prefix/예산을 대조하고 당시 미승인 `--execute`의 조기 거부도 확인했다. 승인 기록 갱신에서는 코드/설정이 그대로인지와 순수 Python 승인 조건만 대조했다. 고정 Qwen2 소스가 tensor형 `logits_to_keep`와 명시적 위치 인자를 받는지 대조했다.
 
-**PyTorch/Transformers가 없는 작성 환경이므로 새 실행기의 실모델/CUDA 경로는 검증하지 못했다.** 기존 준비·토크나이저·합성 AWQ·R0 검사는 반복하지 않았다. 이 절은 작성 당시의 검사 기록이다. 이후 사용자12회 수집 보고를 검토했으며 원시 logit 감사·기능적 수락 판단은 별도로 남아 있다.
+**PyTorch/Transformers가 없는 작성 환경이므로 새 실행기의 실모델/CUDA 경로는 검증하지 못했다.** 기존 준비·토크나이저·합성 AWQ·R0 검사는 반복하지 않았다. 이 절은 작성 당시의 검사 기록이다. 이후 사용자12회 수집과 원시 logit CPU 감사 보고 검토는 완료했다. 기능적 수락 판단은 남아 있다.

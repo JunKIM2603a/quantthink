@@ -15,7 +15,7 @@
 - 원시 logit6개 `[129,151936]` float32의 본체470393856바이트(약449MiB)와 헤더/JSON 공간을 사용한다. 모델 로딩·해시·recipe 재적용 비용은 forward 횟수와 별도다.
 - T=1 전체 어휘 비교와 T=0.6/top-p=.95 float64 수학적 필터를 기록한다. GPU FP32 샘플링·RNG·cache 경로 재현 또는 새 자유 생성이 아니다.
 
-설정·코드·입력·예산은 제안과 같다. 연구 상태에 `authorization=APPROVED`, `remaining_forward_calls=6`과 아래12개 코드 해시를 연결했다. 설정 JSON의 `PROPOSED_NOT_AUTHORIZED_NOT_RUN` 및 기존 결과 검토 JSON의 승인 대기 문자열은 고정된 당시 스냅샷이다. 현재 승인은 이 문서와 `research_status.json`의 `termination_prefix_diagnostic`를 따른다.
+설정·코드·입력·예산은 제안과 같다. 승인 당시 연구 상태에 `authorization=APPROVED`, `remaining_forward_calls=6`과 아래12개 코드 해시를 연결했다. 이후6회 완료 보고를 검토해 현재 잔여 예산은0이다. 설정 JSON의 `PROPOSED_NOT_AUTHORIZED_NOT_RUN` 및 기존 결과 검토 JSON의 승인 대기 문자열은 고정된 당시 스냅샷이다. 현재 상태는 `research_status.json`의 `termination_prefix_diagnostic`를 따른다.
 
 | 파일 | SHA-256 |
 |---|---|
@@ -32,9 +32,9 @@
 | `runtime_contracts.py` | `ca514a25f560b8912edd90de83cb8d4a18aed0cd97d8769f5b9f1627cc8924ee` |
 | `reproduction_contracts.py` | `04923d60075be31ca7b14b7566dd0040b474bb4f1e009d416ee66819401e45bb` |
 
-## 실행 명령과 제출할 결과
+## 승인 당시 실행 명령 이력 — 재실행하지 않음
 
-사용자 GPU 환경에서 다음 명령을 1회 실행한다. 기존20문제·고정 prefix12회·CPU 감사는 완료됐으며 반복하지 않는다. 입력 계획도 실제 첨부로 대조했으므로 `--plan` 출력 재제출은 필요 없다.
+아래 명령은 승인 당시의 이력이다. 이후 commit b57d9d7의6회 완료 `run.json`을 받아 [결과 검토](TERMINATION_PREFIX_RESULT_REVIEW_20260930_KO.md)를 마쳤다. 승인 예산은 소진됐으므로 아래 명령을 다시 실행하지 않는다. 기존20문제·고정 prefix12회·CPU 감사도 반복하지 않는다.
 
 ```bash
 conda activate quantthink
@@ -44,11 +44,11 @@ git pull --ff-only &&
 python scripts/run_termination_prefix_diagnostic.py --execute
 ```
 
-검토할 파일은 **`results/local/termination_prefix_v01/run.json`**이다. 원시 `.npy`는 로컬에 보존하고 공개 Git에 올리지 않는다. 정상 수집 상태는 `TERMINATION_PREFIX_COLLECTED_PENDING_REVIEW`다. B 반복이 다르면 `TERMINATION_PREFIX_BASELINE_REPEAT_DIFFERENCE`로 중단한다. 출력 폴더가 이미 있거나 오류/중단이 발생하면 결과를 지우거나 자동 재실행하지 않고 현재 파일과 로그를 검토한다.
+사용자 `results/local/termination_prefix_v01/run.json`을 수신·검토 완료했다. 보고 상태는 `TERMINATION_PREFIX_COLLECTED_PENDING_REVIEW`이며 6회·4비교가 기록됐다. 원시 `.npy`는 사용자 로컬에 보존하고 공개 Git에 올리지 않는다. 원시 배열을 이 환경에서 직접 재계산한 것은 아니다.
 
 ## 승인과 결과의 구분
 
-현재 상태는 `APPROVED_AWAITING_USER_GPU_EXECUTION`이다. 사용자 실행 결과는 아직 받지 않았고 이 대화 환경에서 GPU/모델을 실행하지 않았다. 이번 갱신에서는 최신 브랜치와 제안 설정·코드12개 해시가 같은지 및 순수 Python 승인 조건만 확인했다. 준비 당시 통과한 새 CPU 검사6개와 실제 첨부 입력 대조 기록은 보존하며 다시 실행하지 않았다.
+승인 작성 당시에는 `APPROVED_AWAITING_USER_GPU_EXECUTION`이었다. 이후 코드/설정/실행 당시 연구 상태 해시가 일치하는6회 수집 보고를 받아 검토했다. 현재 상태는 `REPORT_REVIEWED_FUNCTIONAL_ACCEPTANCE_PENDING`, `remaining_forward_calls=0`이며 승인은 역사 기록으로 유지한다. 이 대화 환경에서 사용자 GPU를 실행하거나 원시 .npy/가중치를 직접 검증한 것은 아니다. 준비 당시 CPU 검사6개·입력 대조 기록은 보존하며 같은 검사를 반복하지 않았다.
 
 한 문제·한 시드의 사후 선택 탐색이다. BF16 경로 마지막 위치에서 B의 EOS 후보 포함 여부를 먼저 확인하고, 두 경로 각각의 B/Q 종료 분포를 비교한다. 자연 길이 지연 원인 확증·기능적 동등성 PASS·H1/H2 검정으로 해석하지 않는다. 자세한 분류 규칙은 프로토콜을 따른다.
 
