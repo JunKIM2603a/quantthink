@@ -52,7 +52,7 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "기존 R0 상세 요약 검토를 완료했다. 고정 scale/clip을 재사용하는 전체 모델 logit·좌표 진단 실행기를 준비한다. 같은 요약·R0·준비 검사를 반복하지 않으며 새 모델 실행은 별도 범위 승인 전 미실행이다.",
+  "next_local_environment_step": "실제 난도·길이를 반영한 입력 확장안을 구체화한다. MATH train 예비 표본·수학 답 평가기·출력/전체 문맥 예산과 calibration 밖 Pile 진단 입력을 준비하고, 기존 산수 2개만을 유일한 후속 입력으로 고정하지 않는다. 새 모델 실행은 아직 하지 않는다.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
@@ -577,11 +577,12 @@
   "session02": {
     "status": "R0_DETAIL_SUMMARY_REVIEWED_FULL_MODEL_DIAGNOSTICS_PENDING",
     "handoff": "docs/HANDOFF_01_TO_02_KO.md",
-    "next_single_task": "고정된 29개 입력 파일 참조를 사용하는 전체 모델 logit·좌표 진단 실행기를 준비한다. 제안 범위는 기존 BF16 두 시퀀스·12회 forward·새 생성 0회이며 미승인·미실행이다.",
+    "next_single_task": "실제 난도 입력 확장안에 따라 MATH train 개발 표본 출처·선택·평가기와 전체 모델 진단 실행기를 준비한다. 28문제·8,192토큰 예산은 제안이며 미수락·미실행이다.",
     "r0_output_directory": "results/local/r0_v03",
     "exit_criteria_met": false,
     "latest_review_document": "docs/R0_DETAIL_REVIEW_20260929_KO.md",
-    "diagnostic_followup_plan": "docs/R0_DIAGNOSTIC_FOLLOWUP_20260929_KO.md"
+    "diagnostic_followup_plan": "docs/R0_DIAGNOSTIC_FOLLOWUP_20260929_KO.md",
+    "realistic_input_plan": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md"
   },
   "snapshot_status_note": "configs의 기존 후보·정책·점검·준비 검토 JSON은 해시가 고정된 당시 스냅샷이다. 해당 파일의 과거 미승인 상태를 소급 수정하지 않으며, 현재 R0 승인은 research_approval_record와 R0_APPROVAL 문서로 기록한다. 상위 승인 상태 문자열은 approval_scope에 한정한다.",
   "approval_record_validation": {
@@ -658,7 +659,7 @@
     "latest_detail_review_document": "docs/R0_DETAIL_REVIEW_20260929_KO.md"
   },
   "r0_diagnostic_followup": {
-    "status": "DETAIL_SUMMARY_REVIEWED_FIXED_PREFIX_RUNNER_PREPARATION_PENDING",
+    "status": "DETAIL_REVIEWED_INPUT_COVERAGE_EXPANSION_PROPOSED",
     "reviewed_head": "69af9e9a8fcdad590ca884d9583171f2f9cac3ad",
     "document": "docs/R0_DIAGNOSTIC_FOLLOWUP_20260929_KO.md",
     "read_only_script": "scripts/summarize_r0_diagnostics.py",
@@ -819,6 +820,51 @@
       ],
       "marker_interpretation": "두 합성 문제·한 sampling seed의 닫는 think 태그 앞 토큰 수에 대한 기술적 관찰. 전체 EOS 길이·과잉 추론·H1 판정이 아님.",
       "validation_this_update": "첨부 JSON·29개 파일 참조의 구조·집계 범위·태그 위치 산술 및 문서/JSON 일관성 확인. 모델·토크나이저·GPU·기존 테스트 재실행 없음."
-    }
+    },
+    "input_scope_revision_document": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md",
+    "original_12_forward_plan_role": "기존 산수 2개를 재사용하는 최소 연결 점검 후보. 실제 난도 검증 전체를 대신하는 유일한 후속 경로로 사용하지 않음."
+  },
+  "realistic_input_proposal": {
+    "status": "DIRECTION_REQUESTED_SPECIFIC_PROTOCOL_NOT_ACCEPTED_NOT_RUN",
+    "document": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md",
+    "reviewed_head": "32b40b456a17d845e9b04cba6a19cdf74f5901f1",
+    "user_direction": "사용자가 산수 2문제가 너무 간단하다고 지적하며 다른/긴 문제와 MATH-500 또는 Pile 수준의 입력을 제안함.",
+    "clarification": "기존 계층 진단은 이미 Pile calibration 128×512토큰 위의 측정. structural_issues 없음은 행동 동등성 판정이 아님.",
+    "development_recommendation": {
+      "dataset_family": "MATH original train",
+      "access_candidate": "EleutherAI/hendrycks_math",
+      "revision": null,
+      "subjects": 7,
+      "levels": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "per_subject_level": 1,
+      "proposed_n_problems": 28,
+      "sample_ids_frozen": false,
+      "sampling_seeds": [
+        42,
+        43
+      ],
+      "arms": [
+        "bf16",
+        "awq_w3"
+      ],
+      "max_new_tokens_candidate": 8192,
+      "proposed_attempts": 112,
+      "maximum_generation_tokens_candidate": 917504,
+      "max_prompt_tokens": null,
+      "max_total_context_tokens": null,
+      "math_evaluator_validated": false
+    },
+    "pile_diagnostic_role": "calibration과 문서가 겹치지 않는 일반 텍스트의 수치/좌표 진단. 수학 정답·정답 포기 평가 자료로 취급하지 않음.",
+    "math500_role": "확증용 역할 유지. 이번에 모델 생성·튜닝하지 않음.",
+    "original_gsm8k_r1_candidate_changed": false,
+    "calibration_rebuilt": false,
+    "approval_scope_changed": false,
+    "new_model_execution": false,
+    "source_verification": "공식 논문 초록·원 저자 GitHub·데이터 페이지의 설명/필드 검토. 새 MATH 원본 파일·revision 고정·문제 선택·tokenizer 실행 없음."
   }
 }
