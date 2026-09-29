@@ -52,7 +52,7 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "Install only requirements/tokenizer-audit.txt and run scripts/audit_tokenizer_contract.py --online using the existing reviewed asset_revisions report. The probe uses CPU tokenizer/configuration assets at the recorded SHA, not model weights, dataset examples, generation or CUDA. Do not repeat metadata-main resolution or basic GPU setup.",
+  "next_local_environment_step": "Tokenizer-only audit completed with user-reported PASS and repository hash consistency. No rerun or new metadata resolution requested. Next prepare the executable reproduction specification (runtime/AWQ adapter, canonical weight-error validation, evaluator/rubric, disjoint data and context budgets) and resolve the remaining scientific gates.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
@@ -86,20 +86,21 @@
     "inspection_reference_status": "INSPECTION_REFERENCES_PINNED_NOT_A_RUNTIME_LOCK",
     "review_document": "docs/ASSET_CONFIG_REVIEW_V01.md",
     "source_findings": [
-      "Source model BOS 151643 differs from source generation BOS 151646; actual tokenizer IDs remain to be tested",
-      "Numeric source EOS values agree at 151643; tokenizer names EOS and PAD identically",
+      "Source model BOS 151643 differs from generation BOS 151646; user-reported tokenizer confirms BOS 151646 and actual input arrays contain one BOS each",
+      "User-reported tokenizer confirms EOS=PAD=151643; left-padding masks pass the probe",
       "Chat template already appends the opening think marker; this prefix is not generated text",
       "Tokenizer length metadata 16384 differs from model position capacity 131072; long-context runtime remains unverified",
-      "Source generation file omits top_k; Transformers 4.51.3 source defaults to 50, while the existing candidate explicitly disables it with 0"
+      "User-reported GenerationConfig inherits top_k=50 and explicit existing candidate overrides it to 0"
     ],
     "tokenizer_probe_script": "scripts/audit_tokenizer_contract.py",
     "tokenizer_probe_dependencies": "requirements/tokenizer-audit.txt",
-    "tokenizer_probe_actual_execution": "NOT_RUN_OR_NOT_PROVIDED",
+    "tokenizer_probe_actual_execution": "USER_REPORTED_PASS_REPOSITORY_HASHES_AND_FIELDS_CHECKED",
     "assistant_new_cpu_tests": "25_PASSED_WITH_TEST_DOUBLES",
     "assistant_new_syntax_check": "PASSED",
     "offline_cli_on_transcribed_source_fields": "METADATA_REVIEW_PASS_TOKENIZER_NOT_RUN",
     "model_execution": "NOT_RUN",
-    "raw_report_committed": false
+    "raw_report_committed": false,
+    "tokenizer_execution_review_document": "docs/TOKENIZER_CONTRACT_REVIEW_20260929.md"
   },
   "assistant_cpu_diagnostic_tests": "7_PASSED_PREVIOUS_TURN_NOT_RERUN_IN_THIS_UPDATE",
   "bf16_reproduction": "NOT_RUN",
@@ -113,7 +114,7 @@
     "Integrate the newly inspected primary text of 2609.23125v1 and 2609.06473v1 with the earlier collision table and make a scoped contribution decision; their primary-text access blockers are resolved, not the overall novelty gate.",
     "Complete scoped novelty decision beyond generic matched-noise control design, compression verbosity and termination measurement",
     "Review and accept the concrete candidate reproduction plan and record required research-run approval",
-    "Asset revision references and supplied configuration hashes are reviewed; actual tokenizer contracts, executable quantizer/calibration provenance, evaluator/rubric, disjoint data IDs, prompt/stop handling and long-context validation remain pending before model runs"
+    "Asset revision references, configuration hashes and user-reported tokenizer contracts are reviewed; executable quantizer/calibration provenance, evaluator/rubric, disjoint data IDs, generation/stop integration and long-context validation remain pending."
   ],
   "allowed_now": [
     "literature_review",
@@ -162,5 +163,51 @@
     "original_hypotheses_or_candidate_changed": false,
     "next_user_evidence": "Actual online tokenizer audit JSON using the existing reviewed metadata report",
     "validation": "Documentation and JSON consistency checked; no code tests or model runs rerun in this continuation"
+  },
+  "user_tokenizer_contract": {
+    "status": "USER_REPORTED_PASS_REPOSITORY_HASHES_AND_FIELDS_CHECKED",
+    "reported_status": "TOKENIZER_CONTRACT_PASS_NOT_MODEL_READY",
+    "reported_at_utc": "2026-09-29T00:13:10.027340+00:00",
+    "evidence_source": "User-pasted terminal JSON; selected fields transcribed locally for checks. Original local file bytes and generating Git commit were not inspected.",
+    "audited_repository_commit": "8335ef867b7a48132e32badd3f60308e8fa15c4f",
+    "generating_git_commit": null,
+    "review_document": "docs/TOKENIZER_CONTRACT_REVIEW_20260929.md",
+    "manifest_canonical_sha256": "98ff733b0d8391c3a33aa2f561e2d389bd6e482ee53b1b680c1bb6e7e6b6201f",
+    "inspection_refs_sha256": "97f5b7bf6cb6888c716a3838f21c224e7920b1df05c5996efe1321d39cd15276",
+    "repository_hashes_recomputed": "2_OF_2_MATCH",
+    "model_revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+    "tokenizer_class": "LlamaTokenizerFast",
+    "bos_token_id": 151646,
+    "eos_token_id": 151643,
+    "pad_token_id": 151643,
+    "think_close_ids": [
+      151649
+    ],
+    "prompt_lengths": [
+      22,
+      33
+    ],
+    "actual_prompt_bos_counts": [
+      1,
+      1
+    ],
+    "bos_counts_if_special_tokens_added_again": [
+      2,
+      2
+    ],
+    "left_padding_mask_check": "PASS_USER_REPORTED",
+    "inherited_top_k": 50,
+    "explicit_top_k": 0,
+    "packages": {
+      "transformers": "4.51.3",
+      "jinja2": "3.1.6",
+      "tokenizers": "0.21.4",
+      "huggingface-hub": "0.36.2",
+      "numpy": "1.26.4"
+    },
+    "long_context_validated": false,
+    "assistant_tokenizer_execution": false,
+    "raw_report_committed": false,
+    "interpretation": "Input-format milestone only; original hypotheses, candidate/inspection JSON snapshots, research gates and model execution states are unchanged."
   }
 }

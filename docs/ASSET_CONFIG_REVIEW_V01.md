@@ -1,6 +1,8 @@
 # Asset/configuration review v0.1 — 2026-09-29
 
-**METADATA INTERNALLY VERIFIED; TOKENIZER EXECUTION PENDING; SESSION 01 OPEN.** This review does not accept the candidate scientific protocol, freeze H1/H2, or authorize model runs. Read `research_status.json` and `REPRODUCTION_PLAN_V01.md` with this document.
+**METADATA INTERNALLY VERIFIED; TOKENIZER PASS USER-REPORTED; SESSION 01 OPEN.** This review does not accept the candidate scientific protocol, freeze H1/H2, or authorize model runs. Read `research_status.json` and `REPRODUCTION_PLAN_V01.md` with this document.
+
+The user supplied a successful online tokenizer report at `2026-09-29T00:13:10.027340+00:00`. Repository hashes and submitted fields were checked in [the tokenizer follow-up](TOKENIZER_CONTRACT_REVIEW_20260929.md). The original preparation details below are retained as history; the local tokenizer task is complete.
 
 ## Evidence and reference scope
 
@@ -31,7 +33,7 @@ Without `--online`, the script performs only local JSON review using the standar
 
 The online probe verifies the three configuration hashes against downloaded content, actual BOS/EOS/PAD IDs, a single BOS, exact user/assistant/think formatting for two synthetic fixtures, agreement between direct and two-step tokenization, left-padded attention masks, and explicit top-k=0. It records the actual tokenizer/dependency versions and synthetic prompt IDs. A library/configuration mismatch is a failed probe, not a reason to silently change the scientific setup.
 
-## Actual validation in this update
+## Earlier preparation validation
 
 - 25 new CPU unit tests passed using test doubles, not the real pretrained tokenizer or live HTTP.
 - Syntax checks passed for the new script and tests.
@@ -39,9 +41,9 @@ The online probe verifies the three configuration hashes against downloaded cont
 - The actual pinned-tokenizer online probe was **not run** in the assistant environment. Container network retrieval was unavailable. No successful package installation, model or GPU run is claimed.
 - The earlier test suites were not rerun in this update; their historical results remain separate.
 
-## Next local action
+## Completed local action (retained for reproducibility)
 
-From the existing `quantthink` environment and working branch:
+The following was the requested tokenizer-only action from the existing `quantthink` environment and working branch. No rerun is requested after the reported pass:
 
 ```bash
 git pull --ff-only &&
@@ -53,4 +55,4 @@ python scripts/audit_tokenizer_contract.py --online
 
 The new report is written under `results/local/tokenizer_contract_<timestamp>.json`. Success is `TOKENIZER_CONTRACT_PASS_NOT_MODEL_READY`; failure is `TOKENIZER_AUDIT_INCOMPLETE`, with no fallback to another revision. A missing/ambiguous local report requires `--metadata` pointing to the existing report, not another revision-resolution run.
 
-Session 01 remains open. Tokenizer success would close a concrete input-format subtask, not the unresolved primary full-text novelty review, scientific protocol acceptance, research approval, AWQ adapter validation or eventual model reproduction. The next model step remains R0 only after the required gates are satisfied; R1 and H1 are not started by this command.
+Session 01 remains open. The user-reported tokenizer pass closes the concrete input-format subtask. The two primary-text access blockers were resolved in the [novelty follow-up](NOVELTY_FOLLOWUP_20260929.md); final contribution/novelty judgment, scientific protocol acceptance, research approval, AWQ adapter validation and eventual model reproduction remain open. The next model step remains R0 only after the required gates are satisfied; R1 and H1 are not started by this command.
