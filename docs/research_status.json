@@ -52,7 +52,7 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "난도 시험80개 요약은 검토 완료. docs/DIFFICULTY_RESULT_REVIEW_20260929_KO.md의 읽기 전용 내보내기로 기존 run.json·재개 백업·캐시 설정을 받아 원본 종료 ID, 형식 미판정4개 및 검열43개를 검토한다. 새 생성·재개·준비는 반복하지 않는다.",
+  "next_local_environment_step": "docs/DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md의 inspect_qwen2_sdpa_mask.py로 설치된고정소스의4096문맥경계마스크를4위치×2조건의작은CPU텐서에서확인. 모델/토크나이저·forward·GPU·생성·다운로드없음. 원본내보내기/80회시험/준비/R0는반복하지않음.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
@@ -116,10 +116,10 @@
   "next_session_ready": false,
   "next_session_title": "QuantThink 03 — 교란 매칭·대조군 검증",
   "blocking_items": [
-    "기존 R0 상세 요약은 검토했다. 두 LayerNorm의56개 비영 잔차가 보고됐다. BF16 재적용 후 실제 파라미터 잔차와 전체 모델 logit·좌표 변환 영향은 미검증이다.",
-    "자체 난도 시험80개 요약의 집계는 일치. EOS는 BF16 25/40·AWQ 12/40이며 검열43개·EOS 형식 미판정4개가 있다. 원본 생성문/종료 ID·실행 provenance·재개 보존·실제 최종 답 검토가 남았다.",
-    "모든 난도는 사전 기준상 INCONCLUSIVE이며 확정된 통과 경계는 없다. 평가 타당도·기능적 양자화 검증·후속 재현 기준이 미완료다.",
-    "R1·MATH-500·KL 매칭·장문맥·H1/H2·7B는 원 R0와 현재 자체 난도 시험 범위 밖이며 미실행이다. 세션03 전환 조건은 미충족이다."
+    "기존R0의두LayerNorm56개비영잔차, BF16재적용파라미터잔차와B/S/Q/C/Cw전체모델logit영향은계속미검증이다.",
+    "난도80개원본의입력/종료/집계·12개/31개재개백업·실행코드/상태해시대조완료. 형식미판정4개는수동정답. v01자동난도판정은보존하며43개검열의최종정오는미관측이다.",
+    "고정config는use_sliding_window=false와sliding_window=4096. 고정소스의공통SDPA마스크가사용플래그를확인하지않는경로를찾았으며44개응답이문맥4096을넘었다. 설치된소스의CPU확인·실제생성영향분리는미완료다.",
+    "기능적양자화검증·평가기의일반타당도·후속재현기준이미완료라model_ready=false·세션02유지. R1/MATH-500/새Pile/KL매칭/장문맥/H1/H2/7B와자동재실행/예산확대는진행하지않는다."
   ],
   "allowed_now": [
     "literature_review",
@@ -577,12 +577,12 @@
     "model_execution_completed": false
   },
   "session02": {
-    "status": "DIFFICULTY_PILOT_80_SUMMARY_REVIEWED_RAW_EVIDENCE_PENDING",
+    "status": "DIFFICULTY_RAW_EVIDENCE_REVIEWED_SDPA_MASK_CPU_CHECK_PENDING",
     "handoff": "docs/HANDOFF_01_TO_02_KO.md",
-    "next_single_task": "난도 시험80개 요약은 검토 완료. docs/DIFFICULTY_RESULT_REVIEW_20260929_KO.md의 읽기 전용 내보내기로 기존 run.json·재개 백업·캐시 설정을 받아 원본 종료 ID, 형식 미판정4개 및 검열43개를 검토한다. 새 생성·재개·준비는 반복하지 않는다.",
+    "next_single_task": "docs/DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md의 inspect_qwen2_sdpa_mask.py로 설치된고정소스의4096문맥경계마스크를4위치×2조건의작은CPU텐서에서확인. 모델/토크나이저·forward·GPU·생성·다운로드없음. 원본내보내기/80회시험/준비/R0는반복하지않음.",
     "r0_output_directory": "results/local/r0_v03",
     "exit_criteria_met": false,
-    "latest_review_document": "docs/DIFFICULTY_RESULT_REVIEW_20260929_KO.md",
+    "latest_review_document": "docs/DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md",
     "diagnostic_followup_plan": "docs/R0_DIAGNOSTIC_FOLLOWUP_20260929_KO.md",
     "realistic_input_plan": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md",
     "difficulty_pilot_plan": "docs/DIFFICULTY_PILOT_V01_KO.md"
@@ -873,7 +873,7 @@
     "current_next_action": "사용자의 추가 자체 문제 요청에 따라 difficulty_pilot v01을 구현했다. 이전 MATH train 28문제/8192 후보는 별도 초안으로 남기고 실행하지 않는다."
   },
   "difficulty_pilot": {
-    "status": "USER_SUMMARY_80_COMPLETE_INTERNAL_AGGREGATES_MATCH_RAW_REVIEW_PENDING",
+    "status": "RAW_80_RECORDS_REVIEWED_MANUAL_4_CORRECT_MASK_CONFOUND_PENDING",
     "authorization": "USER_REQUESTED_BOUNDED_DIFFICULTY_PILOT",
     "request_recorded_at": "2026-09-29T18:58:01+09:00",
     "user_request": "시험문제를 난이도에 따라서 여러개 만들어서, 어느 난이도 쯤에서 시험이 통과하는지 확인해보자. 그리고 다음 연구 단계에서 어떻게 해야할지 명령어도 함께 줘.",
@@ -908,7 +908,7 @@
     "max_prompt_tokens": 768,
     "max_total_context_tokens": 4864,
     "awq_mode": "저장된 R0 scale/clip 재적용. 원 체크포인트와 바이트 동등성 미인증, calibration 탐색 없음.",
-    "evaluator": "EOS + think 종료 뒤 단일 boxed 정수/분수의 정확 비교. 실제 생성문 수동 검토 미완료.",
+    "evaluator": "원래v01자동점수보존. EOS형식미판정4개최종영역의단위설명을수동확인해모두정답. 사후수동보완은별도표이며평가기일반타당도인증아님.",
     "level_pass_rule": "8개 응답 모두 EOS+파싱 가능일 때만 판정. 4문제 중 3개 이상이 두 시드 모두 최종 정답이면 PASS; 그 외 FAIL. 누락/오류/검열/모호한 답은 INCONCLUSIVE.",
     "run_command": "scripts/run_difficulty_pilot.py --execute",
     "summary_command": "scripts/summarize_difficulty_pilot.py",
@@ -923,7 +923,7 @@
       "old_r0_or_preparation_tests_rerun": false,
       "syntax_check": "PASSED_FOR_FOUR_NEW_RUNTIME_SCRIPTS"
     },
-    "user_execution": "ALL_80_ATTEMPTS_RECORDED_IN_USER_SUMMARY_RUNTIME_PROVENANCE_PENDING",
+    "user_execution": "80_SAVED_ATTEMPTS_AND_TWO_RESUME_PREFIXES_VERIFIED_FROM_ATTACHMENT",
     "model_ready": false,
     "automatic_retry": false,
     "automatic_budget_increase": false,
@@ -931,7 +931,7 @@
     "math500_used": false,
     "raw_user_results_committed": false,
     "question_document": "docs/DIFFICULTY_QUESTIONS_V01_KO.md",
-    "latest_review_document": "docs/DIFFICULTY_RESULT_REVIEW_20260929_KO.md",
+    "latest_review_document": "docs/DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md",
     "partial_execution_review": {
       "reviewed_at": "2026-09-29T20:22:14+09:00",
       "attachment_sha256": "52907e27e8918e6e55fcde1d79392be872f87853faa4df19611caee27fe936b2",
@@ -975,7 +975,7 @@
       "raw_terminal_log_committed": false
     },
     "resume_implementation": {
-      "status": "CPU_AND_MOCK_INTEGRATION_TESTED_NOT_USER_GPU_REPORTED",
+      "status": "CPU_MOCK_TESTED_USER_RECORDS_RESUME_PREFIXES_VERIFIED",
       "script": "scripts/difficulty_pilot_resume.py",
       "command_option": "--execute --resume",
       "new_tests_passed": 14,
@@ -988,7 +988,7 @@
       "automatic_retry": false,
       "config_or_budget_changed": false,
       "progress_interval_seconds": 15,
-      "user_resume_result": "COMPLETE_80_SUMMARY_RECEIVED_ACTUAL_RESUME_PROVENANCE_PENDING"
+      "user_resume_result": "TWO_RESUMES_AT_12_AND_31_COMPLETED_PREFIXES_PRESERVED_80_FINAL_RECORDS"
     },
     "completed_summary_review": {
       "reviewed_date": "2026-09-29",
@@ -1059,20 +1059,134 @@
         }
       ],
       "raw_results_committed": false,
-      "model_ready": false
+      "model_ready": false,
+      "record_scope": "요약만받은시점의역사적검토. 이후원본검증은raw_evidence_review를따름."
     },
     "existing_result_export": {
       "script": "scripts/export_difficulty_review.py",
       "test_file": "tests/test_difficulty_review_export.py",
       "new_cpu_tests_passed": 5,
       "new_cpu_tests_failed": 0,
-      "scope": "기존 원본/요약 대조·전체 기록 복사·재개 백업/앞부분 보존 대조. 선택적으로 고정 로컬 config.json만 읽음. 사용자 원본·실제 Hub 캐시는 아직 미검토.",
+      "scope": "기존원본/요약대조·전체기록복사·재개백업/앞부분대조. 이후사용자전체snapshot과고정config.json을받아직접검토완료. GPU/원시가중치검증아님.",
       "new_model_or_tokenizer_execution": false,
       "network_download": false,
       "original_files_modified": false,
       "config_or_budget_or_scoring_changed": false,
       "old_tests_rerun": false,
-      "user_export_result": "NOT_YET_RECEIVED"
+      "user_export_result": "RECEIVED_PACKET_SNAPSHOTS_REVIEWED_ORIGINAL_SERIALIZATION_HASHES_MATCH"
+    },
+    "raw_evidence_review": {
+      "reference": "configs/difficulty_evidence_review_v01.json",
+      "attachment_name": "review_evidence_v01.json",
+      "attachment_sha256": "f9e30e7ad4b7638689e62a4f9f3368d61b5ac21d735a60cb08054019757baad4",
+      "attachment_bytes": 2372954,
+      "source_run_sha256": "ebdf46b1068754b3c12db1bef3dad2b496c18e85209099fed965b4bd3eaacbe0",
+      "source_summary_sha256": "21ba286b4bd78caef53f269319c81564ad39fbabcfaa97ea5e90d740975fba90",
+      "audited_repository_head": "2a3617a38c9cc6597fa86c12238862c3559e0bbb",
+      "all_80_input_ids_and_termination_checked": true,
+      "summary_recomputed_matches": true,
+      "source_serialization_byte_hashes_match": true,
+      "resume_prefixes_preserved": [
+        12,
+        31
+      ],
+      "recorded_execution_commits": {
+        "initial": "fbe673e97a42e38942745aea6d028a3f58bf0b90",
+        "resumes": [
+          "49317c044b42e76f9afeca84b360092e88b99979",
+          "49317c044b42e76f9afeca84b360092e88b99979"
+        ]
+      },
+      "recorded_code_and_status_hashes_match_repository": true,
+      "r0_29_input_hash_references_match": true,
+      "upstream_6_blob_references_match": true,
+      "raw_parameter_arrays_or_gpu_independently_executed": false,
+      "manual_four_unscorable_all_correct": true,
+      "supplemental_manual_counts": {
+        "bf16": {
+          "correct_and_eos": 25,
+          "censored": 15,
+          "stable_problems_by_level": [
+            4,
+            3,
+            3,
+            1,
+            0
+          ]
+        },
+        "awq_w3_replay": {
+          "correct_and_eos": 12,
+          "censored": 28,
+          "stable_problems_by_level": [
+            3,
+            1,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "automatic_v01_verdicts_unchanged": true,
+      "supplemental_manual_boundary": "BF16 D1은8/8 EOS와정답·4/4안정조건충족. AWQ는D1부터검열이있어통과경계미확정. 사후수동보완표이며기존자동판정을덮어쓰지않음.",
+      "censored_think_close_counts": {
+        "bf16_zero": 11,
+        "bf16_one": 4,
+        "awq_zero": 28,
+        "multiple": 0
+      },
+      "context_window_review": {
+        "use_sliding_window": false,
+        "sliding_window": 4096,
+        "input_tokens_min": 59,
+        "input_tokens_max": 110,
+        "max_input_plus_generated_tokens": 4206,
+        "crossing_4096": {
+          "bf16": 16,
+          "awq_w3_replay": 28
+        },
+        "crossing_eos_case": {
+          "problem_id": "D4-04",
+          "arm": "bf16",
+          "seed": 43,
+          "input_tokens": 102,
+          "generated_tokens": 4056
+        },
+        "status": "PINNED_SOURCE_MASK_CONFOUND_IDENTIFIED_INSTALLED_CPU_PROBE_PENDING"
+      },
+      "pre_window_prefix_sensitivity": {
+        "status": "POST_HOC_DESCRIPTIVE_EXISTING_IDS_ONLY",
+        "generated_prefix_limit": 3986,
+        "derivation": "4096 - 최대입력110 = 3986. 마지막 예측에 사용한KV 길이는최대4095로고정소스의4096마스크분기이전.",
+        "bf16_eos": 24,
+        "awq_eos": 12,
+        "both_eos": 12,
+        "bf16_only_eos": 12,
+        "awq_only_eos": 0,
+        "neither_eos": 16,
+        "original_budget_or_outcomes_changed": false,
+        "new_generation": false
+      },
+      "raw_results_committed": false,
+      "new_model_execution": false,
+      "model_ready": false
+    },
+    "sdpa_mask_inspection": {
+      "script": "scripts/inspect_qwen2_sdpa_mask.py",
+      "source_ref": "huggingface/transformers@v4.51.3",
+      "positions": [
+        4094,
+        4095,
+        4096,
+        4204
+      ],
+      "conditions": 2,
+      "device": "cpu",
+      "model_or_tokenizer_loading": false,
+      "model_forward_or_generation": false,
+      "gpu_or_network": false,
+      "source_config_modified": false,
+      "assistant_validation": "구문·고정소스호출시그니처·첨부해시/설정의--plan조회·잘못된근거해시거부·기존출력보호확인. PyTorch/Transformers부재로실제CPU텐서호출미실행.",
+      "user_result": "NOT_YET_RECEIVED"
     }
   }
 }
