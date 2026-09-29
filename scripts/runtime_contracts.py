@@ -47,6 +47,35 @@ def load_prepared_calibration(folder, candidate, refs, policy):
     return blocks, report
 
 
+def verify_reviewed_preparation(folder, report, blocks, candidate, refs, policy, review):
+    """자체 해시가 맞는 다른 자료로 바뀌지 않도록 검토된 참조에도 대조합니다. 승인 판단은 별도입니다."""
+    if (review.get("schema_version") != 1
+            or review.get("status") != "PREPARATION_REPORT_REVIEWED_NOT_RUN_APPROVAL"):
+        raise ValueError("데이터 준비 검토 참조의 형식을 확인하세요.")
+    for key, value in (("candidate_sha256", candidate), ("inspection_refs_sha256", refs),
+                       ("policy_sha256", policy)):
+        if review.get(key) != canonical_hash(value):
+            raise ValueError(f"검토 참조의 설정 해시가 다릅니다: {key}")
+    for key in ("candidate_sha256", "inspection_refs_sha256", "policy_sha256", "source_files",
+                "packages", "implementation_sha256", "artifacts"):
+        if report.get(key) != review.get(key):
+            raise ValueError(f"준비 보고서가 검토한 자료와 다릅니다: {key}")
+    calibration = json.loads((folder / "calibration_manifest.json").read_text())
+    development = json.loads((folder / "development_manifest.json").read_text())
+    for name, actual in (("calibration", calibration), ("development", development)):
+        for key, expected in review[name].items():
+            if actual.get(key) != expected:
+                raise ValueError(f"검토한 {name} 선택·집계와 다릅니다: {key}")
+    cfg = policy["calibration"]
+    if (not isinstance(blocks, list) or len(blocks) != cfg["blocks"]
+            or any(not isinstance(row, list) or len(row) != cfg["block_size"] for row in blocks)
+            or any(type(t) is not int or t < 0 for row in blocks for t in row)):
+        raise ValueError("검토한 calibration 블록 크기 또는 토큰 형식과 다릅니다.")
+    if canonical_hash(blocks) != review["calibration"]["token_blocks_sha256"]:
+        raise ValueError("calibration 토큰이 검토한 토큰 해시와 다릅니다.")
+    return canonical_hash(review)
+
+
 def prompt_ids(tokenizer, prompt):
     ids = tokenizer.apply_chat_template([{"role": "user", "content": prompt}],
                                         tokenize=True, add_generation_prompt=True)
@@ -98,4 +127,3 @@ def generate_r0(model, tokenizer, candidate, *, arm, device, seed=42):
         except Exception as exc:
             row.update(finish_reason="error", error_type=type(exc).__name__, error=str(exc))
         yield row
-

@@ -52,7 +52,7 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "conda activate quantthink 후 작업 브랜치를 pull하고 test_data_preparation_limits.py의 새 회귀 검사 11개를 실행한다. 이어서 prepare_runtime_assets.py --mode all --online을 같은 결과 경로로 재실행하고 준비 보고서와 jsonl_reader·선택 해시를 검토한다. docs/DATA_PREPARATION_FIX_20260929_KO.md 참조.",
+  "next_local_environment_step": "데이터 준비·토크나이저·합성 AWQ 재실행은 불필요하다. docs/R0_REVIEW_PACKET_20260929_KO.md의 제한된 기여 범위와 R0 계획을 검토하고 수락·필요한 연구 실행 승인 근거를 기록한다. 이후 세션 01 종료 조건을 대조하고 실모델 R0 명령을 사용한다.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
@@ -116,10 +116,9 @@
   "next_session_ready": false,
   "next_session_title": "QuantThink 02 — 환경 구축·BF16/AWQ 재현",
   "blocking_items": [
-    "Integrate the newly inspected primary text of 2609.23125v1 and 2609.06473v1 with the earlier collision table and make a scoped contribution decision; their primary-text access blockers are resolved, not the overall novelty gate.",
-    "Complete scoped novelty decision beyond generic matched-noise control design, compression verbosity and termination measurement",
-    "Review and accept the concrete candidate reproduction plan and record required research-run approval",
-    "고정 Pile 파일의 바이트·전체 JSONL 해석은 확인했다. 사용자 전체 데이터 후보 준비 재실행과 개발·calibration ID 검토, 사전학습 모델 좌표·logit 검증, 실제 생성문 평가·판정 검증 및 장문맥은 미완료."
+    "기존 문헌의 통합 검토와 제한된 기여 범위 제안은 docs/R0_REVIEW_PACKET_20260929_KO.md에 정리했다. 해당 범위의 채택 결정이 필요하다.",
+    "이번 고정 자료를 사용하는 합성 2문제 × BF16/AWQ R0 계획의 수락과 필요한 연구 실행 승인 기록이 필요하다.",
+    "실모델 R0, 전체 모델 좌표·logit 검증, 실제 생성문 평가·수동 판정 검증과 장문맥은 후속 미실행 항목이다. R1·확증·KL 매칭·H1/H2는 이번 R0 범위에 포함하지 않는다."
   ],
   "allowed_now": [
     "literature_review",
@@ -250,7 +249,7 @@
     "scientific_gate_states_changed": false
   },
   "reproduction_preparation_v03": {
-    "status": "DATA_READER_FIXED_AWAITING_USER_PREPARATION_RERUN",
+    "status": "USER_PREPARED_DATA_REVIEWED_R0_ACCEPTANCE_PENDING",
     "document": "docs/REPRODUCTION_PREPARATION_V03_KO.md",
     "audited_base_commit": "3e78771b43f5024d844eef741f24f2c6feef8b43",
     "policy": "configs/runtime_preparation_v03.json",
@@ -280,13 +279,13 @@
       "pyarrow": null,
       "huggingface_hub": null
     },
-    "validation_scope": "작성 당시 검증은 모의 Hub 응답·합성 파일·압축 JSONL·오프라인 CLI·준비 경로 연동 및 구문 검사였다. 위 new_cpu_tests와 test_environment는 당시 기록이다. 이후 사용자 GPU 근거는 user_synthetic_awq_adapter, 실제 Pile 바이트·전체 JSONL 읽기와 오류 수정은 user_data_preparation_attempt에 별도로 기록했다.",
+    "validation_scope": "작성 당시 검증은 모의 Hub 응답·합성 파일·압축 JSONL·오프라인 CLI·준비 경로 연동 및 구문 검사였다. 위 new_cpu_tests와 test_environment는 당시 기록이다. 이후 사용자 GPU 근거는 user_synthetic_awq_adapter, 실제 Pile 바이트·전체 JSONL 읽기와 오류 수정은 user_data_preparation_attempt에 별도로 기록했다. 최신 데이터 검토는 user_prepared_assets에 별도로 기록했다.",
     "actual_awq_adapter": "SYNTHETIC_CUDA_PASS_USER_REPORTED_PRETRAINED_NOT_RUN",
-    "source_provenance_loader": "PINNED_PILE_BYTES_AND_FULL_JSONL_VERIFIED_ALL_PREPARATION_PENDING",
+    "source_provenance_loader": "PINNED_3_SOURCE_FILES_INDEPENDENTLY_VERIFIED",
     "synthetic_cuda_adapter_check": "USER_REPORTED_PASS_REPOSITORY_HASHES_CHECKED",
-    "real_dataset_file_hashes": "PILE_VALIDATION_ASSISTANT_VERIFIED_1_OF_3_DATASET_FILES",
-    "actual_calibration_ids": "NOT_SELECTED",
-    "actual_development_ids": "USER_PREPARATION_REACHED_CALIBRATION_IDS_NOT_REPORTED_OR_PERSISTED",
+    "real_dataset_file_hashes": "ALL_3_ASSISTANT_VERIFIED_AND_USER_REPORT_MATCHED",
+    "actual_calibration_ids": "USER_REPORTED_261_DOCUMENTS_TOKEN_HASH_REVIEWED",
+    "actual_development_ids": "INDEPENDENTLY_RECONSTRUCTED_3_ARTIFACT_HASHES_MATCH",
     "pretrained_r0": "NOT_RUN",
     "new_model_or_tokenizer_execution": true,
     "original_h1_h2_changed": false,
@@ -294,7 +293,9 @@
     "scientific_gate_states_changed": false,
     "execution_scope": "사용자 제출 무작위 소형 Qwen2 합성 실행. 작성 환경의 추가 모델·토크나이저 실행과 사전학습 가중치 실행은 없음.",
     "latest_user_review_document": "docs/SYNTHETIC_AWQ_REVIEW_20260929_KO.md",
-    "latest_data_preparation_review_document": "docs/DATA_PREPARATION_FIX_20260929_KO.md"
+    "latest_data_preparation_review_document": "docs/DATA_PREPARATION_REVIEW_20260929_KO.md",
+    "latest_r0_review_document": "docs/R0_REVIEW_PACKET_20260929_KO.md",
+    "prepared_asset_review_reference": "configs/prepared_assets_review_v03.json"
   },
   "user_command_environment": {
     "activation_command": "conda activate quantthink",
@@ -358,7 +359,7 @@
     "interpretation": "소형 무작위 모델의 구현 연결 이정표. 실모델 동등성·BF16/AWQ 재현·H1/H2 검증 또는 프로토콜 수락·연구 실행 승인을 뜻하지 않음."
   },
   "user_data_preparation_attempt": {
-    "status": "USER_REPORTED_FAILURE_REPRODUCED_READER_FIXED_RERUN_PENDING",
+    "status": "HISTORICAL_FAILURE_REPRODUCED_FIXED_SUPERSEDED_BY_SUCCESS",
     "evidence_source": "사용자 제출 터미널 출력. 원본 로컬 보고서와 생성 Git commit은 미확인. 같은 고정 Pile 파일을 작성 환경에서 독립적으로 내려받아 바이트 해시를 대조하고 읽기 오류를 재현함.",
     "review_document": "docs/DATA_PREPARATION_FIX_20260929_KO.md",
     "audited_repository_commit": "a640e64acc967878571ad2d955ce5fc2f7f65d73",
@@ -429,8 +430,92 @@
         "prepare_runtime_assets.py": "62f0c6cc57dabc53011f0ea7dd2ed789330e4579551974f6dc46f74832dd7e97"
       }
     },
-    "actual_preparation_manifest": "NOT_COMPLETED_OR_REVIEWED",
+    "actual_preparation_manifest": "해당 실패 시점에는 미완료. 후속 성공 보고는 user_prepared_assets 참조.",
     "scientific_gate_states_changed": false,
-    "historical_awq_evidence_note": "runtime_assets.py의 데이터 처리 수정으로 코드 해시는 바뀐다. 이전 GPU PASS의 해시 대조는 기존 audited_repository_commit에 대한 근거로 보존한다. AWQ 연결 구현을 변경하거나 새 GPU 실행으로 기록하지 않는다."
+    "historical_awq_evidence_note": "runtime_assets.py의 데이터 처리 수정으로 코드 해시는 바뀐다. 이전 GPU PASS의 해시 대조는 기존 audited_repository_commit에 대한 근거로 보존한다. AWQ 연결 구현을 변경하거나 새 GPU 실행으로 기록하지 않는다.",
+    "superseded_by": "user_prepared_assets"
+  },
+  "user_prepared_assets": {
+    "status": "USER_PREPARATION_COMPLETED_REPORT_REVIEWED_NOT_RUN_APPROVAL",
+    "source_report_recorded_at_utc": "2026-09-29T05:18:26.923265+00:00",
+    "reported_status": "PREPARED_CANDIDATE_NOT_RUN_APPROVAL",
+    "audited_repository_commit": "f89b1c5bf4890c79c36e11462cdd5a5c20d34890",
+    "generating_git_commit": null,
+    "original_local_report_bytes_received": false,
+    "review_document": "docs/DATA_PREPARATION_REVIEW_20260929_KO.md",
+    "review_reference": "configs/prepared_assets_review_v03.json",
+    "reported_code_hashes_matched": 4,
+    "canonical_config_hashes_matched": 3,
+    "independent_source_verification": {
+      "files": 3,
+      "scope": "동일 고정 revision의 원본 바이트와 공식 Hub 메타데이터를 대조. 사용자 디스크 파일을 직접 읽은 것은 아님.",
+      "total_bytes": 340798261
+    },
+    "independent_development_reconstruction": {
+      "files": 3,
+      "pyarrow": "20.0.0",
+      "result": "SIZE_SHA256_GIT_BLOB_SHA1_ALL_MATCH",
+      "scope": "GSM8K 원본과 MATH-500 problem 필드로 기존 선택 코드를 실행. 생성·정답 평가 없음."
+    },
+    "development": {
+      "counts": {
+        "development_rows": 7473,
+        "duplicate_development_rows": 0,
+        "confirmation_rows": 500,
+        "excluded_confirmation_overlap": 0,
+        "eligible_unique": 7473,
+        "selected": 100,
+        "remaining_unassigned": 7373
+      },
+      "selection_seed": 20260929,
+      "selected_ids_sha256": "94980f34565e5f3da60a36169db83c9c0b3e24d7765b84bcd1db188445d5897e",
+      "confirmation_question_set_sha256": "0e87754f814f22085052d6fc1a952bc9f324e548bbbd5430d6114ae6069419c6"
+    },
+    "calibration": {
+      "counts": {
+        "source_rows": 179996,
+        "eligible_unique_documents": 106425,
+        "excluded_exact_question_overlap": 0,
+        "duplicate_documents": 201,
+        "excluded_empty_text": 161,
+        "excluded_text_length": 1488,
+        "excluded_token_length": 71721
+      },
+      "total_tokens": 65536,
+      "used_documents": 261,
+      "token_blocks_sha256": "7270d4703bd2064aafe7aa29f41c002131a179a622f515c791634c61663f9f3b"
+    },
+    "calibration_evidence_scope": "사용자 제출 집계·해시를 고정 정책과 대조. 원본 179,996행은 이전 전체 파싱과 일치. 산출물 2개 바이트·261문서 목록·토큰 배열의 독립 재구성은 하지 않았으며 R0가 실행 전 고정 해시에 대조함.",
+    "jsonl_reader_note": "제출 요약에 없음. 전체 manifest 해시를 기록했으며 재제출·재실행 사유로 삼지 않음.",
+    "r0_binding_validation": {
+      "new_tests_passed": 7,
+      "existing_v03_tests_passed": 29,
+      "existing_v03_tests_skipped": 3,
+      "skip_reason": "작성 환경의 PyTorch·Transformers 부재",
+      "scope": "합성 번들 교체·출처/코드/선택 변경·블록 형식 및 승인 검사 순서 확인. 실모델 실행 없음."
+    },
+    "assistant_environment": {
+      "python": "3.12.14",
+      "numpy": "2.3.5",
+      "pyarrow_isolated": "20.0.0",
+      "torch": null,
+      "transformers": null
+    },
+    "new_model_execution": false,
+    "new_tokenizer_execution_in_assistant_environment": false,
+    "original_config_snapshots_changed": false,
+    "scientific_gate_states_changed": false,
+    "raw_data_or_token_arrays_committed": false
+  },
+  "r0_review_packet": {
+    "document": "docs/R0_REVIEW_PACKET_20260929_KO.md",
+    "status": "SCOPED_PROPOSAL_AWAITING_ACCEPTANCE_AND_RESEARCH_APPROVAL",
+    "source_scope": "저장소의 초기 검토·재현 계획·후속 관련 본문 검토를 통합. 이번 갱신에서 새 원문 대조나 체계적 검색을 수행하지 않음.",
+    "proposed_contribution": "동일 BF16 참조 prefix에서 출력 KL을 맞춘 고정 Gaussian 가중치 교란이 AWQ-W3의 길이·종료·검증된 정답 포기 변화를 함께 재현하는지 평가.",
+    "r0_scope": "합성 2문제 × BF16/AWQ-W3, seed 42, 응답당 최대 128토큰, 총 4회 생성. 전체 계층 AWQ calibration 비용은 별도.",
+    "original_h1_h2_frozen": false,
+    "world_first_claim": false,
+    "protocol_accepted": false,
+    "research_approval_recorded": false
   }
 }

@@ -9,7 +9,10 @@ import platform
 import subprocess
 
 from runtime_assets import ROOT, canonical_hash, load_contracts, package_versions, write_new
-from runtime_contracts import generate_r0, load_prepared_calibration, require_gates, unmet_gates
+from runtime_contracts import (
+    generate_r0, load_prepared_calibration, require_gates, unmet_gates,
+    verify_reviewed_preparation,
+)
 from prepare_runtime_assets import load_tokenizer
 from qwen2_awq_adapter import load_upstream, run_awq
 
@@ -35,6 +38,8 @@ def run(output, assets, upstream_dir, device, candidate, refs, policy, status):
             or versions["huggingface-hub"] != "0.36.2"):
         raise ValueError("검토한 런타임 버전과 다릅니다.")
     blocks, prepared = load_prepared_calibration(assets, candidate, refs, policy)
+    review = json.loads((ROOT / "configs/prepared_assets_review_v03.json").read_text())
+    review_sha256 = verify_reviewed_preparation(assets, prepared, blocks, candidate, refs, policy, review)
     upstream = load_upstream(upstream_dir, policy)
     output.mkdir(parents=True, exist_ok=False)
     report = {"schema_version": 1, "status": "R0_STARTED",
@@ -42,6 +47,7 @@ def run(output, assets, upstream_dir, device, candidate, refs, policy, status):
               "repository": repo, "packages": versions, "python": platform.python_version(),
               "candidate_sha256": canonical_hash(candidate), "policy_sha256": canonical_hash(policy),
               "preparation_report_sha256": canonical_hash(prepared),
+              "prepared_assets_review_sha256": review_sha256,
               "research_status_sha256": canonical_hash(status),
               "scope": "두 합성 프롬프트의 BF16/AWQ R0. H1·MATH-500·장문맥 재현 결과 아님.",
               "attempts": [], "completed_awq_layers": 0}
@@ -118,4 +124,3 @@ def main():
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
