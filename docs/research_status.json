@@ -4,7 +4,7 @@
   "timezone": "Asia/Seoul",
   "current_session": "02",
   "current_session_title": "QuantThink 02 — 환경 구축·BF16/AWQ 재현",
-  "audited_base_commit": "2825c56a7f5cecb68ac6e782fcc9bdc6163e4db3",
+  "audited_base_commit": "8b928376458ad0366013cbe52da95288e771a61e",
   "source_audit": "SCOPED_PRIMARY_FULLTEXT_FOLLOWUP_COMPLETED",
   "novelty_gate": "SCOPED_CONTRIBUTION_ACCEPTED",
   "protocol_gate": "ACCEPTED",
@@ -52,7 +52,7 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "새16문맥 좌표 점검 v01의 입력·한 단계 운영 한도·최대96회/생성0 예산·실행기를 준비하고 새 CPU 검사8개를 통과했다. 현재 새 실행 승인 여부 결정 단계: functional_holdout.authorization=PENDING·잔여예산0. 이전 R0/20문제/12회/6회/CPU 감사는 반복하지 않는다. 이 패널이 통과해도 전체 생성·모집단 동등성·H1/H2·model_ready를 확정하지 않는다. 미래 생성 주 결과·의미 있는 차이·검정력·실제 cache 검증은 별도 설계로 남긴다.",
+  "next_local_environment_step": "사용자의 토큰 상한 확대 재시험 요청을 반영해 기존20문제×2모델×2시드80응답을 출력32768·전체문맥window=None 조건으로 새 폴더에서 실행한다. 동일 경로의4K/8K/16K/32K 종료율·검열률·상한 내 길이를 집계한다. 코드/요청 범위 기록과 새 CPU 검사9개 완료, 사용자 GPU 실행 전이다. 앞선16문맥96회 좌표 점검은 미승인 보류. model_ready=false·세션02 유지.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
@@ -116,10 +116,10 @@
   "next_session_ready": false,
   "next_session_title": "QuantThink 03 — 교란 매칭·대조군 검증",
   "blocking_items": [
-    "고정 prefix12회·사용자 CPU 원시배열 감사·종료 prefix6회 보고 검토 완료. 새16문맥·96회 한 단계 좌표 점검의 입력·운영 한도·실행기·CPU 검사8개를 준비했으나 실행은 미승인·미실행이다. 원시.npy/가중치 직접 검증과 구분하며 종료 지연의 인과 원인·전체 생성 기능 수락 기준·독립 확인은 남아 있다.",
+    "기존80응답 중43개검열(BF16 15/40·AWQ28/40)이 최종정답·자연길이 해석의 주요 제약이다. 사용자 요청으로32K·전체문맥80응답 재시험을 준비했으나 실제 실행 전이다. 상한 확대만으로 좌표변환 수락·평가기 일반타당도·종료지연 인과원인이 해결되지는 않는다.",
     "난도80개원본의입력/종료/집계·12개/31개재개백업·실행코드/상태해시대조완료. 형식미판정4개는수동정답. v01자동난도판정은보존하며43개검열의최종정오는미관측이다.",
     "고정 use_sliding_window=false·sliding_window=4096의 CPU 마스크에서 query4096부터 이전 키 차단을 관측했고4개 설치소스 해시가 공식 원본과 일치한다. 당시 생성 cache/마스크 및 실제 인과 영향은 미검증이다. 경계 전 EOS24/40 대12/40 차이도 남는다.",
-    "기능적양자화검증·평가기의일반타당도·후속재현기준이미완료라model_ready=false·세션02유지. R1/MATH-500/새Pile/KL매칭/장문맥/H1/H2/7B와자동재실행/예산확대는진행하지않는다."
+    "기능적양자화검증·평가기일반타당도·후속재현기준 미완료로model_ready=false·세션02 유지. 요청된long_generation_v01의80회/32K 범위를 넘어선 R1/MATH-500/새Pile/KL매칭/별도장문맥연구/H1/H2/7B는 시작하지 않는다."
   ],
   "allowed_now": [
     "literature_review",
@@ -136,15 +136,16 @@
     "read_only_saved_fixed_prefix_logits_cpu_audit_and_float64_filter_diagnostics",
     "approved_termination_prefix_v01_maximum_6_forward_calls_zero_generation",
     "read_only_result_review_and_session02_acceptance_protocol_design",
-    "functional_holdout_v01_protocol_fixture_implementation_preparation_and_cpu_contract_tests_only"
+    "functional_holdout_v01_protocol_fixture_implementation_preparation_and_cpu_contract_tests_only",
+    "user_requested_long_generation_v01_80_attempts_32768_tokens_full_context_bounded_retest"
   ],
   "not_yet_authorized_by_gates": [
     "functional_holdout_v01_new_16_contexts_maximum_96_forward_calls",
-    "scientific_model_runs_outside_r0_difficulty_v01_fixed_prefix_v01_and_termination_prefix_v01_scope",
+    "scientific_model_runs_outside_recorded_r0_difficulty_fixed_termination_and_long_generation_v01_scopes",
     "r1_100_question_evaluation",
     "math500_confirmation",
     "kl_matching_experiments",
-    "long_context_experiments",
+    "long_context_experiments_outside_long_generation_v01",
     "confirmatory_hypothesis_tests",
     "7b_extension",
     "full_model_benchmark_matrix"
@@ -583,9 +584,9 @@
     "model_execution_completed": false
   },
   "session02": {
-    "status": "FUNCTIONAL_HOLDOUT_PREPARED_EXECUTION_APPROVAL_PENDING",
+    "status": "USER_REQUESTED_32K_RETEST_READY_USER_EXECUTION_PENDING",
     "handoff": "docs/HANDOFF_01_TO_02_KO.md",
-    "next_single_task": "새16문맥 좌표 점검 v01의 입력·한 단계 운영 한도·최대96회/생성0 예산·실행기를 준비하고 새 CPU 검사8개를 통과했다. 현재 새 실행 승인 여부 결정 단계: functional_holdout.authorization=PENDING·잔여예산0. 이전 R0/20문제/12회/6회/CPU 감사는 반복하지 않는다. 이 패널이 통과해도 전체 생성·모집단 동등성·H1/H2·model_ready를 확정하지 않는다. 미래 생성 주 결과·의미 있는 차이·검정력·실제 cache 검증은 별도 설계로 남긴다.",
+    "next_single_task": "사용자의 토큰 상한 확대 재시험 요청을 반영해 기존20문제×2모델×2시드80응답을 출력32768·전체문맥window=None 조건으로 새 폴더에서 실행한다. 동일 경로의4K/8K/16K/32K 종료율·검열률·상한 내 길이를 집계한다. 코드/요청 범위 기록과 새 CPU 검사9개 완료, 사용자 GPU 실행 전이다. 앞선16문맥96회 좌표 점검은 미승인 보류. model_ready=false·세션02 유지.",
     "r0_output_directory": "results/local/r0_v03",
     "exit_criteria_met": false,
     "latest_review_document": "docs/TERMINATION_PREFIX_RESULT_REVIEW_20260930_KO.md",
@@ -601,9 +602,11 @@
     "termination_prefix_result_reference": "configs/termination_prefix_result_review_v01.json",
     "acceptance_design_document": "docs/SESSION02_ACCEPTANCE_DESIGN_20260930_KO.md",
     "easy_explanation_document": "docs/SESSION02_EXPLAINED_20260930_KO.md",
-    "functional_holdout_proposal": "docs/FUNCTIONAL_HOLDOUT_V01_KO.md"
+    "functional_holdout_proposal": "docs/FUNCTIONAL_HOLDOUT_V01_KO.md",
+    "long_generation_protocol": "docs/LONG_GENERATION_V01_KO.md",
+    "generation_budget_policy": "docs/GENERATION_BUDGET_POLICY_KO.md"
   },
-  "snapshot_status_note": "configs의 기존 후보·정책·점검·준비 검토 JSON은 해시가 고정된 당시 스냅샷이며 과거 상태를 소급 수정하지 않는다. 상위 승인 상태와 allowed_now의 기존 실행 항목은 각 기록 범위에 한정한다. fixed_prefix_diagnostic와 termination_prefix_diagnostic의 APPROVED는 완료된 실행의 승인 이력이며 잔여 예산은0이다. 새 functional_holdout_v01 설정도 제안 당시 스냅샷으로 고정하고 현재 별도 실행 권한은 functional_holdout을 따른다. 프로토콜 준비 요청을 미제시 GPU 예산 승인으로 확대 해석하지 않는다.",
+  "snapshot_status_note": "configs의 기존 후보·정책·점검·준비 검토 JSON은 해시가 고정된 당시 스냅샷이며 과거 상태를 소급 수정하지 않는다. 상위 승인 상태와 allowed_now의 기존 실행 항목은 각 기록 범위에 한정한다. fixed_prefix_diagnostic와 termination_prefix_diagnostic의 APPROVED는 완료된 실행의 승인 이력이며 잔여 예산은0이다. 새 functional_holdout_v01 설정도 제안 당시 스냅샷으로 고정하고 현재 별도 실행 권한은 functional_holdout을 따른다. 프로토콜 준비 요청을 미제시 GPU 예산 승인으로 확대 해석하지 않는다. 이후 사용자 상한 확대 요청의 제한된 실행 범위는 long_generation에 별도로 기록한다. 기존 설정/결과나 functional_holdout 승인을 소급 변경하지 않는다.",
   "approval_record_validation": {
     "r0_inspection": "PASS_NO_UNMET_GATES",
     "model_loaded": false,
@@ -1464,7 +1467,7 @@
     "historical_execution_command": "conda activate quantthink\ncd ~/quantthink\ngit switch setup/session-01-research-gates &&\ngit pull --ff-only &&\npython scripts/run_termination_prefix_diagnostic.py --execute"
   },
   "functional_holdout": {
-    "status": "IMPLEMENTED_CPU_TESTED_EXECUTION_APPROVAL_PENDING",
+    "status": "PREPARED_UNAUTHORIZED_DEFERRED_FOR_USER_REQUESTED_32K_RETEST",
     "authorization": "PENDING",
     "remaining_forward_calls": 0,
     "preparation_user_message": "지금 세션에서 무엇을 하고 있고 목적은 무엇이고 진행 결과는 어떤지 아주 쉽게 설명해줘. 그리고 실험방법은 어떻게 했는지도 구체적으로 설명해줘. 알려준 명령어는 입력했어. 다음 작업도 진행해줘",
@@ -1552,6 +1555,94 @@
       "long_context",
       "H1_H2",
       "7B"
-    ]
+    ],
+    "deferred_reason_ko": "2026-09-30 08:27:53 사용자가 상한 확대 재시험을 우선 요청. 새96회는 승인하거나 실행하지 않았으며 기존 준비물을 보존한다."
+  },
+  "long_generation": {
+    "status": "IMPLEMENTED_CPU_TESTED_USER_EXECUTION_PENDING",
+    "authorization": "USER_REQUESTED_BOUNDED_LONG_GENERATION",
+    "request_recorded_at": "2026-09-30T08:27:53+09:00",
+    "user_request": "현재까지 시험한 결과 해석의 걸림돌은 토큰수 제한아니야? 토큰 수 제한을 늘려서 다시 시험하고, 앞으로의 시험도 토큰 수 제한을 충분히 늘리는게 어때?",
+    "authorization_scope_note_ko": "상한을 늘려 다시 시험하라는 현재 요청의 제한 구현.32K·80회·전체 문맥 조건은 요청을 구현한 명시 기본값이며 각 숫자에 별도 명시 승인을 받았다는 기록은 아님. 같은 요청의 승인을 반복하지 않는다. 원래 R0/12회/6회 승인·예산을 확대하지 않는다.",
+    "document": "docs/LONG_GENERATION_V01_KO.md",
+    "config": "configs/long_generation_v01.json",
+    "config_sha256": "033f98377d1ee1c12effb3b240321366683d8584aa11006ad0c254bc0193790e",
+    "suite": "fixtures/difficulty_ladder_v01.json",
+    "suite_sha256": "10fc1a73e263b1e8fa56849c27ce6748ab39bb8bea77858ada6d424dbe4ae961",
+    "script": "scripts/run_long_generation.py",
+    "implementation_sha256": {
+      "run_long_generation.py": "a2c3c685a2944da896cafdc76cd26c4e0862bf5bfb09a36acbd28c1b773f5417",
+      "long_generation_contracts.py": "5aa83b94a813a90d3f7d1cadde407d5bf88db39fd72bd05983a5e8355a3a9f45",
+      "difficulty_pilot_resume.py": "20f1e6f37ed496c97e678172169004281719d0c8d450d6bee434031cbbf33fe6",
+      "run_fixed_prefix_diagnostic.py": "8c0c5d72984c8ba366e2209657f2bacbede196cbb52c1f341a08d4f942f326ff",
+      "fixed_prefix_diagnostic_contracts.py": "bafc0997feac28d93a2fc5b30910fe487edea85ccb56f9adfeaf4a14fc00c31d",
+      "replay_r0_awq.py": "b01e0124eb97a7e1145c886842d894966084ac8b1f7b47f538c647d7e1fb574a",
+      "qwen2_awq_adapter.py": "ea7d9e3c35443fc889480c667a826a9eca793c7592fb03be778b150d094b59c5",
+      "awq_weight_space.py": "230b604c0f436696b9118753c8ddbbd383029a3ca9a2aa89aab6478b1bd23b6b",
+      "runtime_assets.py": "d647bb31a0a72a373a95bf1561603c8eff2563ff598eff60516bd54dbedca130",
+      "run_difficulty_pilot.py": "809b14475e7eac56ce6667b52b85839e674f766106130407b6802aafe9fdaec7",
+      "difficulty_pilot_contracts.py": "d14b79ea22069dc6666fce2e70edc17557ef97029158eafdd51ebb306c460446",
+      "runtime_contracts.py": "ca514a25f560b8912edd90de83cb8d4a18aed0cd97d8769f5b9f1627cc8924ee",
+      "reproduction_contracts.py": "04923d60075be31ca7b14b7566dd0040b474bb4f1e009d416ee66819401e45bb"
+    },
+    "expected_attempts": 80,
+    "max_new_tokens": 32768,
+    "maximum_generation_tokens": 2621440,
+    "maximum_generation_calls": 80,
+    "max_prompt_tokens": 768,
+    "max_total_context_tokens": 33536,
+    "arms": [
+      "bf16",
+      "awq_w3_replay"
+    ],
+    "seeds": [
+      42,
+      43
+    ],
+    "budget_thresholds": [
+      4096,
+      8192,
+      16384,
+      32768
+    ],
+    "sliding_window": null,
+    "use_sliding_window": false,
+    "use_cache": true,
+    "expected_cache_class": "DynamicCache",
+    "source_run_sha256": "ebdf46b1068754b3c12db1bef3dad2b496c18e85209099fed965b4bd3eaacbe0",
+    "low_censoring_rate_target_per_arm": 0.05,
+    "low_censoring_target_scope_ko": "예산 내 지표를 위한 운영 목표. 자연 길이 평균 식별·통계적 동등성·H1 한도가 아님. 검열이0보다크면 전체 자연 길이 평균은 계속 미확정.",
+    "output_directory": "results/local/long_generation_v01",
+    "execution_command": "python scripts/run_long_generation.py --execute",
+    "resume_command": "python scripts/run_long_generation.py --execute --resume --max-attempts 8",
+    "user_execution": "NOT_STARTED",
+    "model_ready": false,
+    "automatic_retry": false,
+    "old_results_overwritten": false,
+    "h1_h2_changed": false,
+    "functional_holdout_96_calls_authorized": false,
+    "resume_scope_ko": "완료 응답 보존·백업, 응답 사이 정상정지 후 명시적 재개. 도중Ctrl+C/OOM/오류의 미완료 호출도 소비 기록하고 자동 재생성하지 않음.",
+    "assistant_validation": {
+      "new_cpu_tests_passed": 9,
+      "test_file": "tests/test_long_generation.py",
+      "actual_torch_transformers_gpu_execution": false,
+      "actual_generation_cache_trace_verified": false,
+      "old_tests_rerun": false,
+      "old_config_and_runtime_code_preserved": true
+    },
+    "future_generation_budget_policy": "docs/GENERATION_BUDGET_POLICY_KO.md",
+    "scope_exclusions": [
+      "new_calibration",
+      "data_preparation_rerun",
+      "tokenizer_test_rerun",
+      "synthetic_AWQ_test_rerun",
+      "MATH-500",
+      "R1",
+      "KL_matching",
+      "H1_H2",
+      "7B",
+      "automatic_budget_increase"
+    ],
+    "comparison_warning_ko": "과거v01과상한/문맥설정이함께바뀌므로과거대비차이를상한만의인과효과로쓰지않음. 새동일경로의상한별집계로예산의존성을관측함."
   }
 }

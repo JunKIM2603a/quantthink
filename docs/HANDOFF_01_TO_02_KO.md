@@ -1,10 +1,10 @@
-# 세션 02 인계 — 종료 진단 검토 완료·새 16문맥 점검 준비
+# 세션 02 인계 — 사용자 요청32K 재시험 준비 완료
 
 **현재 세션 이름: QuantThink 02 — 환경 구축·BF16/AWQ 재현**
 
 새 채팅에서도 세션 02를 계속한다. 세션 01은 명시적 사용자 승인으로 완료됐고, 이후 R0 실행 결과 요약도 제출됐다. 초기 검토는 [R0 결과 검토](R0_RESULT_REVIEW_20260929_KO.md), 최신 상세 값은 [상세 요약 검토](R0_DETAIL_REVIEW_20260929_KO.md), 승인 범위는 [승인 기록](R0_APPROVAL_20260929_KO.md)을 따른다.
 
-이후 자체 난도20문제의80개 응답 요약과 원본/백업 묶음을 받아 [최신 원본 근거 검토](DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md)를 기록했다. [설치 코드의 CPU 마스크](SDPA_MASK_REVIEW_20260929_KO.md), [고정 prefix12회](FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md), [사용자 로컬 CPU 감사](LOGITS_AUDIT_REVIEW_20260930_KO.md), [종료 prefix6회](TERMINATION_PREFIX_RESULT_REVIEW_20260930_KO.md) 보고도 검토했다. 그 뒤 [설계안](SESSION02_ACCEPTANCE_DESIGN_20260930_KO.md)을 구체화하여 **[새16문맥 좌표 점검](FUNCTIONAL_HOLDOUT_V01_KO.md)의 입력·수락 규칙·예산·실행기를 준비**했다. 새 CPU 검사8개가 통과했으며 실제 GPU 실행은 미승인·미실행이다. 현재 다음은 이 새96회 범위의 승인 여부 결정이다. 기존12회/6회 예산은 소진됐고 같은 실행을 반복하지 않는다. [목적·방법·결과의 쉬운 설명](SESSION02_EXPLAINED_20260930_KO.md)을 함께 참고한다. 아래 R0 결과와 후속 결과를 구분한다.
+이후 자체 난도20문제의80개 응답 요약과 원본/백업 묶음을 받아 [최신 원본 근거 검토](DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md)를 기록했다. [설치 코드의 CPU 마스크](SDPA_MASK_REVIEW_20260929_KO.md), [고정 prefix12회](FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md), [사용자 로컬 CPU 감사](LOGITS_AUDIT_REVIEW_20260930_KO.md), [종료 prefix6회](TERMINATION_PREFIX_RESULT_REVIEW_20260930_KO.md) 보고도 검토했다. 그 뒤 [설계안](SESSION02_ACCEPTANCE_DESIGN_20260930_KO.md)을 구체화하여 **[새16문맥 좌표 점검](FUNCTIONAL_HOLDOUT_V01_KO.md)의 입력·수락 규칙·예산·실행기를 준비**했다. 새 CPU 검사8개가 통과했으며 실제 GPU 실행은 미승인·미실행이다. 이후 사용자가 상한 확대 재시험을 요청하여 새96회는 미승인 보류하고 [32K·전체 문맥80응답 재시험](LONG_GENERATION_V01_KO.md)을 우선한다. 기존12회/6회 예산은 소진됐고 같은 실행을 반복하지 않는다. [목적·방법·결과의 쉬운 설명](SESSION02_EXPLAINED_20260930_KO.md)을 함께 참고한다. 아래 R0 결과와 후속 결과를 구분한다.
 
 ## R0 인계 기록과 최신 준비 상태
 
@@ -19,7 +19,7 @@
 | model_ready | false |
 | 후속 상태 | R1·확증·KL 매칭·장문맥·H1/H2·7B 미실행 |
 | 다음 세션 | 03 전환 조건 미충족. 세션 02 유지 |
-| 최신 준비 | 새16문맥 좌표 점검 구현·CPU8검사 완료, 추가96회 실행 승인 대기 |
+| 최신 준비 | 사용자 요청32K·80응답 재시험 구현·CPU9검사 완료, 사용자 GPU 실행 전 |
 
 원본 run.json·계층 파일·전체 생성 ID를 이 환경에서 읽은 것은 아니다. 보고의 후보·정책·고정 자료 참조·당시 연구 상태 해시를 실행 commit에 대조했다. 준비 보고 해시는 앞서 제출된 전체 내용의 구조 재구성과 일치했다. 현재 상태 문서는 갱신되므로 과거 실행의 연구 상태 해시는 해당 실행 commit과 비교한다.
 
@@ -99,6 +99,9 @@ B/S/Q/C/Cw 실행기 후보를 준비했다. D2-03/D3-01 BF16 seed42의 생성 �
 - docs/FUNCTIONAL_HOLDOUT_V01_KO.md
 - configs/functional_holdout_v01.json
 - fixtures/functional_holdout_v01.json
+- docs/LONG_GENERATION_V01_KO.md
+- docs/GENERATION_BUDGET_POLICY_KO.md
+- configs/long_generation_v01.json
 
 세션 01은 완료됐다. 제한된 기여 범위와 합성 2문제 × BF16/AWQ,
 응답당 최대 128토큰의 R0 계획은 내가 명시적으로 승인했다.
@@ -196,7 +199,8 @@ B/S·Q/C·C/Cw마다 평균TV≤.01·개별위치최대TV≤.05·최종답4문�
 B/Q는 수락대상이 아니고 과거 결과를 소급 PASS로 바꾸지 않는다.
 입력·판정·예산·승인차단의 새CPU검사8개 통과, 실제tokenizer/GPU미실행이다.
 functional_holdout.authorization=PENDING·remaining_forward_calls=0이다.
-현재다음은 새96회 범위 승인 여부 결정이며 기존R0/12회/6회승인을 재요청하지 않는다.
+그 뒤 사용자가 토큰 상한 확대 재시험을 요청했다. 현재 다음은 LONG_GENERATION_V01_KO.md의32K/80응답 실행이다.
+새96회는 미승인 보류이며 기존R0/12회/6회승인을 재요청하지 않는다.
 미래 생성 결과의 주 지표·의미 있는 차이·검정력·독립 표본 설계는 별도로 남아 있다.
 쉬운 설명은 SESSION02_EXPLAINED_20260930_KO.md를 따른다.
 기존12회승인이나CPU감사결과제출을재사용한승인이아니다.
@@ -215,7 +219,12 @@ MATH-500은 확인용으로 보존하고, Pile은 calibration과 문서가 겹�
 기존 R0·데이터 준비·토크나이저·합성 AWQ 검사를 자동으로 반복하지 마라.
 이미 승인한 R0와 완료한 고정 prefix12회의 승인을 다시 요청하지 마라.
 termination_prefix추가6회는보고검토완료·잔여예산0이다. 같은승인·실행·계획조회·CPU감사를반복하지마라.
-새16문맥 프로토콜 준비는 GPU실행이나생성·예산확대승인이아니다.
+새16문맥 프로토콜은 미승인 보류다. 별도 사용자 요청의long_generation_v01은
+기존20문제×2모델×2시드80응답·32768 출력상한·최대2621440생성토큰이다.
+양쪽window=None/use_cache=true, 동일경로4K/8K/16K/32K 집계를한다.
+코드·새CPU검사9개·요청범위기록완료, 실제GPU실행전이다.
+기존difficulty_v01결과를보존하고results/local/long_generation_v01에새로저장한다.
+과거결과대비차이를상한만의인과효과로쓰지마라. 같은상한확대요청의승인을다시묻지마라.
 자체 난도 시험과 이번 진단의 범위는 각각의 승인/요청 기록을 따른다. 그 밖의 자동 예산 확대·R1·MATH-500·
 KL 매칭·장문맥·H1/H2·7B는 현재 범위에 포함되지 않는다.
 

@@ -14,6 +14,7 @@ Read `docs/research_status.json`, `docs/SESSION_PLAN.md`, and the relevant proto
 10. Prefer reviewable branch/PR changes. Do not force-push, merge, or change repository visibility without authorization.
 11. 사용자에게 전달하는 새 문서와 갱신 문서는 한국어로 작성한다. 코드 식별자, 파일명, 논문 제목, 원문 인용은 필요한 경우 원어를 유지한다. 기존 영문 문서는 과거 기록이며, 새 안내에서는 최신 한글 문서를 우선 연결한다.
 12. 사용자에게 제시하는 독립적인 실행 명령 묶음은 `conda activate quantthink`으로 시작하고 저장소 명령에는 `cd ~/quantthink`을 포함한다. 현재 제출된 활성 환경명은 `(quantthink)`이다. 환경 이름을 새로 만들거나 임의로 변경하지 않는다.
+13. 새 자유생성 추론 시험의 토큰 예산은 `docs/GENERATION_BUDGET_POLICY_KO.md`를 따른다. 기본32768 출력 상한·전체 문맥·총 예산을 함께 기록하고 검열률로 충분성을 점검한다. 기존 동결 설정을 소급 수정하거나 비생성 logit 진단의 범위를 자동 확대하지 않는다.
 
 ## Session transitions
 
