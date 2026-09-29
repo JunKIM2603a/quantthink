@@ -52,7 +52,7 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "삭제된 시험 파일만 복구하고 기존 difficulty_v01 결과 폴더에서 --execute --resume으로 이어간다. 로그상 BF16 완료12개를 보존하고 나머지68개를 수행하며 R0/준비를 반복하지 않는다.",
+  "next_local_environment_step": "난도 시험80개 요약은 검토 완료. docs/DIFFICULTY_RESULT_REVIEW_20260929_KO.md의 읽기 전용 내보내기로 기존 run.json·재개 백업·캐시 설정을 받아 원본 종료 ID, 형식 미판정4개 및 검열43개를 검토한다. 새 생성·재개·준비는 반복하지 않는다.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
@@ -116,9 +116,10 @@
   "next_session_ready": false,
   "next_session_title": "QuantThink 03 — 교란 매칭·대조군 검증",
   "blocking_items": [
-    "기존 R0 상세 요약은 검토했다. 두 LayerNorm의 56개 비영 잔차가 보고됐다. BF16 재적용 후 실제 파라미터 잔차와 전체 모델 logit·좌표 변환 영향은 미검증이다.",
-    "R0 네 생성의 검열 판정은 유지. 새 난도 시험은 BF16 12개 EOS 후 사용자 중단 보고가 있으며 최종 답은 미검토다. 남은68개·AWQ 결과·원본 종료 ID 대조·실제 답안 검토가 미완료다.",
-    "R1·MATH-500·KL 매칭·장문맥·H1/H2·7B는 기존 R0 승인 범위 밖이고 미실행이다. 세션 03 전환 조건은 충족되지 않았다."
+    "기존 R0 상세 요약은 검토했다. 두 LayerNorm의56개 비영 잔차가 보고됐다. BF16 재적용 후 실제 파라미터 잔차와 전체 모델 logit·좌표 변환 영향은 미검증이다.",
+    "자체 난도 시험80개 요약의 집계는 일치. EOS는 BF16 25/40·AWQ 12/40이며 검열43개·EOS 형식 미판정4개가 있다. 원본 생성문/종료 ID·실행 provenance·재개 보존·실제 최종 답 검토가 남았다.",
+    "모든 난도는 사전 기준상 INCONCLUSIVE이며 확정된 통과 경계는 없다. 평가 타당도·기능적 양자화 검증·후속 재현 기준이 미완료다.",
+    "R1·MATH-500·KL 매칭·장문맥·H1/H2·7B는 원 R0와 현재 자체 난도 시험 범위 밖이며 미실행이다. 세션03 전환 조건은 미충족이다."
   ],
   "allowed_now": [
     "literature_review",
@@ -576,12 +577,12 @@
     "model_execution_completed": false
   },
   "session02": {
-    "status": "DIFFICULTY_PILOT_PARTIAL_12_EOS_INTERRUPTED_RESUME_IMPLEMENTED",
+    "status": "DIFFICULTY_PILOT_80_SUMMARY_REVIEWED_RAW_EVIDENCE_PENDING",
     "handoff": "docs/HANDOFF_01_TO_02_KO.md",
-    "next_single_task": "docs/DIFFICULTY_RESUME_20260929_KO.md의 복구·재개 명령을 수행하고 전체 결과를 검토한다. 기존 로그12개는 정답 미확인, 실제 재개는 미보고다.",
+    "next_single_task": "난도 시험80개 요약은 검토 완료. docs/DIFFICULTY_RESULT_REVIEW_20260929_KO.md의 읽기 전용 내보내기로 기존 run.json·재개 백업·캐시 설정을 받아 원본 종료 ID, 형식 미판정4개 및 검열43개를 검토한다. 새 생성·재개·준비는 반복하지 않는다.",
     "r0_output_directory": "results/local/r0_v03",
     "exit_criteria_met": false,
-    "latest_review_document": "docs/DIFFICULTY_RESUME_20260929_KO.md",
+    "latest_review_document": "docs/DIFFICULTY_RESULT_REVIEW_20260929_KO.md",
     "diagnostic_followup_plan": "docs/R0_DIAGNOSTIC_FOLLOWUP_20260929_KO.md",
     "realistic_input_plan": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md",
     "difficulty_pilot_plan": "docs/DIFFICULTY_PILOT_V01_KO.md"
@@ -872,7 +873,7 @@
     "current_next_action": "사용자의 추가 자체 문제 요청에 따라 difficulty_pilot v01을 구현했다. 이전 MATH train 28문제/8192 후보는 별도 초안으로 남기고 실행하지 않는다."
   },
   "difficulty_pilot": {
-    "status": "USER_REPORTED_12_BF16_EOS_INTERRUPTED_RESUME_READY",
+    "status": "USER_SUMMARY_80_COMPLETE_INTERNAL_AGGREGATES_MATCH_RAW_REVIEW_PENDING",
     "authorization": "USER_REQUESTED_BOUNDED_DIFFICULTY_PILOT",
     "request_recorded_at": "2026-09-29T18:58:01+09:00",
     "user_request": "시험문제를 난이도에 따라서 여러개 만들어서, 어느 난이도 쯤에서 시험이 통과하는지 확인해보자. 그리고 다음 연구 단계에서 어떻게 해야할지 명령어도 함께 줘.",
@@ -922,7 +923,7 @@
       "old_r0_or_preparation_tests_rerun": false,
       "syntax_check": "PASSED_FOR_FOUR_NEW_RUNTIME_SCRIPTS"
     },
-    "user_execution": "PARTIALLY_EXECUTED_12_BF16_EOS_THEN_USER_KEYBOARD_INTERRUPT",
+    "user_execution": "ALL_80_ATTEMPTS_RECORDED_IN_USER_SUMMARY_RUNTIME_PROVENANCE_PENDING",
     "model_ready": false,
     "automatic_retry": false,
     "automatic_budget_increase": false,
@@ -930,7 +931,7 @@
     "math500_used": false,
     "raw_user_results_committed": false,
     "question_document": "docs/DIFFICULTY_QUESTIONS_V01_KO.md",
-    "latest_review_document": "docs/DIFFICULTY_RESUME_20260929_KO.md",
+    "latest_review_document": "docs/DIFFICULTY_RESULT_REVIEW_20260929_KO.md",
     "partial_execution_review": {
       "reviewed_at": "2026-09-29T20:22:14+09:00",
       "attachment_sha256": "52907e27e8918e6e55fcde1d79392be872f87853faa4df19611caee27fe936b2",
@@ -987,7 +988,91 @@
       "automatic_retry": false,
       "config_or_budget_changed": false,
       "progress_interval_seconds": 15,
-      "user_resume_result": "NOT_YET_REPORTED"
+      "user_resume_result": "COMPLETE_80_SUMMARY_RECEIVED_ACTUAL_RESUME_PROVENANCE_PENDING"
+    },
+    "completed_summary_review": {
+      "reviewed_date": "2026-09-29",
+      "audited_repository_head": "49317c044b42e76f9afeca84b360092e88b99979",
+      "attachment_name": "summary.json",
+      "attachment_bytes": 61144,
+      "attachment_sha256": "21ba286b4bd78caef53f269319c81564ad39fbabcfaa97ea5e90d740975fba90",
+      "evidence": "첨부 요약 파일을 직접 읽고80개 고유 키·파싱값/정답표·난도/쌍/경계/수동검토 집계·토큰/처리량 산술을 재계산해 일치를 확인함.",
+      "expected_attempts": 80,
+      "observed_attempts": 80,
+      "missing_attempts": 0,
+      "internal_aggregates_match": true,
+      "original_run_or_ids_reviewed": false,
+      "actual_generation_text_reviewed": false,
+      "actual_execution_commit_verified": null,
+      "runtime_and_resume_provenance_reviewed": false,
+      "prior_12_bf16_lengths_match_terminal_log": true,
+      "prior_12_records_byte_preservation_verified": false,
+      "bf16": {
+        "correct": 22,
+        "incorrect": 0,
+        "unscorable": 3,
+        "censored": 15,
+        "eos": 25,
+        "attempts": 40,
+        "generated_tokens": 105211
+      },
+      "awq_w3_replay": {
+        "correct": 11,
+        "incorrect": 0,
+        "unscorable": 1,
+        "censored": 28,
+        "eos": 12,
+        "attempts": 40,
+        "generated_tokens": 131744
+      },
+      "paired_termination": {
+        "both_eos": 12,
+        "bf16_eos_awq_censored": 13,
+        "bf16_censored_awq_eos": 0,
+        "both_censored": 15
+      },
+      "paired_scorable": 9,
+      "paired_both_correct": 9,
+      "level_verdicts": "ALL_10_ARM_LEVELS_INCONCLUSIVE",
+      "confirmed_difficulty_boundary": null,
+      "interpretation": "고정4096토큰 내 종료 차이 관측. 검열을 오답으로 치환하거나 전체 자연 길이 증가·동등성·MATH 재현·H1/H2로 판정하지 않음.",
+      "eos_unscorable_cases": [
+        {
+          "problem_id": "D1-04",
+          "arm": "bf16",
+          "seed": 42
+        },
+        {
+          "problem_id": "D1-04",
+          "arm": "bf16",
+          "seed": 43
+        },
+        {
+          "problem_id": "D2-01",
+          "arm": "bf16",
+          "seed": 43
+        },
+        {
+          "problem_id": "D1-02",
+          "arm": "awq_w3_replay",
+          "seed": 43
+        }
+      ],
+      "raw_results_committed": false,
+      "model_ready": false
+    },
+    "existing_result_export": {
+      "script": "scripts/export_difficulty_review.py",
+      "test_file": "tests/test_difficulty_review_export.py",
+      "new_cpu_tests_passed": 5,
+      "new_cpu_tests_failed": 0,
+      "scope": "기존 원본/요약 대조·전체 기록 복사·재개 백업/앞부분 보존 대조. 선택적으로 고정 로컬 config.json만 읽음. 사용자 원본·실제 Hub 캐시는 아직 미검토.",
+      "new_model_or_tokenizer_execution": false,
+      "network_download": false,
+      "original_files_modified": false,
+      "config_or_budget_or_scoring_changed": false,
+      "old_tests_rerun": false,
+      "user_export_result": "NOT_YET_RECEIVED"
     }
   }
 }
