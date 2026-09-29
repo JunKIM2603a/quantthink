@@ -52,7 +52,7 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "자체 D1~D5 각 4문제의 제한된 난도 시험을 사용자 GPU에서 실행하고, EOS·최종 답·두 시드 안정성 요약을 검토한다. 기존 R0/준비/토크나이저/합성 AWQ 반복은 하지 않는다.",
+  "next_local_environment_step": "삭제된 시험 파일만 복구하고 기존 difficulty_v01 결과 폴더에서 --execute --resume으로 이어간다. 로그상 BF16 완료12개를 보존하고 나머지68개를 수행하며 R0/준비를 반복하지 않는다.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
@@ -117,7 +117,7 @@
   "next_session_title": "QuantThink 03 — 교란 매칭·대조군 검증",
   "blocking_items": [
     "기존 R0 상세 요약은 검토했다. 두 LayerNorm의 56개 비영 잔차가 보고됐다. BF16 재적용 후 실제 파라미터 잔차와 전체 모델 logit·좌표 변환 영향은 미검증이다.",
-    "R0 네 생성은 모두 128토큰 검열. 새 자체 난도 시험 실행기는 준비됐지만 실모델/CUDA 재구성·4096토큰 완주·최종 생성문 수동 채점과 기능적 재현 판정은 아직 미완료다.",
+    "R0 네 생성의 검열 판정은 유지. 새 난도 시험은 BF16 12개 EOS 후 사용자 중단 보고가 있으며 최종 답은 미검토다. 남은68개·AWQ 결과·원본 종료 ID 대조·실제 답안 검토가 미완료다.",
     "R1·MATH-500·KL 매칭·장문맥·H1/H2·7B는 기존 R0 승인 범위 밖이고 미실행이다. 세션 03 전환 조건은 충족되지 않았다."
   ],
   "allowed_now": [
@@ -576,12 +576,12 @@
     "model_execution_completed": false
   },
   "session02": {
-    "status": "DIFFICULTY_PILOT_IMPLEMENTED_CPU_TESTED_USER_GPU_EXECUTION_PENDING",
+    "status": "DIFFICULTY_PILOT_PARTIAL_12_EOS_INTERRUPTED_RESUME_IMPLEMENTED",
     "handoff": "docs/HANDOFF_01_TO_02_KO.md",
-    "next_single_task": "docs/DIFFICULTY_PILOT_V01_KO.md의 새 난도 시험 실행: 20문제×2조건×seed42/43, 응답당4096토큰. 작성 환경에서는 새 CPU 검사만 통과했고 모델 실행 근거는 아직 없다.",
+    "next_single_task": "docs/DIFFICULTY_RESUME_20260929_KO.md의 복구·재개 명령을 수행하고 전체 결과를 검토한다. 기존 로그12개는 정답 미확인, 실제 재개는 미보고다.",
     "r0_output_directory": "results/local/r0_v03",
     "exit_criteria_met": false,
-    "latest_review_document": "docs/R0_DETAIL_REVIEW_20260929_KO.md",
+    "latest_review_document": "docs/DIFFICULTY_RESUME_20260929_KO.md",
     "diagnostic_followup_plan": "docs/R0_DIAGNOSTIC_FOLLOWUP_20260929_KO.md",
     "realistic_input_plan": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md",
     "difficulty_pilot_plan": "docs/DIFFICULTY_PILOT_V01_KO.md"
@@ -872,7 +872,7 @@
     "current_next_action": "사용자의 추가 자체 문제 요청에 따라 difficulty_pilot v01을 구현했다. 이전 MATH train 28문제/8192 후보는 별도 초안으로 남기고 실행하지 않는다."
   },
   "difficulty_pilot": {
-    "status": "IMPLEMENTED_CPU_TESTED_NOT_MODEL_EXECUTED",
+    "status": "USER_REPORTED_12_BF16_EOS_INTERRUPTED_RESUME_READY",
     "authorization": "USER_REQUESTED_BOUNDED_DIFFICULTY_PILOT",
     "request_recorded_at": "2026-09-29T18:58:01+09:00",
     "user_request": "시험문제를 난이도에 따라서 여러개 만들어서, 어느 난이도 쯤에서 시험이 통과하는지 확인해보자. 그리고 다음 연구 단계에서 어떻게 해야할지 명령어도 함께 줘.",
@@ -922,13 +922,72 @@
       "old_r0_or_preparation_tests_rerun": false,
       "syntax_check": "PASSED_FOR_FOUR_NEW_RUNTIME_SCRIPTS"
     },
-    "user_execution": "NOT_YET_REPORTED",
+    "user_execution": "PARTIALLY_EXECUTED_12_BF16_EOS_THEN_USER_KEYBOARD_INTERRUPT",
     "model_ready": false,
     "automatic_retry": false,
     "automatic_budget_increase": false,
     "h1_h2_changed": false,
     "math500_used": false,
     "raw_user_results_committed": false,
-    "question_document": "docs/DIFFICULTY_QUESTIONS_V01_KO.md"
+    "question_document": "docs/DIFFICULTY_QUESTIONS_V01_KO.md",
+    "latest_review_document": "docs/DIFFICULTY_RESUME_20260929_KO.md",
+    "partial_execution_review": {
+      "reviewed_at": "2026-09-29T20:22:14+09:00",
+      "attachment_sha256": "52907e27e8918e6e55fcde1d79392be872f87853faa4df19611caee27fe936b2",
+      "evidence": "사용자 첨부 터미널 로그를 직접 읽음. 원본 run.json·전체 생성 ID·최종 답은 미검토.",
+      "observed_code_commit": "fbe673e97a42e38942745aea6d028a3f58bf0b90",
+      "completed_reported": 12,
+      "completed_arm": "bf16",
+      "distinct_problems": 6,
+      "seeds": [
+        42,
+        43
+      ],
+      "problem_ids": [
+        "D1-01",
+        "D1-02",
+        "D1-03",
+        "D1-04",
+        "D2-01",
+        "D2-02"
+      ],
+      "reported_eos_count": 12,
+      "reported_token_sum": 11198,
+      "reported_token_min": 307,
+      "reported_token_max": 2373,
+      "final_answer_correctness": "NOT_REVIEWED",
+      "awq_generation": "NOT_REPORTED",
+      "interruption": "사용자 Ctrl+C, 13번째 model.generate 중 KeyboardInterrupt",
+      "next_by_fixed_order": {
+        "problem_id": "D2-03",
+        "arm": "bf16",
+        "seed": 42
+      },
+      "remaining_if_json_matches_log": 68,
+      "subsequent_errors": [
+        "flash-attn 메타데이터 생성 중 psutil 누락",
+        "기존 결과 폴더 FileExistsError",
+        "시험 파일 삭제 후 실행 파일 없음"
+      ],
+      "sdpa_warning_caused_stop": false,
+      "environment_rebuilt": false,
+      "raw_terminal_log_committed": false
+    },
+    "resume_implementation": {
+      "status": "CPU_AND_MOCK_INTEGRATION_TESTED_NOT_USER_GPU_REPORTED",
+      "script": "scripts/difficulty_pilot_resume.py",
+      "command_option": "--execute --resume",
+      "new_tests_passed": 14,
+      "new_tests_failed": 0,
+      "verification": "저장12개→80개/45개→80개 모의 실행, 중단/파일 백업/동시 쓰기/호환 조건/해시/진행 표시, 격리 Git 삭제 파일 복구",
+      "actual_torch_transformers_cuda_execution": false,
+      "saved_completed_attempts_repeated": false,
+      "unfinished_attempt_restarts_from_prompt": true,
+      "partial_generated_tokens_or_rng_restored": false,
+      "automatic_retry": false,
+      "config_or_budget_changed": false,
+      "progress_interval_seconds": 15,
+      "user_resume_result": "NOT_YET_REPORTED"
+    }
   }
 }
