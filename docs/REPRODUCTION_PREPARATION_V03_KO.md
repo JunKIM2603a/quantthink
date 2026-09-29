@@ -3,27 +3,29 @@
 작성일: 2026-09-29  
 현재 세션: **QuantThink 01 — 저장소 점검·연구 설계 검증**
 
-이번에는 실제 원본 AWQ 함수를 호출하는 Qwen2 어댑터, 데이터 파일의 출처·바이트 검증 로더, R0 실행기 후보를 구현했다. **구현을 완료한 범위와 실제로 실행해 확인한 범위는 아래와 같이 다르다.** 현재 환경에는 PyTorch·Transformers가 없어 실모델이나 GPU 어댑터를 실행하지 않았다.
+실제 원본 AWQ 함수를 호출하는 Qwen2 어댑터, 데이터 파일의 출처·바이트 검증 로더, R0 실행기 후보를 구현했다. 작성 환경에는 PyTorch·Transformers가 없어 당시 GPU 검사를 실행하지 못했다. 이후 사용자 제출 합성 CUDA PASS의 코드·정책 해시를 대조했다. **최신 판정과 지금 실행할 명령은 [합성 AWQ 검토·데이터 준비 안내](SYNTHETIC_AWQ_REVIEW_20260929_KO.md)에 있다.**
 
 ## 1. 이번 결과와 증거
 
 | 항목 | 이번 상태 |
 |---|---|
-| 고정 원본 AWQ 함수 연결 | 구현. 실제 CUDA 실행은 아직 미검증 |
+| 고정 원본 AWQ 함수 연결 | 사용자 제출 합성 CUDA PASS 검토. 사전학습 모델은 미실행 |
 | 고정 revision의 데이터 로더 | 구현. 모의 Hub 응답과 합성 파일로 검증. 실제 원격 데이터 준비는 미실행 |
-| Qwen2 입력 포착·스케일·clip·W3 적용 | 코드 작성 및 구문 검사. 사용자 GPU에서 합성 점검 필요 |
+| Qwen2 입력 포착·스케일·clip·W3 적용 | 작은 무작위 모델의 사용자 GPU 연결 결과 확인. 실제 checkpoint는 별도 검증 필요 |
 | R0 입력·EOS·종료·자산 연결 | 구현. 현재 승인 기록으로는 사전학습 모델 실행 전에 중단 |
-| 새 v0.3 테스트 | 32개 중 29개 통과, PyTorch·Transformers가 필요한 3개는 건너뜀 |
+| v0.3 작성 환경 테스트 | 32개 중 29개 통과, PyTorch·Transformers가 필요한 3개는 건너뜀 |
+| 이후 사용자 단위 테스트 요약 | 32개 중 31개 통과·1개 건너뜀. 개별 건너뛴 검사 이름은 미제출 |
 | 기존 v0.2 연계 테스트 | 32개 재실행·통과 |
 | 실제 데이터 ID·AWQ 모델 결과·장문맥·H1/H2 | 아직 없음 |
 
 검사 환경은 Python 3.12.14, NumPy 2.3.5, zstandard 0.25.0이다. 압축 JSONL의 여러 프레임을 읽는 합성 검사는 실제 zstandard로 수행했다. PyArrow의 실제 Parquet 읽기와 Hub 다운로드는 이 환경에서 실행하지 않았다. 사용자용 데이터 준비 버전은 pyarrow 20.0.0, zstandard 0.23.0 후보로 고정했으므로 해당 버전의 실제 실행 결과도 추가로 받아야 한다.
 
-## 2. 지금 사용자가 실행할 순서
+## 2. 완료한 합성 점검의 재현 명령
 
-기존 quantthink 환경을 사용한다. 현재 검토 대상은 PyTorch 2.7.1+cu118, Transformers 4.51.3이며, 이번 점검 때문에 PyTorch를 다시 설치하지 않는다.
+아래는 이미 제출·검토한 점검의 재현 절차이며 지금 다시 실행할 필요는 없다. 다음 작업은 6절의 데이터 준비다. 기존 quantthink 환경을 사용하며, 검토 대상은 PyTorch 2.7.1+cu118와 Transformers 4.51.3이다.
 
 ~~~bash
+conda activate quantthink
 cd ~/quantthink
 git switch setup/session-01-research-gates
 git pull --ff-only
@@ -46,7 +48,7 @@ upstream 준비 명령은 고정한 Python 모듈 5개와 LICENSE만 내려받�
 
 합성 점검은 **사전학습 가중치와 벤치마크 데이터를 사용하지 않는 작은 무작위 Qwen2**를 GPU 한 장에서 실행한다. 설정은 hidden 128, intermediate 256, 계층 1개, vocabulary 256, 무작위 입력 1 × 512 토큰, seed 0이다. 실제 원본의 스케일 탐색·clipping·W3 가짜 양자화를 호출하므로 단순한 NumPy 계산보다 한 단계 진행된 연결 검사다.
 
-성공 기대 상태는 SYNTHETIC_AWQ_ADAPTER_PASS_NOT_MODEL_READY이다. 콘솔에 상태, 패키지 버전, 코드·설정 해시, 계층 출력 오차가 함께 표시된다. **이 콘솔 출력을 다음 검토 자료로 사용한다.** 상세 스케일·clip 값은 로컬 JSON에 보관한다. 기존 토크나이저 검사는 반복할 필요가 없다.
+성공 기대 상태는 SYNTHETIC_AWQ_ADAPTER_PASS_NOT_MODEL_READY이다. 콘솔에 상태, 패키지 버전, 코드·설정 해시, 계층 출력 오차가 함께 표시된다. **이 콘솔 출력은 제출·검토 완료됐다.** 상세 스케일·clip 값은 로컬 JSON에 보관한다. 기존 토크나이저 검사는 반복할 필요가 없다.
 
 합성 점검의 상대 RMS 한도 0.05는 큰 구현 오류를 잡기 위한 느슨한 소형 모델 검사 기준이다. 실제 BF16 모델의 함수 동등성이나 H1의 효과 크기 경계로 사용하지 않는다.
 
@@ -115,23 +117,23 @@ Hugging Face 공식 endpoint에 전체 40자리 revision을 지정하고 files_m
 
 공개 파일 목록에서 Pile validation 파일은 약 338MB로 표시된다. 실제 다운로드 크기는 고정 revision의 응답으로 다시 검사하며, 데이터 파일 합계 상한은 512MiB이다. 숫자를 넘으면 추가 다운로드를 진행하지 않는다. 선택한 원본 경로가 고정 revision에 실제로 존재하는지와 실제 데이터 바이트 일치는 사용자 측 온라인 실행에서 최종 확인한다.
 
-## 6. 합성 연결 점검 이후의 데이터 준비
+## 6. 지금 실행할 데이터 준비
 
-개발 데이터 준비 또는 전체 calibration 준비가 필요할 때만 다음 명령을 사용한다. 현재 설치된 Torch·NumPy·Transformers·Hugging Face Hub를 일괄 갱신하지 않는다.
+합성 CUDA 점검은 사용자 보고로 확인했다. 이제 전체 준비를 한 번 실행해 개발 목록과 calibration을 함께 만든다. 현재 설치된 Torch·NumPy·Transformers·Hugging Face Hub를 일괄 갱신하지 않는다.
 
 ~~~bash
+conda activate quantthink
+cd ~/quantthink
+git switch setup/session-01-research-gates
+git pull --ff-only
+
 python -m pip install --no-deps -r requirements/data-preparation.txt
-
-# 개발 문제 목록과 정답 파일만 준비
-python scripts/prepare_runtime_assets.py \
-  --mode development --online \
-  --output-dir results/local/development_assets_v03
-
-# 이후 calibration까지 준비할 때: 별도의 새 디렉터리 사용
 python scripts/prepare_runtime_assets.py \
   --mode all --online \
   --output-dir results/local/runtime_assets_v03
 ~~~
+
+출력 폴더는 새 경로여야 한다. 준비가 성공하면 [최신 한글 검토 문서의 요약 명령](SYNTHETIC_AWQ_REVIEW_20260929_KO.md)을 실행해 출처·해시·선택 개수를 공유한다. development 모드는 개발 자료만 별도로 준비할 때 유지하는 선택 기능이며, 위 all 모드 전에 실행할 필요는 없다.
 
 전체 준비에는 토크나이저가 필요하지만 모델 가중치나 생성은 사용하지 않는다. 성공 상태는 PREPARED_CANDIDATE_NOT_RUN_APPROVAL이다. 고정한 파일의 출처가 확인돼도 프로토콜 수락이나 모델 실행 승인이 된 것은 아니다.
 
@@ -142,6 +144,8 @@ python scripts/prepare_runtime_assets.py \
 기본 명령은 네트워크나 모델 실행 없이 상태만 보여 준다.
 
 ~~~bash
+conda activate quantthink
+cd ~/quantthink
 python scripts/run_r0.py
 ~~~
 
@@ -160,6 +164,8 @@ python scripts/run_r0.py
 | 성공 시 상태 | R0_EXECUTED_DIAGNOSTICS_PENDING_REVIEW |
 
 ~~~bash
+conda activate quantthink
+cd ~/quantthink
 # 관련 기록 수락 후의 실행 예시. 현재는 승인 조건에서 중단됩니다.
 python scripts/run_r0.py --execute \
   --assets-dir results/local/runtime_assets_v03 \
@@ -172,7 +178,7 @@ python scripts/run_r0.py --execute \
 
 ## 8. 남은 연구 판단
 
-즉시 받을 다음 근거는 작은 무작위 Qwen2의 어댑터 점검 결과다. 그다음 실제 고정 데이터 파일의 출처 보고서와 선택 목록을 검토하고, 합성 R0 실행 조건을 수락해야 한다.
+작은 무작위 Qwen2의 사용자 제출 어댑터 PASS는 검토했다. 다음 근거는 실제 고정 데이터 파일의 출처 보고서와 개발·calibration 선택 목록이다. 이를 검토한 뒤 사전학습 모델 R0의 실행 조건을 수락해야 한다.
 
 선행연구 충돌표를 통합한 최종 기여 판정과 연구 실행 승인 기록도 남아 있다. 기존 후보의 H1 수치 경계나 H2 방향은 이번 구현으로 동결하지 않았다. 세션 01을 유지하며, 세션 02 전환은 실제 종료 조건 충족을 확인한 뒤 알린다.
 

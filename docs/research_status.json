@@ -52,7 +52,7 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "기존 quantthink 환경에서 v0.3 단위 테스트를 실행하고 고정 AWQ 원본을 준비한 뒤 check_awq_adapter.py로 작은 무작위 Qwen2 CUDA 연결을 검사한다. 사전학습 가중치·벤치마크 사용 없음. 상세 명령은 docs/REPRODUCTION_PREPARATION_V03_KO.md 참조. 기존 토크나이저 재검사는 불필요.",
+  "next_local_environment_step": "합성 AWQ CUDA 점검의 사용자 PASS와 구현·정책 해시 대조를 완료했다. conda activate quantthink 후 고정된 추가 패키지 두 개를 설치하고 prepare_runtime_assets.py --mode all --online으로 개발 100문제·calibration 65,536토큰 후보를 준비한다. docs/SYNTHETIC_AWQ_REVIEW_20260929_KO.md의 실행·요약 명령 참조.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
@@ -63,7 +63,8 @@
     "followup_v02_document": "docs/REPRODUCTION_PREPARATION_V02_KO.md",
     "followup_v02_scope": "동일 고정 commit의 pre_quant.py, auto_scale.py, auto_clip.py, quantizer.py, calib_data.py, run_awq.py, requirements.txt와 Transformers v4.51.3 Qwen2 코드를 읽음. 원본 코드·모델 실행은 없음.",
     "followup_v03_document": "docs/REPRODUCTION_PREPARATION_V03_KO.md",
-    "followup_v03_scope": "고정 AWQ 모듈 5개와 LICENSE의 blob SHA를 확인하고 함수 연결 코드를 작성함. 실제 원본 함수·Qwen2 실행은 현재 환경에서 미검증. Hugging Face Hub v0.36.2 파일 메타데이터 타입과 Qwen2 4.51.3 코드를 읽음."
+    "followup_v03_scope": "고정 AWQ 모듈 5개와 LICENSE의 blob SHA를 확인하고 연결 코드를 작성했다. 이후 사용자 제출 무작위 Qwen2 CUDA PASS의 구현·정책 해시를 대조했다. 작성 환경에서는 원본 함수를 실행하지 않았고 사전학습 모델 적용은 미실행이다.",
+    "synthetic_execution_review_document": "docs/SYNTHETIC_AWQ_REVIEW_20260929_KO.md"
   },
   "session01_followup": {
     "owner_instruction": "Proceed with the next research step; treated as authorization for continued preparation, not evidence of academic approval or acceptance of newly proposed settings",
@@ -118,7 +119,7 @@
     "Integrate the newly inspected primary text of 2609.23125v1 and 2609.06473v1 with the earlier collision table and make a scoped contribution decision; their primary-text access blockers are resolved, not the overall novelty gate.",
     "Complete scoped novelty decision beyond generic matched-noise control design, compression verbosity and termination measurement",
     "Review and accept the concrete candidate reproduction plan and record required research-run approval",
-    "실제 AWQ 어댑터·출처 검증 로더·R0 실행기 후보는 v0.3에 구현됨. 사용자 환경의 합성 CUDA 연결, 실제 고정 데이터 다운로드·ID 검토, 실모델 좌표·logit 검증, 실제 생성문 평가·판정 검증 및 장문맥은 미검증."
+    "실제 고정 데이터 다운로드·ID 검토, 사전학습 모델 좌표·logit 검증, 실제 생성문 평가·판정 검증 및 장문맥은 미완료. 소형 무작위 Qwen2 합성 CUDA 연결은 사용자 PASS를 제출받아 코드·정책 해시와 대조함."
   ],
   "allowed_now": [
     "literature_review",
@@ -249,7 +250,7 @@
     "scientific_gate_states_changed": false
   },
   "reproduction_preparation_v03": {
-    "status": "IMPLEMENTED_PARTIALLY_CPU_TESTED_NOT_MODEL_READY",
+    "status": "SYNTHETIC_CUDA_PASS_USER_REPORTED_REAL_DATA_PENDING",
     "document": "docs/REPRODUCTION_PREPARATION_V03_KO.md",
     "audited_base_commit": "3e78771b43f5024d844eef741f24f2c6feef8b43",
     "policy": "configs/runtime_preparation_v03.json",
@@ -279,17 +280,80 @@
       "pyarrow": null,
       "huggingface_hub": null
     },
-    "validation_scope": "모의 Hub 응답·합성 파일·압축 JSONL·오프라인 CLI·준비 경로 연동. 원격 데이터 다운로드·실제 Parquet 읽기·원본 AWQ 함수 실행은 미검증. 구문 검사 통과.",
-    "actual_awq_adapter": "IMPLEMENTED_NOT_EXECUTED",
+    "validation_scope": "작성 시 검증: 모의 Hub 응답·합성 파일·압축 JSONL·오프라인 CLI·준비 경로 연동 및 구문 검사. 위 new_cpu_tests와 test_environment는 당시 작성 환경 기록이다. 후속 사용자 GPU 근거는 user_synthetic_awq_adapter에 별도 기록했다. 실제 데이터 다운로드·Parquet 준비는 미실행이다.",
+    "actual_awq_adapter": "SYNTHETIC_CUDA_PASS_USER_REPORTED_PRETRAINED_NOT_RUN",
     "source_provenance_loader": "IMPLEMENTED_MOCK_TESTED_NOT_RUN_ON_REAL_SOURCES",
-    "synthetic_cuda_adapter_check": "NOT_RUN",
+    "synthetic_cuda_adapter_check": "USER_REPORTED_PASS_REPOSITORY_HASHES_CHECKED",
     "real_dataset_file_hashes": "NOT_RETRIEVED",
     "actual_calibration_ids": "NOT_SELECTED",
     "actual_development_ids": "NOT_SELECTED",
     "pretrained_r0": "NOT_RUN",
-    "new_model_or_tokenizer_execution": false,
+    "new_model_or_tokenizer_execution": true,
     "original_h1_h2_changed": false,
     "manifest_snapshots_changed": false,
-    "scientific_gate_states_changed": false
+    "scientific_gate_states_changed": false,
+    "execution_scope": "사용자 제출 무작위 소형 Qwen2 합성 실행. 작성 환경의 추가 모델·토크나이저 실행과 사전학습 가중치 실행은 없음.",
+    "latest_user_review_document": "docs/SYNTHETIC_AWQ_REVIEW_20260929_KO.md"
+  },
+  "user_command_environment": {
+    "activation_command": "conda activate quantthink",
+    "reported_active_environment": "quantthink",
+    "instruction": "사용자 실행 명령마다 conda 활성화와 필요한 작업 경로를 포함한다.",
+    "name_note": "사용자 요청의 quantrhink 표기와 제출 프롬프트의 quantthink이 달라, 실제 활성 표시인 quantthink을 기준으로 안내함."
+  },
+  "user_synthetic_awq_adapter": {
+    "status": "USER_REPORTED_PASS_REPOSITORY_HASHES_CHECKED",
+    "reported_status": "SYNTHETIC_AWQ_ADAPTER_PASS_NOT_MODEL_READY",
+    "evidence_source": "사용자가 붙여 넣은 터미널 출력. 원본 로컬 JSON 바이트·생성 Git commit·보고서 시각은 미확인. 작성 환경에서 GPU 실행을 재현하지 않음.",
+    "audited_repository_commit": "4076739762357b3e26b7b89641bb96f131b07fff",
+    "generating_git_commit": null,
+    "reported_at_utc": null,
+    "review_document": "docs/SYNTHETIC_AWQ_REVIEW_20260929_KO.md",
+    "unit_test_summary": {
+      "discovered": 32,
+      "passed": 31,
+      "skipped": 1,
+      "failed": 0,
+      "skipped_test_name": null,
+      "evidence_scope": "제출된 요약 기준. 개별 검사명·skip 사유와 테스트 명령행은 미제출."
+    },
+    "upstream_file_hash_check": "6_MATCH_USER_REPORTED_ORIGINAL_LOCAL_BYTES_NOT_INSPECTED",
+    "policy_sha256": "36ca463c20f278562f5e21d5a28040b636c7d8dad1551e3f46fd4b0e2c545a4a",
+    "policy_hash_matches_repository": true,
+    "implementation_sha256": {
+      "check_awq_adapter.py": "ba9bc7dcdf136fa0bc90e2931d577548c3113167716941795c49a55dd49c2842",
+      "qwen2_awq_adapter.py": "ea7d9e3c35443fc889480c667a826a9eca793c7592fb03be778b150d094b59c5",
+      "runtime_assets.py": "92156ff7fdc79a801b469c99cbc9076f6be88e666397e0237d2d7209b6814ede",
+      "awq_weight_space.py": "230b604c0f436696b9118753c8ddbbd383029a3ca9a2aa89aab6478b1bd23b6b"
+    },
+    "implementation_hashes_recomputed": "4_OF_4_MATCH",
+    "packages": {
+      "torch": "2.7.1+cu118",
+      "transformers": "4.51.3",
+      "numpy": "1.26.4",
+      "tqdm": "4.70.1"
+    },
+    "device": "cuda:0",
+    "layer": 0,
+    "scale_only_relative_rms": 0.0037016145199817822,
+    "canonicalized_relative_rms": 0.0036649665056165473,
+    "max_abs_both_checks": 0.0009765625,
+    "synthetic_relative_rms_limit": 0.05,
+    "warning_review": {
+      "transformers_version": "4.51.3",
+      "use_sliding_window_default": false,
+      "sliding_window_default": 4096,
+      "synthetic_sequence_length": 512,
+      "finding": "경고 조건은 use_sliding_window를 확인하지 않는다. 인과 마스크에는 sliding_window를 직접 읽는 경로도 있지만 이번 512토큰·cache 없음 조건에서는 창 경계가 추가 토큰을 가리지 않는다. 장문맥 전체로 확대 해석하지 않음.",
+      "source_blob_sha1": {
+        "configuration_qwen2.py": "2e82f1976f3922f3620415f4eace6c6e046243f8",
+        "modeling_qwen2.py": "16a7316e2d0e56eafe301a7f2d8693d6cc6c73ec"
+      }
+    },
+    "assistant_gpu_execution": false,
+    "pretrained_model_execution": false,
+    "long_context_validated": false,
+    "raw_report_committed": false,
+    "interpretation": "소형 무작위 모델의 구현 연결 이정표. 실모델 동등성·BF16/AWQ 재현·H1/H2 검증 또는 프로토콜 수락·연구 실행 승인을 뜻하지 않음."
   }
 }
