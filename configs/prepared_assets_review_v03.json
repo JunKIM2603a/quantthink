@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "status": "PREPARATION_REPORT_REVIEWED_NOT_RUN_APPROVAL",
+  "source_report_recorded_at_utc": "2026-09-29T05:18:26.923265+00:00",
+  "audited_repository_commit": "f89b1c5bf4890c79c36e11462cdd5a5c20d34890",
+  "evidence_scope": "사용자 제출 요약의 코드·설정·집계를 대조함. 원본 3개 바이트 해시는 작성 환경에서도 확인했고 개발 파일 3개를 독립 재구성해 해시가 일치함. calibration 산출물 2개는 사용자 보고 해시이며 원본 파일 바이트·261개 문서 목록·토큰 배열을 전달받지 않았음.",
+  "candidate_sha256": "98ff733b0d8391c3a33aa2f561e2d389bd6e482ee53b1b680c1bb6e7e6b6201f",
+  "policy_sha256": "36ca463c20f278562f5e21d5a28040b636c7d8dad1551e3f46fd4b0e2c545a4a",
+  "inspection_refs_sha256": "97f5b7bf6cb6888c716a3838f21c224e7920b1df05c5996efe1321d39cd15276",
+  "source_files": [
+    {
+      "role": "development",
+      "repo_type": "dataset",
+      "repo_id": "openai/gsm8k",
+      "revision": "740312add88f781978c0658806c59bc2815b9866",
+      "path": "main/train-00000-of-00001.parquet",
+      "size": 2306545,
+      "digest_algorithm": "sha256",
+      "expected_digest": "ea82612ea9582142387730c793eb67d3b12849002bc0b7fa6f8efafa7351419d",
+      "observed_sha256": "ea82612ea9582142387730c793eb67d3b12849002bc0b7fa6f8efafa7351419d",
+      "verification": "BYTES_MATCH_PINNED_HUB_METADATA"
+    },
+    {
+      "role": "confirmation",
+      "repo_type": "dataset",
+      "repo_id": "HuggingFaceH4/MATH-500",
+      "revision": "6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be",
+      "path": "test.jsonl",
+      "size": 446564,
+      "digest_algorithm": "git_blob_sha1",
+      "expected_digest": "2376b9a194b46c0790e197c91b7249e5f88ac09b",
+      "observed_sha256": "35dc41080a3680858b27fa7e0533d2d547825316fc5dafe5d316f4ccc5a06132",
+      "verification": "BYTES_MATCH_PINNED_HUB_METADATA"
+    },
+    {
+      "role": "awq_calibration",
+      "repo_type": "dataset",
+      "repo_id": "monology/pile-uncopyrighted",
+      "revision": "3be90335b66f24456a5d6659d9c8d208c0357119",
+      "path": "val.jsonl.zst",
+      "size": 338045152,
+      "digest_algorithm": "sha256",
+      "expected_digest": "db5e5d1532bf8dc33a6589b50ecba1a8c96f7b4b9cb343d168e603c393007c26",
+      "observed_sha256": "db5e5d1532bf8dc33a6589b50ecba1a8c96f7b4b9cb343d168e603c393007c26",
+      "verification": "BYTES_MATCH_PINNED_HUB_METADATA"
+    }
+  ],
+  "packages": {
+    "huggingface-hub": "0.36.2",
+    "pyarrow": "20.0.0",
+    "zstandard": "0.23.0",
+    "transformers": "4.51.3"
+  },
+  "implementation_sha256": {
+    "prepare_runtime_assets.py": "62f0c6cc57dabc53011f0ea7dd2ed789330e4579551974f6dc46f74832dd7e97",
+    "runtime_assets.py": "d647bb31a0a72a373a95bf1561603c8eff2563ff598eff60516bd54dbedca130",
+    "build_development_manifest.py": "f7584d191f6f0851f4f6ae66f11a7015521b37303504f2af9da1d15ac521d6c8",
+    "evaluate_gsm8k.py": "834e95d229ce9c409349a25b02f98015209ffcc6a6b55938c09c35c2d13a8c84"
+  },
+  "artifacts": {
+    "calibration_manifest.json": {
+      "size": 76078,
+      "sha256": "fbd2cfd3028fbd7f572ee37d744b598c5ffacbc4acff2bda1f1c774a3d049468",
+      "git_blob_sha1": "7918cab84842e139d6dc95ae51d53659a8e7c5ce"
+    },
+    "calibration_tokens.json": {
+      "size": 760683,
+      "sha256": "2b7e61759a3972eb7646d7cb6ae7a1ff3fcac47c5126cde13a73032f2f905df4",
+      "git_blob_sha1": "7c536a8fc62c71ed28e92e5613d494df43c8e738"
+    },
+    "r1_inputs.jsonl": {
+      "size": 33345,
+      "sha256": "3ef9acc4d12054bdcaa6f68399d407a3cbc637ca98462ae8da0a3fd649416169",
+      "git_blob_sha1": "af68d5244de14f712f7c221bfdb7978ffe35f42d"
+    },
+    "development_manifest.json": {
+      "size": 23171,
+      "sha256": "6feab69599811df73e62a42f453ffc17a48b11ed2506e9527106b37d1a552e3a",
+      "git_blob_sha1": "9579e85ef71becadc64545aa77d83347cb4e4ab9"
+    },
+    "r1_gold.jsonl": {
+      "size": 39536,
+      "sha256": "e72732ee6d2e43c30b1284de9a25d0dbca5161f94011480fdb047d97899929cf",
+      "git_blob_sha1": "5135ff95c5c3bbbef7e64be735e491e2a6952e65"
+    }
+  },
+  "development": {
+    "counts": {
+      "development_rows": 7473,
+      "duplicate_development_rows": 0,
+      "confirmation_rows": 500,
+      "excluded_confirmation_overlap": 0,
+      "eligible_unique": 7473,
+      "selected": 100,
+      "remaining_unassigned": 7373
+    },
+    "selection_seed": 20260929,
+    "selected_ids_sha256": "94980f34565e5f3da60a36169db83c9c0b3e24d7765b84bcd1db188445d5897e",
+    "confirmation_question_set_sha256": "0e87754f814f22085052d6fc1a952bc9f324e548bbbd5430d6114ae6069419c6"
+  },
+  "calibration": {
+    "counts": {
+      "source_rows": 179996,
+      "eligible_unique_documents": 106425,
+      "excluded_exact_question_overlap": 0,
+      "duplicate_documents": 201,
+      "excluded_empty_text": 161,
+      "excluded_text_length": 1488,
+      "excluded_token_length": 71721
+    },
+    "total_tokens": 65536,
+    "used_documents": 261,
+    "token_blocks_sha256": "7270d4703bd2064aafe7aa29f41c002131a179a622f515c791634c61663f9f3b"
+  },
+  "research_approval": false,
+  "protocol_acceptance": false,
+  "model_execution": false
+}

@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "status": "PROPOSED_NOT_AUTHORIZED_NOT_RUN",
+  "panel_id": "functional_holdout_v01",
+  "suite_path": "fixtures/functional_holdout_v01.json",
+  "suite_sha256": "a589153d2abfab834dce6fad7ba433a9d074bd775c4c46d7d75a0cb0bc0ba187",
+  "base_config_path": "configs/fixed_prefix_diagnostic_v01.json",
+  "base_config_sha256": "5d24000bfa9d7b15d398b978f671d94be816918bd9c5881a458448bced488fd6",
+  "source_fixed_prefix_run_sha256": "68ff918d9c4b9a43ae154b1d08b2e5fcc93028d66d1fe67d4338001094097fb7",
+  "states": [
+    "B",
+    "B_repeat",
+    "S",
+    "Q",
+    "C",
+    "Cw"
+  ],
+  "comparisons": [
+    [
+      "B",
+      "B_repeat"
+    ],
+    [
+      "B",
+      "S"
+    ],
+    [
+      "B",
+      "Q"
+    ],
+    [
+      "Q",
+      "C"
+    ],
+    [
+      "C",
+      "Cw"
+    ]
+  ],
+  "acceptance_comparisons": [
+    [
+      "B",
+      "S"
+    ],
+    [
+      "Q",
+      "C"
+    ],
+    [
+      "C",
+      "Cw"
+    ]
+  ],
+  "number_of_inputs": 16,
+  "positions_per_input": 32,
+  "position_rule": "last_32_consecutive_full_causal_context",
+  "maximum_sequence_length": 768,
+  "maximum_forward_calls": 96,
+  "maximum_forward_input_tokens": 73728,
+  "maximum_raw_logit_bytes": 1866989568,
+  "new_generation_tokens": 0,
+  "temperature": 0.6,
+  "top_p": 0.95,
+  "use_cache": false,
+  "effective_sliding_window": null,
+  "acceptance": {
+    "mean_filtered_tv_max": 0.01,
+    "maximum_filtered_tv_max": 0.05,
+    "final_anchor_eos_support_mismatches_max": 0
+  },
+  "acceptance_scope_ko": "고정 패널의 한 단계 분포 영향 한도 제안. 평균 토큰 집합 확률 오차1%p, 각 관측위치5%p 이내 및 완성 답 anchor EOS 후보 여부 일치. 보편적 기준·H1 한도·자연 종료/정답 동등성 보증이 아님. 과거 결과 재판정에 적용하지 않음.",
+  "seed": 42,
+  "sampling": false,
+  "calibration_search": false,
+  "network_download": false,
+  "automatic_retry": false,
+  "math500_used": false,
+  "r1_used": false,
+  "new_pile_used": false,
+  "h1_h2_test": false
+}

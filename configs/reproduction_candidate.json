@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "plan_id": "r0-r1-candidate-20260929-v01",
+  "status": "PROPOSED_NOT_ACCEPTED_NOT_RUN_READY",
+  "study_type": "adapted_controlled_replication",
+  "original_h1_h2_changed": false,
+  "assets": [
+    {"role": "bf16_reference", "repo_type": "model", "repo_id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"},
+    {"role": "awq_calibration", "repo_type": "dataset", "repo_id": "monology/pile-uncopyrighted"},
+    {"role": "development", "repo_type": "dataset", "repo_id": "openai/gsm8k"},
+    {"role": "confirmation", "repo_type": "dataset", "repo_id": "HuggingFaceH4/MATH-500"}
+  ],
+  "quantization": {
+    "method": "AWQ", "weight_bits": 3, "group_size": 128, "zero_point": true,
+    "activation_dtype": "bfloat16", "kv_cache_dtype": "bfloat16",
+    "calibration_blocks": 128, "tokens_per_block": 512, "total_calibration_tokens": 65536,
+    "calibration_contract": "exact token budget, not 128 source documents",
+    "upstream_reference_commit": "bf947e29f52e3f666e3263efac149dae0ac18d00",
+    "adapter_commit": null, "calibration_ids_sha256": null,
+    "canonical_weight_error_space_validated": false
+  },
+  "runtime": {
+    "candidate_engine": "transformers_sdpa_same_stack_for_both_arms",
+    "engine_version": null, "gpus_per_worker": 1, "tensor_parallel_size": 1,
+    "simultaneous_workers_after_individual_validation": 2,
+    "observed_torch": "2.7.1+cu118", "observed_python": "3.11.16",
+    "runtime_validated": false
+  },
+  "r0": {"purpose": "engineering_loader_format_only", "synthetic_prompts": 2, "max_new_tokens": 128},
+  "r1": {
+    "purpose": "development_premise_check_not_H1_not_MATH500_reproduction",
+    "arms": ["bf16", "awq_w3"], "dataset_role": "development", "config": "main", "split": "train",
+    "n_problems": 100, "sampling_seeds": [42, 43], "selection_seed": 20260929,
+    "selection": "sort by SHA256(seed + newline + whitespace-normalized question); first 100 after exclusions",
+    "data_ids_sha256": null,
+    "temperature": 0.6, "top_p": 0.95, "top_k": 0, "repetition_penalty": 1.0,
+    "max_new_tokens": 32768, "max_prompt_tokens": 8192, "max_total_context_tokens": 40960,
+    "prompt_policy": "pinned tokenizer chat template, user-only, explicit math answer instruction, no silent truncation",
+    "prompt_template_sha256": null, "stop_token_ids": null,
+    "record": ["input_ids", "generated_ids", "rendered_prompt_hash", "answer_region", "finish_reason", "budget_reached", "right_censored", "accuracy", "annotation", "runtime", "peak_vram"],
+    "pilot_outcomes": ["length_inflation", "accuracy_change", "EOS_vs_budget_stop", "verified_correct_answer_abandonment"],
+    "confirmation_access": "do not generate or tune on MATH-500; exact question-hash exclusion only"
+  },
+  "gates": {
+    "fulltext_novelty_review_complete": false,
+    "protocol_acceptance_recorded": false,
+    "required_research_approval_recorded": false,
+    "evaluator_and_annotation_validated": false,
+    "asset_revisions_reviewed": false
+  }
+}

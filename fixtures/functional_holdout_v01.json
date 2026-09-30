@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "panel_id": "functional_holdout_v01",
+  "selection_ko": "기존 결과 확인 후 새로 작성한 고정16문맥. 모델 출력을 보고 선택하지 않음. 구현 확인용 선택 밖 패널이며 통계적 무작위 표본·MATH 공식 난도·H1 독립 확증 자료가 아님.",
+  "instruction": "Solve the problem carefully and give the final answer in \\boxed{}.",
+  "cases": [
+    {
+      "id": "FH-01",
+      "family": "algebra",
+      "phase": "setup",
+      "question_en": "Seven boxes contain fruit. Four boxes contain six apples each and three boxes contain ten apples each. What is the average number of apples per box?",
+      "reference_answer": "54/7",
+      "assistant_prefix_en": "The average must weight each group by its number of boxes. There are four boxes in the first group and three in the second, so treating the two group sizes as equally frequent would be incorrect. I will first count the total apples in all seven boxes and then divide by seven. The first group contributes four times six apples, and the second contributes three times ten apples."
+    },
+    {
+      "id": "FH-02",
+      "family": "algebra",
+      "phase": "calculation",
+      "question_en": "An item costs 250 dollars before a 20 percent discount. A 10 percent sales tax is applied to the discounted price. What is the final price in dollars?",
+      "reference_answer": "220",
+      "assistant_prefix_en": "The discount and tax act on different bases, so subtracting twenty and adding ten percentage points is not the correct calculation. A twenty percent discount leaves eighty percent of the original price. Thus the discounted amount is 250 times 0.8, which is 200 dollars. The ten percent tax is then computed from 200, rather than from 250. The final operation is to multiply the discounted amount by 1.1."
+    },
+    {
+      "id": "FH-03",
+      "family": "algebra",
+      "phase": "verification",
+      "question_en": "One pipe fills an empty tank in 6 hours and another fills the same tank in 9 hours. Working together at constant rates, how many hours do they need?",
+      "reference_answer": "18/5",
+      "assistant_prefix_en": "The rates are one sixth and one ninth of a tank per hour. Their sum is three eighteenths plus two eighteenths, or five eighteenths. Taking the reciprocal gives eighteen fifths of an hour. This is less than six hours, as it should be when both pipes operate together. Checking the proposed time, the first pipe fills three fifths of the tank and the second fills two fifths, which sum to one."
+    },
+    {
+      "id": "FH-04",
+      "family": "algebra",
+      "phase": "final",
+      "question_en": "Solve the equation 5x - 7 = 2x + 20 for x.",
+      "reference_answer": "9",
+      "assistant_prefix_en": "Subtracting two x from both sides gives three x minus seven equals twenty. Adding seven gives three x equals twenty-seven, and dividing by three gives x equals nine. Substitution checks both sides: five times nine minus seven is thirty-eight, and two times nine plus twenty is also thirty-eight. The coefficient of x after subtraction is nonzero, so this solution is unique.\n</think>\n\nThe solution is \\boxed{9}."
+    },
+    {
+      "id": "FH-05",
+      "family": "counting",
+      "phase": "setup",
+      "question_en": "A committee must contain exactly two people from a group of five researchers and exactly one person from a separate group of four engineers. How many committees are possible?",
+      "reference_answer": "40",
+      "assistant_prefix_en": "The two groups contain distinct people, and committee membership does not assign any ordering to the selected researchers. I therefore need a combination for choosing two researchers, rather than a permutation. The engineer is chosen independently from the other group. Each valid researcher pair can be combined with any of the four engineers. After counting the researcher pairs, the multiplication principle gives the total number of committees."
+    },
+    {
+      "id": "FH-06",
+      "family": "counting",
+      "phase": "calculation",
+      "question_en": "A lattice path from (0,0) to (4,3) uses only steps one unit right or one unit up. How many such paths avoid the point (2,1)?",
+      "reference_answer": "17",
+      "assistant_prefix_en": "Every complete path contains four right steps and three up steps, so there are thirty-five paths in total. To count the excluded paths, split a path at the point two comma one. Reaching that point requires two right steps and one up step, which can be arranged in three ways. From there to the destination, two right and two up steps remain, which can be arranged in six ways. Thus eighteen complete paths pass through the forbidden point."
+    },
+    {
+      "id": "FH-07",
+      "family": "counting",
+      "phase": "verification",
+      "question_en": "How many distinct arrangements of the seven letters in BALLOON are possible?",
+      "reference_answer": "1260",
+      "assistant_prefix_en": "There are seven letters, with L repeated twice and O repeated twice. If all copies were labelled, there would be seven factorial arrangements. Removing the labels causes each distinct arrangement to be counted twice for the L copies and twice for the O copies. Division by both two factorial factors gives 5040 divided by four, which is 1260. The other letters each occur only once and require no further correction."
+    },
+    {
+      "id": "FH-08",
+      "family": "counting",
+      "phase": "final",
+      "question_en": "Eight identical tokens are distributed among three labelled boxes, and every box must receive at least one token. How many distributions are possible?",
+      "reference_answer": "21",
+      "assistant_prefix_en": "Assign one token to each box first. Five tokens remain, and their nonnegative counts in the three labelled boxes must sum to five. Stars and bars gives seven choose two possibilities. This is seven times six divided by two, or twenty-one. The boxes are labelled, so exchanging two different box counts generally produces a different distribution and there is no division by three factorial.\n</think>\n\nThe number of distributions is \\boxed{21}."
+    },
+    {
+      "id": "FH-09",
+      "family": "probability",
+      "phase": "setup",
+      "question_en": "An urn contains three red balls and two blue balls. Two balls are drawn uniformly without replacement. What is the probability of drawing one ball of each color?",
+      "reference_answer": "3/5",
+      "assistant_prefix_en": "Because the balls are drawn without replacement, the color of the first draw affects the probabilities on the second draw. One approach is to add the probabilities of red then blue and blue then red. Another is to count unordered pairs of physical balls. Both approaches must distinguish the individual balls even when they share a color. For the unordered approach, I will compare the number of mixed-color pairs with all two-ball pairs."
+    },
+    {
+      "id": "FH-10",
+      "family": "probability",
+      "phase": "calculation",
+      "question_en": "Choose one of two coins with equal probability. One is fair and the other has heads on both sides. After one toss shows heads, what is the probability that the selected coin is double-headed?",
+      "reference_answer": "2/3",
+      "assistant_prefix_en": "The prior probability of selecting either coin is one half. The double-headed coin produces heads with probability one, so its joint probability with the observed heads is one half. The fair coin produces heads with probability one half, so its joint probability with the observation is one quarter. Adding these disjoint possibilities gives an overall probability of three quarters for observing heads. The posterior probability uses the first joint probability divided by this total."
+    },
+    {
+      "id": "FH-11",
+      "family": "probability",
+      "phase": "verification",
+      "question_en": "Two independent fair six-sided dice are rolled. Given that their sum is even, what is the probability that both dice show odd numbers?",
+      "reference_answer": "1/2",
+      "assistant_prefix_en": "An even sum requires both dice to have the same parity. Each die has three odd faces and three even faces. There are nine ordered outcomes with two odd faces and nine with two even faces, making eighteen outcomes consistent with the condition. The desired conditional probability is nine divided by eighteen, or one half. Mixed-parity outcomes do not enter the denominator because their sums are odd."
+    },
+    {
+      "id": "FH-12",
+      "family": "probability",
+      "phase": "final",
+      "question_en": "A fair coin is tossed until the first head appears. What is the probability that the first head appears on the third toss?",
+      "reference_answer": "1/8",
+      "assistant_prefix_en": "For the first head to occur on the third toss, the first two tosses must both be tails and the third must be heads. These tosses are independent, and each required result has probability one half. The product is therefore one eighth. Sequences containing a head on an earlier toss cannot count because the experiment would already have stopped before the third toss.\n</think>\n\nThe probability is \\boxed{\\frac{1}{8}}."
+    },
+    {
+      "id": "FH-13",
+      "family": "number_theory",
+      "phase": "setup",
+      "question_en": "What is the remainder when 7 raised to the power 202 is divided by 10?",
+      "reference_answer": "9",
+      "assistant_prefix_en": "Only the last decimal digit matters for a remainder modulo ten, so computing the enormous full integer is unnecessary. I can multiply by seven repeatedly while reducing each result modulo ten. Once a remainder repeats, the last digits follow a cycle. I will find the cycle length, reduce the exponent modulo that length, and then select the corresponding remainder from the cycle rather than confusing the exponent with the remainder itself."
+    },
+    {
+      "id": "FH-14",
+      "family": "number_theory",
+      "phase": "calculation",
+      "question_en": "Find the least positive integer n such that n has remainder 2 when divided by 5 and remainder 3 when divided by 7.",
+      "reference_answer": "17",
+      "assistant_prefix_en": "An integer with remainder two modulo five can be written as five k plus two. For positive candidates, the first possibilities are two, seven, twelve, seventeen, and twenty-two. Their remainders modulo seven must be checked in increasing order because the question asks for the least positive solution. Two has remainder two, seven has remainder zero, and twelve has remainder five. The next candidate is seventeen."
+    },
+    {
+      "id": "FH-15",
+      "family": "number_theory",
+      "phase": "verification",
+      "question_en": "Find the greatest common divisor of 252 and 198.",
+      "reference_answer": "18",
+      "assistant_prefix_en": "Using the Euclidean algorithm, subtracting 198 from 252 leaves 54. Dividing 198 by 54 leaves remainder 36. Dividing 54 by 36 leaves remainder 18, and 36 is divisible by 18. The last nonzero remainder is eighteen. As a direct check, 252 equals eighteen times fourteen and 198 equals eighteen times eleven. Fourteen and eleven are coprime, so a larger common divisor cannot remain."
+    },
+    {
+      "id": "FH-16",
+      "family": "number_theory",
+      "phase": "final",
+      "question_en": "How many trailing decimal zeros are in 100 factorial?",
+      "reference_answer": "24",
+      "assistant_prefix_en": "Each trailing zero requires a factor of ten, consisting of a factor two and a factor five. Factors of two are more numerous, so I count the factors of five. The multiples of five contribute twenty, and the multiples of twenty-five contribute four additional factors. No factor of 125 occurs among the integers from one through one hundred. The total is twenty-four.\n</think>\n\nThe number of trailing zeros is \\boxed{24}."
+    }
+  ]
+}

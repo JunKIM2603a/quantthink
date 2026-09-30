@@ -1,0 +1,313 @@
+{
+  "schema_version": 1,
+  "status": "TERMINATION_PREFIX_REPORT_REVIEWED_RAW_ARRAYS_NOT_RECEIVED",
+  "source_run_sha256": "9ff8b7b828b6d1c25e2664d85a0bae8bbb2ef2746d83b56e947f313e32c426f0",
+  "source_run_bytes": 1585728,
+  "execution_commit": "b57d9d7be24d8d8f7e1ebfdbb24c17dca983b636",
+  "execution_research_status_sha256": "404914146c1801b1667c391e09be4c1dbc63c5c516f255220e9e7adec064bc14",
+  "config_sha256": "073986759aa41f29e54dfdf2835e7877aa2a2dccdb7347878a696451bdc2b1b3",
+  "implementation_sha256": {
+    "run_termination_prefix_diagnostic.py": "a65f5e0484e03fc64eef698f81d24c1b3db6a9e1012e2c1d1f9f6216b44b270e",
+    "audit_fixed_prefix_logits.py": "ab9b164c32413cdc4a2d8015c531b7a15bac0b76ebe7a5b7d9bc14894a2f5abd",
+    "run_fixed_prefix_diagnostic.py": "8c0c5d72984c8ba366e2209657f2bacbede196cbb52c1f341a08d4f942f326ff",
+    "fixed_prefix_diagnostic_contracts.py": "bafc0997feac28d93a2fc5b30910fe487edea85ccb56f9adfeaf4a14fc00c31d",
+    "replay_r0_awq.py": "b01e0124eb97a7e1145c886842d894966084ac8b1f7b47f538c647d7e1fb574a",
+    "qwen2_awq_adapter.py": "ea7d9e3c35443fc889480c667a826a9eca793c7592fb03be778b150d094b59c5",
+    "awq_weight_space.py": "230b604c0f436696b9118753c8ddbbd383029a3ca9a2aa89aab6478b1bd23b6b",
+    "runtime_assets.py": "d647bb31a0a72a373a95bf1561603c8eff2563ff598eff60516bd54dbedca130",
+    "run_difficulty_pilot.py": "809b14475e7eac56ce6667b52b85839e674f766106130407b6802aafe9fdaec7",
+    "difficulty_pilot_contracts.py": "d14b79ea22069dc6666fce2e70edc17557ef97029158eafdd51ebb306c460446",
+    "runtime_contracts.py": "ca514a25f560b8912edd90de83cb8d4a18aed0cd97d8769f5b9f1627cc8924ee",
+    "reproduction_contracts.py": "04923d60075be31ca7b14b7566dd0040b474bb4f1e009d416ee66819401e45bb"
+  },
+  "verification_ko": "첨부 run.json·실행 commit의 코드/설정/연구 상태·기존 첨부 참조·입력 ID·위치별 수치 내부 집계를 직접 대조했다. 원시 .npy/가중치는 미첨부이며 원시 logit에서의 분포 재계산·GPU 독립 실행은 하지 않았다.",
+  "new_forward_calls_reported": 6,
+  "new_generation_tokens": 0,
+  "forward_input_tokens": 14970,
+  "maximum_sequence_length": 2495,
+  "recorded_at_utc": "2026-09-29T21:53:12.666385+00:00",
+  "finished_at_utc": "2026-09-29T21:54:19.053705+00:00",
+  "reported_interval_seconds": 66.38732,
+  "reported_interval_note_ko": "실행기 recorded_at 이후 수집·recipe 재적용·파일/통계 처리 구간. 시작 전 검증/로딩 일부 제외 가능, 생성 처리량이 아님.",
+  "reported_peak_allocated_bytes": 3730728960,
+  "raw_array_metadata": [
+    {
+      "state": "B",
+      "prefix_id": "D2-03_B_pre_eos",
+      "file": "logits_B_D2-03_B_pre_eos.npy",
+      "file_sha256": "2ed16bf363da690578c68bec9c556debb7d56be0da3cfe926238f60bf1626345",
+      "shape": [
+        129,
+        151936
+      ],
+      "stored_dtype": "float32"
+    },
+    {
+      "state": "B",
+      "prefix_id": "D2-03_Q_same_length",
+      "file": "logits_B_D2-03_Q_same_length.npy",
+      "file_sha256": "b4fe71277f564154e840a585d53c184a9be6746e6264859a82410d44a29ea077",
+      "shape": [
+        129,
+        151936
+      ],
+      "stored_dtype": "float32"
+    },
+    {
+      "state": "B_repeat",
+      "prefix_id": "D2-03_B_pre_eos",
+      "file": "logits_B_repeat_D2-03_B_pre_eos.npy",
+      "file_sha256": "2ed16bf363da690578c68bec9c556debb7d56be0da3cfe926238f60bf1626345",
+      "shape": [
+        129,
+        151936
+      ],
+      "stored_dtype": "float32"
+    },
+    {
+      "state": "B_repeat",
+      "prefix_id": "D2-03_Q_same_length",
+      "file": "logits_B_repeat_D2-03_Q_same_length.npy",
+      "file_sha256": "b4fe71277f564154e840a585d53c184a9be6746e6264859a82410d44a29ea077",
+      "shape": [
+        129,
+        151936
+      ],
+      "stored_dtype": "float32"
+    },
+    {
+      "state": "Q",
+      "prefix_id": "D2-03_B_pre_eos",
+      "file": "logits_Q_D2-03_B_pre_eos.npy",
+      "file_sha256": "99b52096ad826982172094bf783221c51505da68c48af5aedbe1b0ecb579fcb0",
+      "shape": [
+        129,
+        151936
+      ],
+      "stored_dtype": "float32"
+    },
+    {
+      "state": "Q",
+      "prefix_id": "D2-03_Q_same_length",
+      "file": "logits_Q_D2-03_Q_same_length.npy",
+      "file_sha256": "f26e9504ec72be67c587be2821c6fe4300a0693597a569627d606a40ea17c02d",
+      "shape": [
+        129,
+        151936
+      ],
+      "stored_dtype": "float32"
+    }
+  ],
+  "raw_logit_body_bytes": 470393856,
+  "baseline_repeat_exact_reported": true,
+  "comparisons": [
+    {
+      "prefix_id": "D2-03_B_pre_eos",
+      "reference": "B",
+      "observed": "B_repeat",
+      "positions": 129,
+      "t1_rms": 0.0,
+      "t1_mean_kl": 0.0,
+      "t1_mean_tv": 0.0,
+      "t1_top1_changed_count": 0,
+      "filtered_mean_tv": 0.0,
+      "filtered_max_tv": 0.0,
+      "filtered_mean_js": 0.0,
+      "filtered_support_changed_count": 0,
+      "filtered_kl_infinite_count": 0,
+      "distinct_unique_top1_reversals": 0,
+      "reference_eos_retained_positions": [
+        2494
+      ],
+      "reference_eos_boundary_tie_sensitive_count": 0,
+      "reference_split_boundary_tie_count": 0,
+      "observed_eos_retained_positions": [
+        2494
+      ],
+      "observed_eos_boundary_tie_sensitive_count": 0,
+      "observed_split_boundary_tie_count": 0
+    },
+    {
+      "prefix_id": "D2-03_Q_same_length",
+      "reference": "B",
+      "observed": "B_repeat",
+      "positions": 129,
+      "t1_rms": 0.0,
+      "t1_mean_kl": 0.0,
+      "t1_mean_tv": 0.0,
+      "t1_top1_changed_count": 0,
+      "filtered_mean_tv": 0.0,
+      "filtered_max_tv": 0.0,
+      "filtered_mean_js": 0.0,
+      "filtered_support_changed_count": 0,
+      "filtered_kl_infinite_count": 0,
+      "distinct_unique_top1_reversals": 0,
+      "reference_eos_retained_positions": [],
+      "reference_eos_boundary_tie_sensitive_count": 0,
+      "reference_split_boundary_tie_count": 4,
+      "observed_eos_retained_positions": [],
+      "observed_eos_boundary_tie_sensitive_count": 0,
+      "observed_split_boundary_tie_count": 4
+    },
+    {
+      "prefix_id": "D2-03_B_pre_eos",
+      "reference": "B",
+      "observed": "Q",
+      "positions": 129,
+      "t1_rms": 0.9126005959732548,
+      "t1_mean_kl": 0.042869391463810025,
+      "t1_mean_tv": 0.02812993272400226,
+      "t1_top1_changed_count": 5,
+      "filtered_mean_tv": 0.03131913858582639,
+      "filtered_max_tv": 1.0,
+      "filtered_mean_js": 0.01441499083786797,
+      "filtered_support_changed_count": 5,
+      "filtered_kl_infinite_count": 3,
+      "distinct_unique_top1_reversals": 5,
+      "reference_eos_retained_positions": [
+        2494
+      ],
+      "reference_eos_boundary_tie_sensitive_count": 0,
+      "reference_split_boundary_tie_count": 0,
+      "observed_eos_retained_positions": [
+        2494
+      ],
+      "observed_eos_boundary_tie_sensitive_count": 0,
+      "observed_split_boundary_tie_count": 0
+    },
+    {
+      "prefix_id": "D2-03_Q_same_length",
+      "reference": "B",
+      "observed": "Q",
+      "positions": 129,
+      "t1_rms": 0.8655967683494117,
+      "t1_mean_kl": 0.09459125043490489,
+      "t1_mean_tv": 0.11200996078903445,
+      "t1_top1_changed_count": 16,
+      "filtered_mean_tv": 0.12272418877664865,
+      "filtered_max_tv": 0.618379790835756,
+      "filtered_mean_js": 0.03768994899129859,
+      "filtered_support_changed_count": 47,
+      "filtered_kl_infinite_count": 19,
+      "distinct_unique_top1_reversals": 12,
+      "reference_eos_retained_positions": [],
+      "reference_eos_boundary_tie_sensitive_count": 0,
+      "reference_split_boundary_tie_count": 4,
+      "observed_eos_retained_positions": [],
+      "observed_eos_boundary_tie_sensitive_count": 0,
+      "observed_split_boundary_tie_count": 3
+    }
+  ],
+  "last_position_eos": [
+    {
+      "prefix_id": "D2-03_B_pre_eos",
+      "model": "B",
+      "t1_eos_probability": 0.9999988690607373,
+      "retained_count": 1,
+      "retained_full_probability_mass": 0.999999999962391,
+      "boundary_logit": 30.0,
+      "boundary_tie_count": 1,
+      "boundary_tie_kept": 1,
+      "split_boundary_tie": false,
+      "minimum_cumulative_distance_to_cutoff": 0.04999999996239112,
+      "eos_rank_best": 1,
+      "eos_rank_worst": 1,
+      "eos_full_log_probability": -3.760902700307488e-11,
+      "eos_full_probability": 0.999999999962391,
+      "eos_retained": true,
+      "eos_filtered_probability": 1.0,
+      "eos_boundary_tie_sensitive": false
+    },
+    {
+      "prefix_id": "D2-03_B_pre_eos",
+      "model": "Q",
+      "t1_eos_probability": 0.9999957788647097,
+      "retained_count": 1,
+      "retained_full_probability_mass": 0.9999999996530662,
+      "boundary_logit": 29.25,
+      "boundary_tie_count": 1,
+      "boundary_tie_kept": 1,
+      "split_boundary_tie": false,
+      "minimum_cumulative_distance_to_cutoff": 0.04999999965306624,
+      "eos_rank_best": 1,
+      "eos_rank_worst": 1,
+      "eos_full_log_probability": -3.4693381494953857e-10,
+      "eos_full_probability": 0.9999999996530662,
+      "eos_retained": true,
+      "eos_filtered_probability": 1.0,
+      "eos_boundary_tie_sensitive": false
+    },
+    {
+      "prefix_id": "D2-03_Q_same_length",
+      "model": "B",
+      "t1_eos_probability": 1.3165734907945605e-12,
+      "retained_count": 4,
+      "retained_full_probability_mass": 0.967151522530699,
+      "boundary_logit": 25.25,
+      "boundary_tie_count": 1,
+      "boundary_tie_kept": 1,
+      "split_boundary_tie": false,
+      "minimum_cumulative_distance_to_cutoff": 0.017151522530698904,
+      "eos_rank_best": 149859,
+      "eos_rank_worst": 149861,
+      "eos_full_log_probability": -44.619072813906314,
+      "eos_full_probability": 4.1896996382162004e-20,
+      "eos_retained": false,
+      "eos_filtered_probability": 0.0,
+      "eos_boundary_tie_sensitive": false
+    },
+    {
+      "prefix_id": "D2-03_Q_same_length",
+      "model": "Q",
+      "t1_eos_probability": 2.95770915374291e-11,
+      "retained_count": 4,
+      "retained_full_probability_mass": 0.9878693169382113,
+      "boundary_logit": 25.25,
+      "boundary_tie_count": 1,
+      "boundary_tie_kept": 1,
+      "split_boundary_tie": false,
+      "minimum_cumulative_distance_to_cutoff": 0.0039598544658588225,
+      "eos_rank_best": 86446,
+      "eos_rank_worst": 87123,
+      "eos_full_log_probability": -39.47624463570995,
+      "eos_full_probability": 7.172735041723334e-18,
+      "eos_retained": false,
+      "eos_filtered_probability": 0.0,
+      "eos_boundary_tie_sensitive": false
+    }
+  ],
+  "existing_path_context": {
+    "common_initial_generated_tokens": 4,
+    "first_different_generated_token_one_based": 5,
+    "bf16_finish_reason": "eos",
+    "awq_finish_reason": "length",
+    "bf16_total_generated_tokens": 2425,
+    "awq_total_generated_tokens": 4096,
+    "bf16_close_think_text_count": 1,
+    "awq_close_think_text_count": 0,
+    "scope_ko": "기존 저장 ID/전체 생성문 읽기 전용 대조. 첫 토큰 차이는 sampling을 포함한 관측이며 원인·추론 오류 발생 시점으로 단정하지 않는다."
+  },
+  "interpretation_ko": "BF16 종료 직전 경로에서는 두 모델 모두 수학적 top-p 후 EOS만 남고, 동일길이 AWQ 경로에서는 양쪽 EOS가 제외된다. 이 사례의 고정 종료 문맥에서 AWQ의 EOS 후보 제거는 관측되지 않았다. 경로 의존 기술 관측이며 종료 지연의 인과 분해·전역 EOS 가설 기각·기능적 동등성 PASS가 아니다.",
+  "model_ready": false,
+  "next_session_ready": false,
+  "next_step_ko": "기존 자료 검토를 종료하고 기능적 수락 기준·독립 확인 설계를 먼저 고정한다. 같은6회/CPU감사/새생성을 자동 반복하지 않는다.",
+  "verification_checks": {
+    "source_code_files": 12,
+    "reported_forward_records": 6,
+    "reported_comparisons": 4,
+    "per_position_t1_and_filtered_rows_each": 516,
+    "all_internal_checks_passed": true,
+    "internal_recalculation_rtol": 1e-10,
+    "internal_recalculation_atol": 1e-12,
+    "is_functional_equivalence_tolerance": false,
+    "raw_array_bytes_received": false,
+    "user_gpu_run_repeated": false,
+    "prior_tests_rerun": false
+  },
+  "bf16_prefix_disjoint_filtered_support_positions": [
+    2470
+  ],
+  "remaining_forward_calls": 0,
+  "review_document": "docs/TERMINATION_PREFIX_RESULT_REVIEW_20260930_KO.md",
+  "next_design_document": "docs/SESSION02_ACCEPTANCE_DESIGN_20260930_KO.md"
+}

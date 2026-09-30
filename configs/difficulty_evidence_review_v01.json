@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "status": "EXISTING_RECORDS_REVIEWED_NOT_MODEL_CERTIFICATION",
+  "review_date": "2026-09-29",
+  "reviewed_repository_head": "2a3617a38c9cc6597fa86c12238862c3559e0bbb",
+  "evidence_packet_sha256": "f9e30e7ad4b7638689e62a4f9f3368d61b5ac21d735a60cb08054019757baad4",
+  "evidence_packet_bytes": 2372954,
+  "source_run_sha256": "ebdf46b1068754b3c12db1bef3dad2b496c18e85209099fed965b4bd3eaacbe0",
+  "source_summary_sha256": "21ba286b4bd78caef53f269319c81564ad39fbabcfaa97ea5e90d740975fba90",
+  "config_sha256": "1a0b9ccd1a2863b7078368ec853461f2973015ce13386d338aa51af2c2ba22c6",
+  "suite_sha256": "10fc1a73e263b1e8fa56849c27ce6748ab39bb8bea77858ada6d424dbe4ae961",
+  "original_score_rules_changed": false,
+  "new_model_or_tokenizer_execution": false,
+  "model_ready": false,
+  "verification_scope_ko": "첨부 snapshot의80개 전체ID/입력·종료/요약과12개·31개 백업 앞부분을 직접 대조. 저장형식 재직렬화 바이트 해시 일치. 실제 GPU·원시 가중치를 다시 실행/해시한 것은 아님.",
+  "observed_attempts": 80,
+  "resume_preserved_prefixes": [
+    12,
+    31
+  ],
+  "execution_commits": {
+    "initial": "fbe673e97a42e38942745aea6d028a3f58bf0b90",
+    "resumes": [
+      "49317c044b42e76f9afeca84b360092e88b99979",
+      "49317c044b42e76f9afeca84b360092e88b99979"
+    ]
+  },
+  "manual_review_scope": "원래EOS 형식 미판정4개 최종영역 전체. 그 밖의자동정답33개는최종수치대조, 검열43개는태그/토큰/말미검토. 전체추론의논리타당도/정답포기주석검증은아님.",
+  "manual_adjudications": [
+    {
+      "problem_id": "D1-04",
+      "arm": "bf16",
+      "seed": 42,
+      "original_outcome": "UNSCORABLE",
+      "original_parse_status": "TEXT_AFTER_FINAL_BOX",
+      "attempt_canonical_sha256": "3d67f09659bce32a85d59f0391c77cd4c87cea0f73430d6ac08893d646092f66",
+      "final_region_utf8_sha256": "8a18e2598eab2828fa487ea18113124b4c40dd612d886339667209b421c7373b",
+      "manual_final_answer": "126",
+      "manual_correct": true,
+      "manual_review_note_ko": "최종 박스 뒤 넓이 단위 설명. 답 번복 없음."
+    },
+    {
+      "problem_id": "D1-04",
+      "arm": "bf16",
+      "seed": 43,
+      "original_outcome": "UNSCORABLE",
+      "original_parse_status": "TEXT_AFTER_FINAL_BOX",
+      "attempt_canonical_sha256": "d8225ba5fb01539b491057952e5113b85bcabc18af6865739bc9627438faf904",
+      "final_region_utf8_sha256": "dcd35a21cecd4cf0a9c4e28cd36b71a9fddd5daac9655ba301533ed629815a0f",
+      "manual_final_answer": "126",
+      "manual_correct": true,
+      "manual_review_note_ko": "최종 박스 뒤 넓이 단위 설명. 답 번복 없음."
+    },
+    {
+      "problem_id": "D2-01",
+      "arm": "bf16",
+      "seed": 43,
+      "original_outcome": "UNSCORABLE",
+      "original_parse_status": "TEXT_AFTER_FINAL_BOX",
+      "attempt_canonical_sha256": "104f181e7aafc1c5ab6b414c3b549480360fb5ed073c7eede4eb301f9dbed62e",
+      "final_region_utf8_sha256": "c37ef7ce97d5154e5eb8af847a8b5931aa1d3cb92b933f89a15201b4deedb471",
+      "manual_final_answer": "78",
+      "manual_correct": true,
+      "manual_review_note_ko": "최종 박스 뒤 물의 양 단위 설명. 답 번복 없음."
+    },
+    {
+      "problem_id": "D1-02",
+      "arm": "awq_w3_replay",
+      "seed": 43,
+      "original_outcome": "UNSCORABLE",
+      "original_parse_status": "TEXT_AFTER_FINAL_BOX",
+      "attempt_canonical_sha256": "8ba0480880566f27c961f6eacc381d5cca90e4f03a88198f843435607ce29db2",
+      "final_region_utf8_sha256": "dd3b3e596f8513c784658939888efb0845010e8bcd08a71957f84fa6438e0bff",
+      "manual_final_answer": "20",
+      "manual_correct": true,
+      "manual_review_note_ko": "최종 박스 뒤 거스름돈 단위 설명. 답 번복 없음."
+    }
+  ],
+  "supplemental_manual_counts": {
+    "bf16": {
+      "correct_and_eos": 25,
+      "censored": 15,
+      "stable_problems_by_level": [
+        4,
+        3,
+        3,
+        1,
+        0
+      ]
+    },
+    "awq_w3_replay": {
+      "correct_and_eos": 12,
+      "censored": 28,
+      "stable_problems_by_level": [
+        3,
+        1,
+        1,
+        0,
+        0
+      ]
+    }
+  },
+  "automatic_v01_verdicts": "ALL_INCONCLUSIVE_PRESERVED",
+  "supplemental_manual_boundary": "BF16 D1은8/8 EOS와정답·4/4안정조건충족. AWQ는D1부터검열이있어통과경계미확정. 사후수동보완표이며기존자동판정을덮어쓰지않음.",
+  "censored_think_close_counts": {
+    "bf16_zero": 11,
+    "bf16_one": 4,
+    "awq_zero": 28,
+    "multiple": 0
+  },
+  "context_window_review": {
+    "use_sliding_window": false,
+    "sliding_window": 4096,
+    "input_tokens_min": 59,
+    "input_tokens_max": 110,
+    "max_input_plus_generated_tokens": 4206,
+    "crossing_4096": {
+      "bf16": 16,
+      "awq_w3_replay": 28
+    },
+    "crossing_eos_case": {
+      "problem_id": "D4-04",
+      "arm": "bf16",
+      "seed": 43,
+      "input_tokens": 102,
+      "generated_tokens": 4056
+    },
+    "status": "INSTALLED_CPU_MASK_OBSERVED_GENERATION_CAUSAL_IMPACT_UNVERIFIED"
+  },
+  "raw_generations_committed": false,
+  "pre_window_prefix_sensitivity": {
+    "status": "POST_HOC_DESCRIPTIVE_EXISTING_IDS_ONLY",
+    "generated_prefix_limit": 3986,
+    "derivation": "4096 - 최대입력110 = 3986. 마지막 예측에 사용한KV 길이는최대4095로고정소스의4096마스크분기이전.",
+    "bf16_eos": 24,
+    "awq_eos": 12,
+    "both_eos": 12,
+    "bf16_only_eos": 12,
+    "awq_only_eos": 0,
+    "neither_eos": 16,
+    "original_budget_or_outcomes_changed": false,
+    "new_generation": false
+  },
+  "mask_upstream_source": {
+    "repository": "huggingface/transformers",
+    "ref": "v4.51.3",
+    "git_blob_sha1": {
+      "configuration_qwen2.py": "2e82f1976f3922f3620415f4eace6c6e046243f8",
+      "modeling_qwen2.py": "16a7316e2d0e56eafe301a7f2d8693d6cc6c73ec",
+      "modeling_attn_mask_utils.py": "dfdd976f0156139024c6f7788870a71e4a41754d",
+      "sdpa_attention.py": "9c924c048ad52929a2d0f890a22295d5a56ef505"
+    },
+    "verification": "수신 CPU 보고의 4개 설치 소스 blob SHA-1·SHA-256을 공식 v4.51.3 바이트와 대조해 일치. 8개 마스크 행 검토. 독립 텐서/GPU 실행은 없음."
+  },
+  "sdpa_mask_review": {
+    "document": "docs/SDPA_MASK_REVIEW_20260929_KO.md",
+    "audited_repository_head": "c45899c7d02056422e5aaa9d58a8bb183a50f767",
+    "attachment_name": "sdpa_mask_review_v01.json",
+    "attachment_bytes": 4556,
+    "attachment_sha256": "bd18f808619c03859653d43c6ad956f3aea7c9d816a27e8387ff0b7fe3b81b0c",
+    "reported_at_utc": "2026-09-29T14:55:42.644433+00:00",
+    "status": "DISABLED_FLAG_WINDOW_MASK_OBSERVED",
+    "script_sha256": "831ce0cc8ad55cd68f55f280941a28cf7408a0e4f4e13fcc7829e707ee9928b3",
+    "script_hash_matches_repository": true,
+    "source_hashes_match_official_pinned_bytes": true,
+    "source_files": [
+      {
+        "file": "configuration_qwen2.py",
+        "git_blob_sha1": "2e82f1976f3922f3620415f4eace6c6e046243f8",
+        "sha256": "4d3fc49747ab9dd0be658842bd30b877bd8bb644e494bba484b98c191e3952ed"
+      },
+      {
+        "file": "modeling_qwen2.py",
+        "git_blob_sha1": "16a7316e2d0e56eafe301a7f2d8693d6cc6c73ec",
+        "sha256": "1760c628019995d3564c8572be6c5149f488b6c3aa95ceda16099c2516e146ff"
+      },
+      {
+        "file": "modeling_attn_mask_utils.py",
+        "git_blob_sha1": "dfdd976f0156139024c6f7788870a71e4a41754d",
+        "sha256": "75189bb86ad79bb0337b008eb564ea43e29682a886e3730b9605bfe1ae0d61c2"
+      },
+      {
+        "file": "sdpa_attention.py",
+        "git_blob_sha1": "9c924c048ad52929a2d0f890a22295d5a56ef505",
+        "sha256": "5a2d607459531430503dd3cb1adc8778885037c1d0be7e6ca0e82a1a852f4d8b"
+      }
+    ],
+    "eight_records_recomputed_match": true,
+    "as_recorded_blocked_key_counts": [
+      0,
+      0,
+      1,
+      109
+    ],
+    "window_none_control_blocked_key_counts": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "user_cpu_function_execution_reported": true,
+    "assistant_independent_tensor_execution": false,
+    "actual_generation_cache_or_mask_recorded": false,
+    "actual_model_or_sdpa_kernel_execution": false,
+    "original_results_changed": false,
+    "model_ready": false
+  }
+}

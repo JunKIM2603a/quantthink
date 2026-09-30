@@ -1,0 +1,1803 @@
+{
+  "schema_version": 1,
+  "as_of_local_date": "2026-09-30",
+  "timezone": "Asia/Seoul",
+  "current_session": "02",
+  "current_session_title": "QuantThink 02 — 환경 구축·BF16/AWQ 재현",
+  "audited_base_commit": "8b928376458ad0366013cbe52da95288e771a61e",
+  "source_audit": "SCOPED_PRIMARY_FULLTEXT_FOLLOWUP_COMPLETED",
+  "novelty_gate": "SCOPED_CONTRIBUTION_ACCEPTED",
+  "protocol_gate": "ACCEPTED",
+  "research_approval": "APPROVED",
+  "user_hardware_preflight": "USER_REPORTED_CUDA_VISIBLE",
+  "user_hardware_preflight_summary": {
+    "evidence_source": "User-submitted terminal output; not an assistant-run hardware inspection or verification of local file bytes",
+    "observed_commit": "95e7be8b125eb3307b7054a931c7a7033d7c5dfb",
+    "diagnostic_recorded_at_utc": "2026-09-28T15:55:30.618275+00:00",
+    "git_dirty": false,
+    "python": "3.11.16",
+    "torch": "2.7.1+cu118",
+    "numpy": "1.26.4",
+    "cuda_build": "11.8",
+    "nvidia_smi_status": "ok",
+    "nvidia_smi_device_count": 2,
+    "torch_probe_status": "ok",
+    "torch_cuda_available": true,
+    "torch_visible_device_count": 2,
+    "bf16_supported_on_both_devices": true,
+    "interpretation": "CUDA visibility is confirmed by the submitted report. This is a basic environment milestone, not model, quantizer, communication, or research-gate validation.",
+    "raw_report_committed": false
+  },
+  "user_hardware_preflight_history": [
+    {
+      "observed_commit": "a5789ce55fb47475ea3fe94bbf02d26bbdd5c237",
+      "diagnostic_recorded_at_utc": "2026-09-28T15:44:16.783488+00:00",
+      "status": "USER_REPORTED_ENVIRONMENT_NOT_READY",
+      "torch_probe_status": "not_installed",
+      "nvidia_smi_device_count": 2,
+      "user_cpu_diagnostic_tests": "7_PASSED_USER_REPORTED",
+      "interpretation": "The earlier environment lacked PyTorch; the derived warnings did not establish a hardware fault. Superseded by the later CUDA-visible report."
+    }
+  ],
+  "user_gpu_tensor_smoke": "USER_REPORTED_PASS_2_GPUS",
+  "user_gpu_tensor_smoke_summary": {
+    "evidence_source": "User-submitted terminal output",
+    "reported_artifact": "results/local/gpu_tensor_smoke_20260928T155549946270Z.json",
+    "reported_status": "GPU_TENSOR_SMOKE_PASS",
+    "device_indices": [
+      0,
+      1
+    ],
+    "operation": "Individual 256x256 BF16 all-ones matrix products with expected output 256",
+    "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
+    "raw_report_committed": false
+  },
+  "next_local_environment_step": "32K 원본80개·요약·SSH 복구57+23·물리81회 기록 검토를 완료했다. BF16 EOS40/40·AWQ22/40, AWQ검열18/40이다. 단위 표현4건의 별도 수동 보완표에서 정답 확인은BF16 36/40·AWQ14/40, BF16 D1~D4 PASS·D5 FAIL이며 AWQ 전단계 INCONCLUSIVE다. 생성432개 마스크/cache 표본과 처리량을 검토했다. 다음은 좌표 변환의 기능적 수락·평가기 일반 타당도·독립 확인 기준 결정이다. 이미 준비한16문맥96회 forward/새생성0 점검은 미승인 상태를 유지하며 기존32K 재실행·64K 자동 증액은 하지 않는다. model_ready=false·세션02 유지.",
+  "upstream_code_audit": {
+    "repository": "ruikangliu/Quantized-Reasoning-Models",
+    "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
+    "scope": "README, AWQ/inference wrappers and inference.py inspected; follow-up also inspected methods/awq/run_awq.py, calib_data.py and pre_quant.py. No upstream code executed and no exact Lotfi runtime provenance claim.",
+    "review_document": "docs/REPRODUCTION_READINESS_REVIEW.md",
+    "followup_document": "docs/REPRODUCTION_PLAN_V01.md",
+    "calibration_finding": "The pileval loader's n_samples counts source documents, then concatenates and splits them; 128 documents do not ensure 128 blocks of 512 tokens.",
+    "followup_v02_document": "docs/REPRODUCTION_PREPARATION_V02_KO.md",
+    "followup_v02_scope": "동일 고정 commit의 pre_quant.py, auto_scale.py, auto_clip.py, quantizer.py, calib_data.py, run_awq.py, requirements.txt와 Transformers v4.51.3 Qwen2 코드를 읽음. 원본 코드·모델 실행은 없음.",
+    "followup_v03_document": "docs/REPRODUCTION_PREPARATION_V03_KO.md",
+    "followup_v03_scope": "고정 AWQ 모듈 5개와 LICENSE의 blob SHA를 확인하고 연결 코드를 작성했다. 이후 사용자 제출 무작위 Qwen2 CUDA PASS의 구현·정책 해시를 대조했다. 작성 환경에서는 원본 함수를 실행하지 않았고 사전학습 모델 적용은 미실행이다.",
+    "synthetic_execution_review_document": "docs/SYNTHETIC_AWQ_REVIEW_20260929_KO.md"
+  },
+  "session01_followup": {
+    "owner_instruction": "이전 다음 단계 진행 요청은 준비의 근거였으며, 2026-09-29 현재 대화의 명시적 승인으로 제안 기여 범위와 제한된 R0 수락·실행 승인을 별도 기록했다. research_approval_record 참조.",
+    "candidate_manifest": "configs/reproduction_candidate.json",
+    "candidate_manifest_status": "PROPOSED_NOT_ACCEPTED_NOT_RUN_READY",
+    "original_h1_h2_changed": false,
+    "candidate_development": "100 GSM8K main/train questions with two sampling seeds; proposed development check, not MATH-500 reproduction. MATH-500 remains primary confirmation.",
+    "source_review": "Earlier primary-source reviews are retained as historical evidence. Relevant primary HTML sections of 2609.23125v1 and 2609.06473v1 were inspected in the continuation; see docs/NOVELTY_FOLLOWUP_20260929.md. Broad novelty is not established.",
+    "metadata_collector": "LIVE_SUCCESS_USER_REPORTED_INTERNAL_CONFIG_HASHES_CHECKED",
+    "measurement_contracts": "EXACT_TOKEN_BLOCKS_AND_EOS_BUDGET_ACCOUNTING_CPU_TESTED",
+    "mathematical_check": "Equal KL and entropy can coexist with different EOS probabilities and expected lengths in a memoryless toy model; not an empirical H1 test or novelty claim",
+    "new_cpu_tests": "18_PASSED_WITH_MOCK_HTTP_IN_ASSISTANT_ENVIRONMENT_PREVIOUS_UPDATE",
+    "syntax_check": "COMPILEALL_PASSED_FOR_PREPARATION_SCRIPTS_AND_TESTS_PREVIOUS_UPDATE",
+    "user_asset_revision_report": "USER_REPORTED_METADATA_RESOLVED_INTERNAL_HASHES_MATCH",
+    "source_fulltext_artifact_needed": null
+  },
+  "asset_config_review": {
+    "source_recorded_at_utc": "2026-09-28T23:25:35.768653+00:00",
+    "evidence_source": "User-pasted report; canonical configuration hashes recomputed from a local transcription of the supplied fields, not independent remote retrieval or verification of original local file bytes",
+    "manifest_canonical_sha256": "98ff733b0d8391c3a33aa2f561e2d389bd6e482ee53b1b680c1bb6e7e6b6201f",
+    "manifest_hash_matches_current_candidate": true,
+    "supplied_configuration_internal_hashes": "3_OF_3_MATCH",
+    "inspection_references": "configs/asset_inspection_refs.json",
+    "inspection_reference_status": "INSPECTION_REFERENCES_PINNED_NOT_A_RUNTIME_LOCK",
+    "review_document": "docs/ASSET_CONFIG_REVIEW_V01.md",
+    "source_findings": [
+      "Source model BOS 151643 differs from generation BOS 151646; user-reported tokenizer confirms BOS 151646 and actual input arrays contain one BOS each",
+      "User-reported tokenizer confirms EOS=PAD=151643; left-padding masks pass the probe",
+      "Chat template already appends the opening think marker; this prefix is not generated text",
+      "Tokenizer length metadata 16384 differs from model position capacity 131072; long-context runtime remains unverified",
+      "User-reported GenerationConfig inherits top_k=50 and explicit existing candidate overrides it to 0"
+    ],
+    "tokenizer_probe_script": "scripts/audit_tokenizer_contract.py",
+    "tokenizer_probe_dependencies": "requirements/tokenizer-audit.txt",
+    "tokenizer_probe_actual_execution": "USER_REPORTED_PASS_REPOSITORY_HASHES_AND_FIELDS_CHECKED",
+    "assistant_new_cpu_tests": "25_PASSED_WITH_TEST_DOUBLES",
+    "assistant_new_syntax_check": "PASSED",
+    "offline_cli_on_transcribed_source_fields": "METADATA_REVIEW_PASS_TOKENIZER_NOT_RUN",
+    "model_execution": "NOT_RUN",
+    "raw_report_committed": false,
+    "tokenizer_execution_review_document": "docs/TOKENIZER_CONTRACT_REVIEW_20260929.md"
+  },
+  "assistant_cpu_diagnostic_tests": "7_PASSED_PREVIOUS_TURN_NOT_RERUN_IN_THIS_UPDATE",
+  "bf16_reproduction": "R0_FIXED_PREFIX_AND_32K_RAW_RESULTS_REVIEWED_FORMAL_BENCHMARK_NOT_RUN",
+  "awq_reproduction": "R0_FIXED_PREFIX_AND_32K_RAW_RESULTS_REVIEWED_EQUIVALENCE_UNCERTIFIED",
+  "kl_matching": "NOT_RUN",
+  "h1": "UNTESTED",
+  "h2": "UNTESTED",
+  "next_session_ready": false,
+  "next_session_title": "QuantThink 03 — 교란 매칭·대조군 검증",
+  "blocking_items": [
+    "32K 원본80개·요약 검토 완료. BF16 EOS40/40·AWQ22/40, AWQ18/40 검열로32K 충분성 운영목표5%를 미충족하며 전체 자연 종료 길이 평균은 미확정이다.",
+    "좌표 변환의 비영 분포 차이가 후속 결과에 허용되는지의 기능적 수락과 독립 확인은 미완료다. BF16/AWQ 행동 차이 자체는 구현 실패의 판정 기준이 아니다.",
+    "단위 표현4개는 별도 수동 정답으로 확인했다. AWQ EOS22개 중7개는 최종답 경계/박스 없음,1개는 think경계2개와 마지막오답7이다. 고정 자동점수는 보존하며 평가기의 일반 타당도는 미완료다.",
+    "사용자 생성 마스크/cache 저장표본432행에서 도달경계 누락·과거키 차단·28계층cache길이 불일치가 없었다. GPU kernel 내부 독립 관측/수치 재현·종료지연 인과원인은 미확정이다.",
+    "기능적 수락·독립 확인의 재현 기준 미완료로model_ready=false·세션02 유지. 준비된16문맥96회는 미승인, 기존32K+SSH복구81회는 소진됐다. R1/MATH-500/새Pile/KL매칭/H1/H2/7B는 시작하지 않는다."
+  ],
+  "allowed_now": [
+    "literature_review",
+    "protocol_design",
+    "cpu_unit_tests",
+    "local_environment_inspection",
+    "public_asset_metadata_collection",
+    "cpu_tokenizer_asset_inspection",
+    "synthetic_random_model_engineering_checks",
+    "public_dataset_provenance_preparation",
+    "approved_r0_synthetic_2_prompts_bf16_awq_w3_128_tokens",
+    "user_requested_bounded_custom_difficulty_v01_pilot",
+    "approved_fixed_prefix_diagnostic_v01_maximum_12_forward_calls_zero_generation",
+    "read_only_saved_fixed_prefix_logits_cpu_audit_and_float64_filter_diagnostics",
+    "approved_termination_prefix_v01_maximum_6_forward_calls_zero_generation",
+    "read_only_result_review_and_session02_acceptance_protocol_design",
+    "functional_holdout_v01_protocol_fixture_implementation_preparation_and_cpu_contract_tests_only",
+    "user_requested_long_generation_v01_80_attempts_32768_tokens_full_context_bounded_retest",
+    "user_requested_single_ssh_recovery_preserve_57_completed_archive_one_interrupted_call_maximum_81_calls",
+    "read_only_32k_saved_outputs_result_review_manual_unit_annotation_and_acceptance_design"
+  ],
+  "not_yet_authorized_by_gates": [
+    "functional_holdout_v01_new_16_contexts_maximum_96_forward_calls",
+    "scientific_model_runs_outside_recorded_r0_difficulty_fixed_termination_and_long_generation_v01_scopes",
+    "r1_100_question_evaluation",
+    "math500_confirmation",
+    "kl_matching_experiments",
+    "long_context_experiments_outside_long_generation_v01",
+    "confirmatory_hypothesis_tests",
+    "7b_extension",
+    "full_model_benchmark_matrix"
+  ],
+  "novelty_followup": {
+    "review_document": "docs/NOVELTY_FOLLOWUP_20260929.md",
+    "audited_working_commit": "e31983317d1d9cb3fb708c7b0a4ddbc1e6b360da",
+    "review_local_date": "2026-09-29",
+    "sources": [
+      {
+        "paper": "2609.23125v1",
+        "url": "https://arxiv.org/html/2609.23125v1",
+        "verification": "PRIMARY_HTML_RELEVANT_SECTIONS_READ",
+        "sections": [
+          "2-4",
+          "6-7",
+          "10-11",
+          "F-G"
+        ]
+      },
+      {
+        "paper": "2609.06473v1",
+        "url": "https://arxiv.org/html/2609.06473v1",
+        "verification": "PRIMARY_HTML_RELEVANT_SECTIONS_READ",
+        "sections": [
+          "3-4",
+          "6",
+          "A-B"
+        ]
+      }
+    ],
+    "source_access_blockers_resolved": true,
+    "novelty_gate_closed": false,
+    "source_code_executed": false,
+    "new_model_or_tokenizer_execution": false,
+    "original_hypotheses_or_candidate_changed": false,
+    "next_user_evidence": null,
+    "validation": "Documentation and JSON consistency checked; no code tests or model runs rerun in this continuation",
+    "next_user_evidence_note": "기존 토크나이저 보고서 요청은 충족됐음. user_tokenizer_contract와 최신 v0.2 안내 참조."
+  },
+  "user_tokenizer_contract": {
+    "status": "USER_REPORTED_PASS_REPOSITORY_HASHES_AND_FIELDS_CHECKED",
+    "reported_status": "TOKENIZER_CONTRACT_PASS_NOT_MODEL_READY",
+    "reported_at_utc": "2026-09-29T00:13:10.027340+00:00",
+    "evidence_source": "User-pasted terminal JSON; selected fields transcribed locally for checks. Original local file bytes and generating Git commit were not inspected.",
+    "audited_repository_commit": "8335ef867b7a48132e32badd3f60308e8fa15c4f",
+    "generating_git_commit": null,
+    "review_document": "docs/TOKENIZER_CONTRACT_REVIEW_20260929.md",
+    "manifest_canonical_sha256": "98ff733b0d8391c3a33aa2f561e2d389bd6e482ee53b1b680c1bb6e7e6b6201f",
+    "inspection_refs_sha256": "97f5b7bf6cb6888c716a3838f21c224e7920b1df05c5996efe1321d39cd15276",
+    "repository_hashes_recomputed": "2_OF_2_MATCH",
+    "model_revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+    "tokenizer_class": "LlamaTokenizerFast",
+    "bos_token_id": 151646,
+    "eos_token_id": 151643,
+    "pad_token_id": 151643,
+    "think_close_ids": [
+      151649
+    ],
+    "prompt_lengths": [
+      22,
+      33
+    ],
+    "actual_prompt_bos_counts": [
+      1,
+      1
+    ],
+    "bos_counts_if_special_tokens_added_again": [
+      2,
+      2
+    ],
+    "left_padding_mask_check": "PASS_USER_REPORTED",
+    "inherited_top_k": 50,
+    "explicit_top_k": 0,
+    "packages": {
+      "transformers": "4.51.3",
+      "jinja2": "3.1.6",
+      "tokenizers": "0.21.4",
+      "huggingface-hub": "0.36.2",
+      "numpy": "1.26.4"
+    },
+    "long_context_validated": false,
+    "assistant_tokenizer_execution": false,
+    "raw_report_committed": false,
+    "interpretation": "Input-format milestone only; original hypotheses, candidate/inspection JSON snapshots, research gates and model execution states are unchanged."
+  },
+  "user_document_language": "ko",
+  "reproduction_preparation_v02": {
+    "status": "CPU_TOOLS_TESTED_NOT_MODEL_READY",
+    "document": "docs/REPRODUCTION_PREPARATION_V02_KO.md",
+    "audited_base_commit": "b7f9e11001f0ac29744fde71ab590a7f801af40c",
+    "implemented": [
+      "AWQ 스케일 기록 역변환과 원래 좌표의 오차 계산",
+      "GSM8K 최종 영역 수치 평가와 계획 전체의 누락 검사",
+      "문제 해시 기반 개발 후보 목록과 평가 입력 ID 대조"
+    ],
+    "test_command": "python -m unittest discover -s tests -p 'test_reproduction_v02.py' -v",
+    "test_result": "32_PASSED_IN_ASSISTANT_ENVIRONMENT",
+    "test_environment": {
+      "python": "3.12.14",
+      "numpy": "2.3.5"
+    },
+    "test_evidence_scope": "합성 배열·합성 JSONL·CLI 연동. 원격 데이터·모델·토크나이저·CUDA를 사용하지 않음. 기존 테스트 묶음 재실행·합산 없음.",
+    "user_environment_test": "NOT_YET_REPORTED",
+    "manifest_snapshots_changed": false,
+    "actual_awq_adapter": "NOT_IMPLEMENTED",
+    "actual_calibration_ids": "NOT_SELECTED",
+    "actual_development_ids": "NOT_SELECTED",
+    "source_provenance_loader": "NOT_IMPLEMENTED",
+    "real_generation_evaluator_audit": "NOT_RUN",
+    "math500_symbolic_evaluator": "NOT_IMPLEMENTED",
+    "overthinking_annotation_validation": "NOT_RUN",
+    "long_context_validation": "NOT_RUN",
+    "new_model_or_tokenizer_execution": false,
+    "original_h1_h2_changed": false,
+    "scientific_gate_states_changed": false
+  },
+  "reproduction_preparation_v03": {
+    "status": "USER_REPORTED_PRETRAINED_R0_EXECUTED_REVIEW_PENDING",
+    "document": "docs/REPRODUCTION_PREPARATION_V03_KO.md",
+    "audited_base_commit": "3e78771b43f5024d844eef741f24f2c6feef8b43",
+    "policy": "configs/runtime_preparation_v03.json",
+    "implemented": [
+      "고정 원본 AWQ 함수와 Qwen2 계층·RoPE 입력 연결",
+      "작은 무작위 Qwen2 CUDA 점검 명령",
+      "고정 Hub revision 파일 바이트 검증·데이터 및 calibration 준비",
+      "승인 조건을 먼저 확인하는 BF16/AWQ 합성 R0 실행기"
+    ],
+    "new_cpu_tests": {
+      "discovered": 32,
+      "passed": 29,
+      "skipped": 3,
+      "failed": 0,
+      "skip_reason": "PyTorch·Transformers가 없어 실제 Qwen2 CPU 연결 검사 미실행"
+    },
+    "v02_regression_tests": {
+      "passed": 32,
+      "failed": 0
+    },
+    "test_environment": {
+      "python": "3.12.14",
+      "numpy": "2.3.5",
+      "zstandard": "0.25.0",
+      "torch": null,
+      "transformers": null,
+      "pyarrow": null,
+      "huggingface_hub": null
+    },
+    "validation_scope": "작성 당시 검증은 모의 Hub 응답·합성 파일·압축 JSONL·오프라인 CLI·준비 경로 연동 및 구문 검사였다. 위 new_cpu_tests와 test_environment는 당시 기록이다. 이후 사용자 GPU 근거는 user_synthetic_awq_adapter, 실제 Pile 바이트·전체 JSONL 읽기와 오류 수정은 user_data_preparation_attempt에 별도로 기록했다. 최신 데이터 검토는 user_prepared_assets에 별도로 기록했다.",
+    "actual_awq_adapter": "USER_REPORTED_PRETRAINED_28_LAYER_TRANSFORM_NOT_EQUIVALENCE_CERTIFIED",
+    "source_provenance_loader": "PINNED_3_SOURCE_FILES_INDEPENDENTLY_VERIFIED",
+    "synthetic_cuda_adapter_check": "USER_REPORTED_PASS_REPOSITORY_HASHES_CHECKED",
+    "real_dataset_file_hashes": "ALL_3_ASSISTANT_VERIFIED_AND_USER_REPORT_MATCHED",
+    "actual_calibration_ids": "USER_REPORTED_261_DOCUMENTS_TOKEN_HASH_REVIEWED",
+    "actual_development_ids": "INDEPENDENTLY_RECONSTRUCTED_3_ARTIFACT_HASHES_MATCH",
+    "pretrained_r0": "USER_REPORTED_EXECUTED_DIAGNOSTICS_PENDING_REVIEW",
+    "new_model_or_tokenizer_execution": true,
+    "original_h1_h2_changed": false,
+    "manifest_snapshots_changed": false,
+    "scientific_gate_states_changed": false,
+    "execution_scope": "사용자 제출 무작위 소형 Qwen2 합성 실행. 작성 환경의 추가 모델·토크나이저 실행과 사전학습 가중치 실행은 없음.",
+    "latest_user_review_document": "docs/SYNTHETIC_AWQ_REVIEW_20260929_KO.md",
+    "latest_data_preparation_review_document": "docs/DATA_PREPARATION_REVIEW_20260929_KO.md",
+    "latest_r0_review_document": "docs/R0_REVIEW_PACKET_20260929_KO.md",
+    "prepared_asset_review_reference": "configs/prepared_assets_review_v03.json",
+    "latest_approval_document": "docs/R0_APPROVAL_20260929_KO.md",
+    "latest_r0_result_review_document": "docs/R0_RESULT_REVIEW_20260929_KO.md"
+  },
+  "user_command_environment": {
+    "activation_command": "conda activate quantthink",
+    "reported_active_environment": "quantthink",
+    "instruction": "사용자 실행 명령마다 conda 활성화와 필요한 작업 경로를 포함한다.",
+    "name_note": "사용자 요청의 quantrhink 표기와 제출 프롬프트의 quantthink이 달라, 실제 활성 표시인 quantthink을 기준으로 안내함."
+  },
+  "user_synthetic_awq_adapter": {
+    "status": "USER_REPORTED_PASS_REPOSITORY_HASHES_CHECKED",
+    "reported_status": "SYNTHETIC_AWQ_ADAPTER_PASS_NOT_MODEL_READY",
+    "evidence_source": "사용자가 붙여 넣은 터미널 출력. 원본 로컬 JSON 바이트·생성 Git commit·보고서 시각은 미확인. 작성 환경에서 GPU 실행을 재현하지 않음.",
+    "audited_repository_commit": "4076739762357b3e26b7b89641bb96f131b07fff",
+    "generating_git_commit": null,
+    "reported_at_utc": null,
+    "review_document": "docs/SYNTHETIC_AWQ_REVIEW_20260929_KO.md",
+    "unit_test_summary": {
+      "discovered": 32,
+      "passed": 31,
+      "skipped": 1,
+      "failed": 0,
+      "skipped_test_name": null,
+      "evidence_scope": "제출된 요약 기준. 개별 검사명·skip 사유와 테스트 명령행은 미제출."
+    },
+    "upstream_file_hash_check": "6_MATCH_USER_REPORTED_ORIGINAL_LOCAL_BYTES_NOT_INSPECTED",
+    "policy_sha256": "36ca463c20f278562f5e21d5a28040b636c7d8dad1551e3f46fd4b0e2c545a4a",
+    "policy_hash_matches_repository": true,
+    "implementation_sha256": {
+      "check_awq_adapter.py": "ba9bc7dcdf136fa0bc90e2931d577548c3113167716941795c49a55dd49c2842",
+      "qwen2_awq_adapter.py": "ea7d9e3c35443fc889480c667a826a9eca793c7592fb03be778b150d094b59c5",
+      "runtime_assets.py": "92156ff7fdc79a801b469c99cbc9076f6be88e666397e0237d2d7209b6814ede",
+      "awq_weight_space.py": "230b604c0f436696b9118753c8ddbbd383029a3ca9a2aa89aab6478b1bd23b6b"
+    },
+    "implementation_hashes_recomputed": "4_OF_4_MATCH",
+    "packages": {
+      "torch": "2.7.1+cu118",
+      "transformers": "4.51.3",
+      "numpy": "1.26.4",
+      "tqdm": "4.70.1"
+    },
+    "device": "cuda:0",
+    "layer": 0,
+    "scale_only_relative_rms": 0.0037016145199817822,
+    "canonicalized_relative_rms": 0.0036649665056165473,
+    "max_abs_both_checks": 0.0009765625,
+    "synthetic_relative_rms_limit": 0.05,
+    "warning_review": {
+      "transformers_version": "4.51.3",
+      "use_sliding_window_default": false,
+      "sliding_window_default": 4096,
+      "synthetic_sequence_length": 512,
+      "finding": "경고 조건은 use_sliding_window를 확인하지 않는다. 인과 마스크에는 sliding_window를 직접 읽는 경로도 있지만 이번 512토큰·cache 없음 조건에서는 창 경계가 추가 토큰을 가리지 않는다. 장문맥 전체로 확대 해석하지 않음.",
+      "source_blob_sha1": {
+        "configuration_qwen2.py": "2e82f1976f3922f3620415f4eace6c6e046243f8",
+        "modeling_qwen2.py": "16a7316e2d0e56eafe301a7f2d8693d6cc6c73ec"
+      }
+    },
+    "assistant_gpu_execution": false,
+    "pretrained_model_execution": false,
+    "long_context_validated": false,
+    "raw_report_committed": false,
+    "interpretation": "소형 무작위 모델의 구현 연결 이정표. 실모델 동등성·BF16/AWQ 재현·H1/H2 검증 또는 프로토콜 수락·연구 실행 승인을 뜻하지 않음."
+  },
+  "user_data_preparation_attempt": {
+    "status": "HISTORICAL_FAILURE_REPRODUCED_FIXED_SUPERSEDED_BY_SUCCESS",
+    "evidence_source": "사용자 제출 터미널 출력. 원본 로컬 보고서와 생성 Git commit은 미확인. 같은 고정 Pile 파일을 작성 환경에서 독립적으로 내려받아 바이트 해시를 대조하고 읽기 오류를 재현함.",
+    "review_document": "docs/DATA_PREPARATION_FIX_20260929_KO.md",
+    "audited_repository_commit": "a640e64acc967878571ad2d955ce5fc2f7f65d73",
+    "generating_git_commit": null,
+    "reported_packages": {
+      "pyarrow": "20.0.0",
+      "zstandard": "0.23.0"
+    },
+    "reported_planned_download_bytes": 340798261,
+    "reported_tokenizer_warning": {
+      "observed_length": 17692,
+      "metadata_limit": 16384
+    },
+    "reported_error": "ValueError: 행 수 또는 한 행의 크기가 상한을 초과했습니다.",
+    "original_reader_reproduction": {
+      "successfully_read_rows": 76409,
+      "failing_source_row": 76409,
+      "line_number": 76410
+    },
+    "assistant_source_inspection": {
+      "repo_id": "monology/pile-uncopyrighted",
+      "revision": "3be90335b66f24456a5d6659d9c8d208c0357119",
+      "path": "val.jsonl.zst",
+      "size": 338045152,
+      "sha256": "db5e5d1532bf8dc33a6589b50ecba1a8c96f7b4b9cb343d168e603c393007c26",
+      "verification": "BYTES_MATCH_PINNED_HUB_LFS_METADATA",
+      "source_rows": 179996,
+      "largest_line_characters_including_newline": 4744757,
+      "rows_above_original_line_limit": 1,
+      "large_document_stripped_text_characters": 1106669,
+      "corrected_reader_zstandard": "0.23.0",
+      "corrected_reader_status": "PINNED_PILE_FULL_JSONL_PARSE_PASS",
+      "tokenizer_execution": false,
+      "model_execution": false
+    },
+    "parser_change": {
+      "default_max_line_characters": 4194304,
+      "calibration_max_line_characters": 8388608,
+      "max_source_rows": 1000000,
+      "selection_policy_changed": false,
+      "truncate_documents": false
+    },
+    "validation": {
+      "new_tests": {
+        "passed": 11,
+        "failed": 0,
+        "skipped": 0
+      },
+      "existing_v03_tests": {
+        "passed": 29,
+        "failed": 0,
+        "skipped": 3,
+        "skip_reason": "작성 환경에 PyTorch·Transformers 없음"
+      },
+      "environment": {
+        "python": "3.12.14",
+        "numpy": "2.3.5",
+        "zstandard": "0.25.0"
+      },
+      "target_zstandard_023_checks": {
+        "compression_related_tests_repeated": 2,
+        "both_passed": true,
+        "whole_pinned_jsonl_parse": "PASS"
+      },
+      "syntax": "PASS",
+      "implementation_sha256": {
+        "runtime_assets.py": "d647bb31a0a72a373a95bf1561603c8eff2563ff598eff60516bd54dbedca130",
+        "prepare_runtime_assets.py": "62f0c6cc57dabc53011f0ea7dd2ed789330e4579551974f6dc46f74832dd7e97"
+      }
+    },
+    "actual_preparation_manifest": "해당 실패 시점에는 미완료. 후속 성공 보고는 user_prepared_assets 참조.",
+    "scientific_gate_states_changed": false,
+    "historical_awq_evidence_note": "runtime_assets.py의 데이터 처리 수정으로 코드 해시는 바뀐다. 이전 GPU PASS의 해시 대조는 기존 audited_repository_commit에 대한 근거로 보존한다. AWQ 연결 구현을 변경하거나 새 GPU 실행으로 기록하지 않는다.",
+    "superseded_by": "user_prepared_assets"
+  },
+  "user_prepared_assets": {
+    "status": "USER_PREPARATION_COMPLETED_REPORT_REVIEWED_NOT_RUN_APPROVAL",
+    "source_report_recorded_at_utc": "2026-09-29T05:18:26.923265+00:00",
+    "reported_status": "PREPARED_CANDIDATE_NOT_RUN_APPROVAL",
+    "audited_repository_commit": "f89b1c5bf4890c79c36e11462cdd5a5c20d34890",
+    "generating_git_commit": null,
+    "original_local_report_bytes_received": false,
+    "review_document": "docs/DATA_PREPARATION_REVIEW_20260929_KO.md",
+    "review_reference": "configs/prepared_assets_review_v03.json",
+    "reported_code_hashes_matched": 4,
+    "canonical_config_hashes_matched": 3,
+    "independent_source_verification": {
+      "files": 3,
+      "scope": "동일 고정 revision의 원본 바이트와 공식 Hub 메타데이터를 대조. 사용자 디스크 파일을 직접 읽은 것은 아님.",
+      "total_bytes": 340798261
+    },
+    "independent_development_reconstruction": {
+      "files": 3,
+      "pyarrow": "20.0.0",
+      "result": "SIZE_SHA256_GIT_BLOB_SHA1_ALL_MATCH",
+      "scope": "GSM8K 원본과 MATH-500 problem 필드로 기존 선택 코드를 실행. 생성·정답 평가 없음."
+    },
+    "development": {
+      "counts": {
+        "development_rows": 7473,
+        "duplicate_development_rows": 0,
+        "confirmation_rows": 500,
+        "excluded_confirmation_overlap": 0,
+        "eligible_unique": 7473,
+        "selected": 100,
+        "remaining_unassigned": 7373
+      },
+      "selection_seed": 20260929,
+      "selected_ids_sha256": "94980f34565e5f3da60a36169db83c9c0b3e24d7765b84bcd1db188445d5897e",
+      "confirmation_question_set_sha256": "0e87754f814f22085052d6fc1a952bc9f324e548bbbd5430d6114ae6069419c6"
+    },
+    "calibration": {
+      "counts": {
+        "source_rows": 179996,
+        "eligible_unique_documents": 106425,
+        "excluded_exact_question_overlap": 0,
+        "duplicate_documents": 201,
+        "excluded_empty_text": 161,
+        "excluded_text_length": 1488,
+        "excluded_token_length": 71721
+      },
+      "total_tokens": 65536,
+      "used_documents": 261,
+      "token_blocks_sha256": "7270d4703bd2064aafe7aa29f41c002131a179a622f515c791634c61663f9f3b"
+    },
+    "calibration_evidence_scope": "사용자 제출 집계·해시를 고정 정책과 대조. 원본 179,996행은 이전 전체 파싱과 일치. 산출물 2개 바이트·261문서 목록·토큰 배열의 독립 재구성은 하지 않았으며 R0가 실행 전 고정 해시에 대조함.",
+    "jsonl_reader_note": "제출 요약에 없음. 전체 manifest 해시를 기록했으며 재제출·재실행 사유로 삼지 않음.",
+    "r0_binding_validation": {
+      "new_tests_passed": 7,
+      "existing_v03_tests_passed": 29,
+      "existing_v03_tests_skipped": 3,
+      "skip_reason": "작성 환경의 PyTorch·Transformers 부재",
+      "scope": "합성 번들 교체·출처/코드/선택 변경·블록 형식 및 승인 검사 순서 확인. 실모델 실행 없음."
+    },
+    "assistant_environment": {
+      "python": "3.12.14",
+      "numpy": "2.3.5",
+      "pyarrow_isolated": "20.0.0",
+      "torch": null,
+      "transformers": null
+    },
+    "new_model_execution": false,
+    "new_tokenizer_execution_in_assistant_environment": false,
+    "original_config_snapshots_changed": false,
+    "scientific_gate_states_changed": false,
+    "raw_data_or_token_arrays_committed": false
+  },
+  "r0_review_packet": {
+    "document": "docs/R0_REVIEW_PACKET_20260929_KO.md",
+    "status": "ACCEPTED_R0_REPORTED_EXECUTED_DIAGNOSTICS_PENDING_REVIEW",
+    "source_scope": "저장소의 초기 검토·재현 계획·후속 관련 본문 검토를 통합. 이번 갱신에서 새 원문 대조나 체계적 검색을 수행하지 않음.",
+    "proposed_contribution": "동일 BF16 참조 prefix에서 출력 KL을 맞춘 고정 Gaussian 가중치 교란이 AWQ-W3의 길이·종료·검증된 정답 포기 변화를 함께 재현하는지 평가.",
+    "r0_scope": "합성 2문제 × BF16/AWQ-W3, seed 42, 응답당 최대 128토큰, 총 4회 생성. 전체 계층 AWQ calibration 비용은 별도.",
+    "original_h1_h2_frozen": false,
+    "world_first_claim": false,
+    "protocol_accepted": true,
+    "research_approval_recorded": true,
+    "contribution_scope_accepted": true,
+    "approved_at": "2026-09-29T15:34:45+09:00",
+    "approval_document": "docs/R0_APPROVAL_20260929_KO.md",
+    "accepted_base_commit": "ff14820c6fde1f4b4b907ceacc6b65ad9bb2cb53",
+    "accepted_packet_sha256": "2fa4fffd77f84d81b3534b889ba818d7235e7e573965c6ea1f455951e8b3e584"
+  },
+  "approval_scope": "R0_SYNTHETIC_2_PROMPTS_BF16_AWQ_W3_128_TOKENS_ONLY",
+  "research_approval_record": {
+    "status": "APPROVED",
+    "approved_at": "2026-09-29T15:34:45+09:00",
+    "authority": "USER_EXPLICIT_SCOPE_APPROVAL",
+    "evidence": "이전 응답의 기여 범위·R0 계획 수락 및 이 범위의 실모델 실행 승인 질문에 사용자가 현재 대화에서 승인해.라고 응답함.",
+    "approved_base_commit": "ff14820c6fde1f4b4b907ceacc6b65ad9bb2cb53",
+    "accepted_packet_path": "docs/R0_REVIEW_PACKET_20260929_KO.md",
+    "accepted_packet_sha256": "2fa4fffd77f84d81b3534b889ba818d7235e7e573965c6ea1f455951e8b3e584",
+    "accepted_packet_url": "https://github.com/JunKIM2603a/quantthink/blob/ff14820c6fde1f4b4b907ceacc6b65ad9bb2cb53/docs/R0_REVIEW_PACKET_20260929_KO.md",
+    "prepared_assets_review_sha256": "70027712fdac6b02127c810f829bba231e6e96900c4be74ee3bea4a3a45f8689",
+    "candidate_sha256": "98ff733b0d8391c3a33aa2f561e2d389bd6e482ee53b1b680c1bb6e7e6b6201f",
+    "policy_sha256": "36ca463c20f278562f5e21d5a28040b636c7d8dad1551e3f46fd4b0e2c545a4a",
+    "inspection_refs_sha256": "97f5b7bf6cb6888c716a3838f21c224e7920b1df05c5996efe1321d39cd15276",
+    "scope": "R0_SYNTHETIC_2_PROMPTS_BF16_AWQ_W3_128_TOKENS_ONLY",
+    "includes": [
+      "제한된 기여 범위 채택",
+      "고정 calibration 후보와 R0 프로토콜 수락",
+      "고정 모델 가중치 다운로드·BF16 로딩",
+      "전체 계층 AWQ-W3 g128 탐색·변환",
+      "합성 2문제 × BF16/AWQ, 각 seed 42, 응답당 최대 128토큰, 총 4회 생성"
+    ],
+    "excludes": [
+      "R1 100문제 평가",
+      "MATH-500 확증 평가",
+      "KL 매칭 실험",
+      "장문맥 실험",
+      "H1/H2 본검정",
+      "7B 확장",
+      "전체 모델 벤치마크 행렬"
+    ],
+    "document": "docs/R0_APPROVAL_20260929_KO.md",
+    "execution_status": "USER_REPORTED_R0_EXECUTED_DIAGNOSTICS_PENDING_REVIEW"
+  },
+  "session01_completion": {
+    "status": "COMPLETED",
+    "completed_at": "2026-09-29T15:34:45+09:00",
+    "source_and_contribution_scope": "검토한 선행연구의 중복을 인정한 제한된 기여 범위 채택. 세계 최초 또는 논문 가치 인증 아님.",
+    "protocol": "고정 자료·런타임·출력 예산·실패 처리를 정한 R0 계획 수락. R1 및 본검증 계획은 미동결.",
+    "approval": "현재 대화의 명시적 사용자 승인 기록",
+    "handoff": "docs/HANDOFF_01_TO_02_KO.md",
+    "model_execution_completed": false
+  },
+  "session02": {
+    "status": "LONG_GENERATION_80_RAW_RESULTS_REVIEWED_FUNCTIONAL_ACCEPTANCE_PENDING",
+    "handoff": "docs/HANDOFF_01_TO_02_KO.md",
+    "next_single_task": "32K 원본80개·요약·SSH 복구57+23·물리81회 기록 검토를 완료했다. BF16 EOS40/40·AWQ22/40, AWQ검열18/40이다. 단위 표현4건의 별도 수동 보완표에서 정답 확인은BF16 36/40·AWQ14/40, BF16 D1~D4 PASS·D5 FAIL이며 AWQ 전단계 INCONCLUSIVE다. 생성432개 마스크/cache 표본과 처리량을 검토했다. 다음은 좌표 변환의 기능적 수락·평가기 일반 타당도·독립 확인 기준 결정이다. 이미 준비한16문맥96회 forward/새생성0 점검은 미승인 상태를 유지하며 기존32K 재실행·64K 자동 증액은 하지 않는다. model_ready=false·세션02 유지.",
+    "r0_output_directory": "results/local/r0_v03",
+    "exit_criteria_met": false,
+    "latest_review_document": "docs/LONG_GENERATION_RESULT_REVIEW_20260930_KO.md",
+    "diagnostic_followup_plan": "docs/R0_DIAGNOSTIC_FOLLOWUP_20260929_KO.md",
+    "realistic_input_plan": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md",
+    "difficulty_pilot_plan": "docs/DIFFICULTY_PILOT_V01_KO.md",
+    "fixed_prefix_diagnostic_plan": "docs/FIXED_PREFIX_DIAGNOSTIC_V01_KO.md",
+    "fixed_prefix_approval_record": "docs/FIXED_PREFIX_APPROVAL_20260930_KO.md",
+    "fixed_prefix_result_reference": "configs/fixed_prefix_result_review_v01.json",
+    "logits_audit_review_reference": "configs/logits_audit_review_v01.json",
+    "termination_prefix_proposal": "docs/TERMINATION_PREFIX_V01_KO.md",
+    "termination_prefix_approval_record": "docs/TERMINATION_PREFIX_APPROVAL_20260930_KO.md",
+    "termination_prefix_result_reference": "configs/termination_prefix_result_review_v01.json",
+    "acceptance_design_document": "docs/SESSION02_ACCEPTANCE_DESIGN_20260930_KO.md",
+    "easy_explanation_document": "docs/SESSION02_EXPLAINED_20260930_KO.md",
+    "functional_holdout_proposal": "docs/FUNCTIONAL_HOLDOUT_V01_KO.md",
+    "long_generation_protocol": "docs/LONG_GENERATION_V01_KO.md",
+    "generation_budget_policy": "docs/GENERATION_BUDGET_POLICY_KO.md",
+    "long_generation_ssh_recovery": "docs/LONG_GENERATION_SSH_RECOVERY_20260930_KO.md",
+    "long_generation_result_reference": "configs/long_generation_result_review_v01.json"
+  },
+  "snapshot_status_note": "configs의 기존 후보·정책·점검·준비 검토 JSON은 해시가 고정된 당시 스냅샷이며 과거 상태를 소급 수정하지 않는다. 상위 승인 상태와 allowed_now의 기존 실행 항목은 각 기록 범위에 한정한다. fixed_prefix_diagnostic와 termination_prefix_diagnostic의 APPROVED는 완료된 실행의 승인 이력이며 잔여 예산은0이다. 새 functional_holdout_v01 설정도 제안 당시 스냅샷으로 고정하고 현재 별도 실행 권한은 functional_holdout을 따른다. 프로토콜 준비 요청을 미제시 GPU 예산 승인으로 확대 해석하지 않는다. 이후 사용자 상한 확대 요청의 제한된 실행 범위는 long_generation에 별도로 기록한다. 기존 설정/결과나 functional_holdout 승인을 소급 변경하지 않는다. SSH 단절 한 건의 사용자 재시작 요청은 long_generation_ssh_recovery에 별도 기록한다. 원래80회 설정을 소급 수정하거나 미완료 호출을 지우지 않고 추가1회·합산81회로 제한한다. 32K 본시험과SSH복구는 완료80개·물리81회 원본 검토를 마쳐 잔여예산0이다. 과거 승인/요청 문구는 이력으로 보존한다. 수동 단위 보완표는 원래 자동 점수를 대체하지 않는다.",
+  "approval_record_validation": {
+    "r0_inspection": "PASS_NO_UNMET_GATES",
+    "model_loaded": false,
+    "network_used": false,
+    "affected_gate_tests_passed": 3,
+    "runtime_implementation_changed": false,
+    "test_change_reason": "미승인 실행 차단 검사가 실제 저장소를 계속 미승인으로 가정하지 않도록 명시적인 미승인 입력으로 수정함."
+  },
+  "r0_execution": "USER_REPORTED_EXECUTED_DIAGNOSTICS_REVIEW_INCOMPLETE",
+  "user_r0_result": {
+    "review_document": "docs/R0_RESULT_REVIEW_20260929_KO.md",
+    "evidence_source": "사용자 제출 터미널 요약. 원본 run.json·계층 파일 바이트·전체 생성 ID는 전달받지 않았으며 작성 환경의 GPU 재실행 없음.",
+    "reported_status": "R0_EXECUTED_DIAGNOSTICS_PENDING_REVIEW",
+    "recorded_at_utc": "2026-09-29T06:56:37.483147+00:00",
+    "time_interpretation": "코드상 실행 보고 생성 시각이며 완료 시각은 미제공",
+    "repository": {
+      "commit": "5a88f69c4981f105384e0198166f7f24b6ca01c3",
+      "tracked_dirty": false
+    },
+    "packages": {
+      "torch": "2.7.1+cu118",
+      "transformers": "4.51.3",
+      "huggingface-hub": "0.36.2",
+      "numpy": "1.26.4"
+    },
+    "python": "3.11.16",
+    "reported_hashes": {
+      "candidate_sha256": "98ff733b0d8391c3a33aa2f561e2d389bd6e482ee53b1b680c1bb6e7e6b6201f",
+      "policy_sha256": "36ca463c20f278562f5e21d5a28040b636c7d8dad1551e3f46fd4b0e2c545a4a",
+      "preparation_report_sha256": "70a37c43a4ab7049b1c068670a8102a764e2668a6bf90784c0a3cc3112e6d904",
+      "prepared_assets_review_sha256": "70027712fdac6b02127c810f829bba231e6e96900c4be74ee3bea4a3a45f8689",
+      "research_status_sha256": "00059b1c26f85be281c4f38f213c56aaa768111213be15e6781fd56cc614a239"
+    },
+    "hash_review": "후보·정책·준비 검토 참조·당시 연구 상태의 정규화 해시 4개 일치. 준비 보고 해시는 이전 제출 내용의 구조 재구성과 일치. 원본 로컬 파일 바이트 검증 아님.",
+    "completed_awq_layers": 28,
+    "awq_status": "AWQ_TRANSFORM_APPLIED_NOT_EQUIVALENCE_CERTIFIED",
+    "model_ready": false,
+    "generation_summary": {
+      "attempts": 4,
+      "bf16_attempts": 2,
+      "awq_attempts": 2,
+      "fixture_input_token_counts": [
+        22,
+        33
+      ],
+      "seed": 42,
+      "generated_tokens_per_attempt": 128,
+      "finish_reason_counts": {
+        "length": 4,
+        "eos": 0
+      },
+      "right_censored_attempts": 4,
+      "interpretation": "자연 종료 길이·길이 증가·최종 정답률·정답 포기 판정 불가. 입력별 중간 계산 정답이 보이는 것은 최종 답 평가를 대신하지 않음."
+    },
+    "layer_summary": {
+      "scale_only_max_relative_rms": 0.005685803660580144,
+      "scale_only_max_relative_rms_layer": 0,
+      "canonicalized_max_relative_rms": 0.006007767435596503,
+      "canonicalized_max_relative_rms_layer": 1,
+      "canonicalized_max_abs": 32.0,
+      "canonicalized_max_abs_layer": 2,
+      "equivalence_certified": false
+    },
+    "raw_report_or_generated_text_committed": false,
+    "remaining_review": [
+      "가중치·norm/bias 상세 요약은 후속 문서에서 검토 완료. 원본 진단 재계산 및 BF16 재적용 후 잔차·출력 영향은 미완료.",
+      "전체 모델 logit·함수 동등성 검증 계획",
+      "EOS 종료 관측과 후속 출력 예산·판정 기준",
+      "평가·수동 판정 및 후속 R1 기준"
+    ],
+    "new_model_or_test_execution_by_assistant": false,
+    "latest_detail_review_document": "docs/R0_DETAIL_REVIEW_20260929_KO.md"
+  },
+  "r0_diagnostic_followup": {
+    "status": "BOUNDED_PREFIX_REPORTS_REVIEWED_ACCEPTANCE_DESIGN_PENDING",
+    "reviewed_head": "69af9e9a8fcdad590ca884d9583171f2f9cac3ad",
+    "document": "docs/R0_DIAGNOSTIC_FOLLOWUP_20260929_KO.md",
+    "read_only_script": "scripts/summarize_r0_diagnostics.py",
+    "code_findings": [
+      "계층 파라미터 오차는 float64 역변환 배열 기준이며 출력 진단은 BF16 재적용 기준",
+      "보조 파라미터는 절대 RMS만 저장해 상대오차·max_abs·위치를 기존 JSON에서 복구할 수 없음",
+      "R0 실행기는 전체 모델 logit·AWQ 체크포인트·전체 파라미터 해시·생성 RNG 상태를 저장하지 않음"
+    ],
+    "original_user_result_files_inspected": false,
+    "new_user_result_values_received": true,
+    "assistant_validation": {
+      "new_cpu_tests_passed": 6,
+      "new_cpu_tests_failed": 0,
+      "python": "3.12.14",
+      "scope": "표준 라이브러리·합성 JSON에 한정한 집계/검열/오류 처리 및 원본 파일 불변 확인",
+      "existing_gpu_or_preparation_tests_rerun": false,
+      "model_or_tokenizer_execution": false
+    },
+    "future_model_diagnostics": "FIXED_PREFIX_V01_EXECUTED_REVIEWED_ADDITIONAL_GENERATION_NOT_AUTHORIZED",
+    "functional_numeric_acceptance_margin": "UNDEFINED_NO_RETROSPECTIVE_PASS",
+    "proposed_eos_followup": {
+      "status": "PROPOSED_NOT_AUTHORIZED_NOT_RUN",
+      "prompts": 2,
+      "arms": [
+        "bf16",
+        "awq_w3"
+      ],
+      "sampling_seed": 42,
+      "max_new_tokens_per_attempt": 512,
+      "attempts": 4,
+      "max_new_generated_tokens_total": 2048,
+      "automatic_further_budget_increase": false
+    },
+    "approval_scope_changed": false,
+    "session02_exit_criteria_met": false,
+    "raw_user_result_or_token_arrays_committed": false,
+    "latest_detail_review_document": "docs/R0_DETAIL_REVIEW_20260929_KO.md",
+    "input_review_reference": "configs/r0_diagnostic_input_review_v01.json",
+    "future_model_runner_implementation": "FIXED_PREFIX_12_AND_TERMINATION_PREFIX_6_REPORTS_REVIEWED_NO_RETRY_ACCEPTANCE_DESIGN_PENDING",
+    "detail_review": {
+      "reported_summary_head": "7067e5a3832bd0e405003d7fa38db0ffd8182860",
+      "source_attachment_sha256": "6f70f7c17d0f2bff77624e8d713b4b407671bedbd6da797a2f344a73b3d796b6",
+      "evidence_scope": "첨부된 터미널 요약을 직접 읽고 내부 집계를 대조. 원본 29개 결과 파일·전체 생성 ID·가중치·활성값의 독립 검증은 아님.",
+      "reported_source_file_count": 29,
+      "reported_run_json_sha256": "423d5be0c0c7125ec9ea6c4768d2aebfaed8cf822a3ffdae3cc32a7523624a1d",
+      "reported_structural_issues": [],
+      "layer_coverage": {
+        "expected": 28,
+        "files": 28,
+        "missing": [],
+        "unexpected": [],
+        "duplicates": []
+      },
+      "weight_parameter_records": 196,
+      "auxiliary_parameter_records": 140,
+      "nonzero_norm_records": 56,
+      "zero_bias_records": 84,
+      "norm_summary": [
+        {
+          "parameter": "input_layernorm.weight",
+          "records": 28,
+          "elements": 43008,
+          "element_weighted_rms_error": 0.0010933685940154572,
+          "min_rms_error": 0.00033794242928977,
+          "max_rms_error": 0.001697974052488273,
+          "max_rms_layer": 27,
+          "nonzero_layer_count": 28
+        },
+        {
+          "parameter": "post_attention_layernorm.weight",
+          "records": 28,
+          "elements": 43008,
+          "element_weighted_rms_error": 0.0012260219546921382,
+          "min_rms_error": 0.000469551031058354,
+          "max_rms_error": 0.0021970594826053896,
+          "max_rms_layer": 27,
+          "nonzero_layer_count": 28
+        }
+      ],
+      "maximum_weight_relative_rms": 0.3608866327403012,
+      "maximum_weight_relative_rms_parameter": "self_attn.v_proj.weight",
+      "maximum_weight_relative_rms_layer": 25,
+      "generation_id_summary": [
+        {
+          "arm": "bf16",
+          "fixture_id": 0,
+          "seed": 42,
+          "input_token_count": 22,
+          "generated_token_count_including_eos": 128,
+          "finish_reason": "length",
+          "budget_reached": true,
+          "right_censored": true,
+          "recorded_fields_match": true,
+          "eos_positions_zero_based": [],
+          "think_close_positions_zero_based": [
+            57
+          ]
+        },
+        {
+          "arm": "bf16",
+          "fixture_id": 1,
+          "seed": 42,
+          "input_token_count": 33,
+          "generated_token_count_including_eos": 128,
+          "finish_reason": "length",
+          "budget_reached": true,
+          "right_censored": true,
+          "recorded_fields_match": true,
+          "eos_positions_zero_based": [],
+          "think_close_positions_zero_based": [
+            78
+          ]
+        },
+        {
+          "arm": "awq_w3",
+          "fixture_id": 0,
+          "seed": 42,
+          "input_token_count": 22,
+          "generated_token_count_including_eos": 128,
+          "finish_reason": "length",
+          "budget_reached": true,
+          "right_censored": true,
+          "recorded_fields_match": true,
+          "eos_positions_zero_based": [],
+          "think_close_positions_zero_based": [
+            101
+          ]
+        },
+        {
+          "arm": "awq_w3",
+          "fixture_id": 1,
+          "seed": 42,
+          "input_token_count": 33,
+          "generated_token_count_including_eos": 128,
+          "finish_reason": "length",
+          "budget_reached": true,
+          "right_censored": true,
+          "recorded_fields_match": true,
+          "eos_positions_zero_based": [],
+          "think_close_positions_zero_based": [
+            99
+          ]
+        }
+      ],
+      "tokens_before_think_close": [
+        {
+          "fixture_id": 0,
+          "bf16": 57,
+          "awq_w3": 101,
+          "difference": 44
+        },
+        {
+          "fixture_id": 1,
+          "bf16": 78,
+          "awq_w3": 99,
+          "difference": 21
+        }
+      ],
+      "marker_interpretation": "두 합성 문제·한 sampling seed의 닫는 think 태그 앞 토큰 수에 대한 기술적 관찰. 전체 EOS 길이·과잉 추론·H1 판정이 아님.",
+      "validation_this_update": "첨부 JSON·29개 파일 참조의 구조·집계 범위·태그 위치 산술 및 문서/JSON 일관성 확인. 모델·토크나이저·GPU·기존 테스트 재실행 없음."
+    },
+    "input_scope_revision_document": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md",
+    "original_12_forward_plan_role": "기존 산수 2개를 재사용하는 최소 연결 점검 후보. 실제 난도 검증 전체를 대신하는 유일한 후속 경로로 사용하지 않음.",
+    "replay_implementation": "고정prefix12회·사용자 원시배열 CPU 감사·종료prefix6회 보고 검토 완료. B/Q 파라미터 해시는 기존 난도 시험 기록과 일치. 원 R0 전체 체크포인트 동일성 인증 및 이 환경의 원시 .npy/가중치 직접 검증은 아님. 다음은 기능적 수락 기준·독립 확인 설계 고정이며 같은 GPU 실행을 반복하지 않음.",
+    "latest_fixed_prefix_review_document": "docs/TERMINATION_PREFIX_RESULT_REVIEW_20260930_KO.md"
+  },
+  "realistic_input_proposal": {
+    "status": "DIRECTION_REQUESTED_SPECIFIC_PROTOCOL_NOT_ACCEPTED_NOT_RUN",
+    "document": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md",
+    "reviewed_head": "32b40b456a17d845e9b04cba6a19cdf74f5901f1",
+    "user_direction": "사용자가 산수 2문제가 너무 간단하다고 지적하며 다른/긴 문제와 MATH-500 또는 Pile 수준의 입력을 제안함.",
+    "clarification": "기존 계층 진단은 이미 Pile calibration 128×512토큰 위의 측정. structural_issues 없음은 행동 동등성 판정이 아님.",
+    "development_recommendation": {
+      "dataset_family": "MATH original train",
+      "access_candidate": "EleutherAI/hendrycks_math",
+      "revision": null,
+      "subjects": 7,
+      "levels": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "per_subject_level": 1,
+      "proposed_n_problems": 28,
+      "sample_ids_frozen": false,
+      "sampling_seeds": [
+        42,
+        43
+      ],
+      "arms": [
+        "bf16",
+        "awq_w3"
+      ],
+      "max_new_tokens_candidate": 8192,
+      "proposed_attempts": 112,
+      "maximum_generation_tokens_candidate": 917504,
+      "max_prompt_tokens": null,
+      "max_total_context_tokens": null,
+      "math_evaluator_validated": false
+    },
+    "pile_diagnostic_role": "calibration과 문서가 겹치지 않는 일반 텍스트의 수치/좌표 진단. 수학 정답·정답 포기 평가 자료로 취급하지 않음.",
+    "math500_role": "확증용 역할 유지. 이번에 모델 생성·튜닝하지 않음.",
+    "original_gsm8k_r1_candidate_changed": false,
+    "calibration_rebuilt": false,
+    "approval_scope_changed": false,
+    "new_model_execution": false,
+    "source_verification": "공식 논문 초록·원 저자 GitHub·데이터 페이지의 설명/필드 검토. 새 MATH 원본 파일·revision 고정·문제 선택·tokenizer 실행 없음.",
+    "current_next_action": "사용자의 추가 자체 문제 요청에 따라 difficulty_pilot v01을 구현했다. 이전 MATH train 28문제/8192 후보는 별도 초안으로 남기고 실행하지 않는다."
+  },
+  "difficulty_pilot": {
+    "status": "RAW_80_REVIEWED_CPU_MASK_CONFOUND_OBSERVED_MODEL_IMPACT_UNVERIFIED",
+    "authorization": "USER_REQUESTED_BOUNDED_DIFFICULTY_PILOT",
+    "request_recorded_at": "2026-09-29T18:58:01+09:00",
+    "user_request": "시험문제를 난이도에 따라서 여러개 만들어서, 어느 난이도 쯤에서 시험이 통과하는지 확인해보자. 그리고 다음 연구 단계에서 어떻게 해야할지 명령어도 함께 줘.",
+    "authorization_scope_note": "현재 요청을 제한된 자체 난도 시험의 수행 근거로 기록. 아래 숫자는 요청을 구현한 사전 기본값이며 사용자가 각 숫자를 명시적으로 승인했다는 기록이 아님. 원 R0 승인 기록을 소급 변경하지 않음.",
+    "reviewed_head": "ddd759d54dcc21df0785b63abd3a919120ced660",
+    "document": "docs/DIFFICULTY_PILOT_V01_KO.md",
+    "config": "configs/difficulty_pilot_v01.json",
+    "config_sha256": "1a0b9ccd1a2863b7078368ec853461f2973015ce13386d338aa51af2c2ba22c6",
+    "suite": "fixtures/difficulty_ladder_v01.json",
+    "suite_sha256": "10fc1a73e263b1e8fa56849c27ce6748ab39bb8bea77858ada6d424dbe4ae961",
+    "problem_count": 20,
+    "levels": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "per_level": 4,
+    "label_scope": "자체 임시 난도. MATH 공식 Level·실측 난도 아님.",
+    "arms": [
+      "bf16",
+      "awq_w3_replay"
+    ],
+    "seeds": [
+      42,
+      43
+    ],
+    "attempts": 80,
+    "max_new_tokens": 4096,
+    "maximum_generation_tokens": 327680,
+    "max_prompt_tokens": 768,
+    "max_total_context_tokens": 4864,
+    "awq_mode": "저장된 R0 scale/clip 재적용. 원 체크포인트와 바이트 동등성 미인증, calibration 탐색 없음.",
+    "evaluator": "원래v01자동점수보존. EOS형식미판정4개최종영역의단위설명을수동확인해모두정답. 사후수동보완은별도표이며평가기일반타당도인증아님.",
+    "level_pass_rule": "8개 응답 모두 EOS+파싱 가능일 때만 판정. 4문제 중 3개 이상이 두 시드 모두 최종 정답이면 PASS; 그 외 FAIL. 누락/오류/검열/모호한 답은 INCONCLUSIVE.",
+    "run_command": "scripts/run_difficulty_pilot.py --execute",
+    "summary_command": "scripts/summarize_difficulty_pilot.py",
+    "output_directory": "results/local/difficulty_v01",
+    "assistant_validation": {
+      "new_cpu_tests_passed": 17,
+      "new_cpu_tests_failed": 0,
+      "python": "3.12.14",
+      "torch_available": false,
+      "transformers_available": false,
+      "actual_model_or_tokenizer_execution": false,
+      "old_r0_or_preparation_tests_rerun": false,
+      "syntax_check": "PASSED_FOR_FOUR_NEW_RUNTIME_SCRIPTS"
+    },
+    "user_execution": "80_SAVED_ATTEMPTS_AND_TWO_RESUME_PREFIXES_VERIFIED_FROM_ATTACHMENT",
+    "model_ready": false,
+    "automatic_retry": false,
+    "automatic_budget_increase": false,
+    "h1_h2_changed": false,
+    "math500_used": false,
+    "raw_user_results_committed": false,
+    "question_document": "docs/DIFFICULTY_QUESTIONS_V01_KO.md",
+    "latest_review_document": "docs/SDPA_MASK_REVIEW_20260929_KO.md",
+    "partial_execution_review": {
+      "reviewed_at": "2026-09-29T20:22:14+09:00",
+      "attachment_sha256": "52907e27e8918e6e55fcde1d79392be872f87853faa4df19611caee27fe936b2",
+      "evidence": "사용자 첨부 터미널 로그를 직접 읽음. 원본 run.json·전체 생성 ID·최종 답은 미검토.",
+      "observed_code_commit": "fbe673e97a42e38942745aea6d028a3f58bf0b90",
+      "completed_reported": 12,
+      "completed_arm": "bf16",
+      "distinct_problems": 6,
+      "seeds": [
+        42,
+        43
+      ],
+      "problem_ids": [
+        "D1-01",
+        "D1-02",
+        "D1-03",
+        "D1-04",
+        "D2-01",
+        "D2-02"
+      ],
+      "reported_eos_count": 12,
+      "reported_token_sum": 11198,
+      "reported_token_min": 307,
+      "reported_token_max": 2373,
+      "final_answer_correctness": "NOT_REVIEWED",
+      "awq_generation": "NOT_REPORTED",
+      "interruption": "사용자 Ctrl+C, 13번째 model.generate 중 KeyboardInterrupt",
+      "next_by_fixed_order": {
+        "problem_id": "D2-03",
+        "arm": "bf16",
+        "seed": 42
+      },
+      "remaining_if_json_matches_log": 68,
+      "subsequent_errors": [
+        "flash-attn 메타데이터 생성 중 psutil 누락",
+        "기존 결과 폴더 FileExistsError",
+        "시험 파일 삭제 후 실행 파일 없음"
+      ],
+      "sdpa_warning_caused_stop": false,
+      "environment_rebuilt": false,
+      "raw_terminal_log_committed": false
+    },
+    "resume_implementation": {
+      "status": "CPU_MOCK_TESTED_USER_RECORDS_RESUME_PREFIXES_VERIFIED",
+      "script": "scripts/difficulty_pilot_resume.py",
+      "command_option": "--execute --resume",
+      "new_tests_passed": 14,
+      "new_tests_failed": 0,
+      "verification": "저장12개→80개/45개→80개 모의 실행, 중단/파일 백업/동시 쓰기/호환 조건/해시/진행 표시, 격리 Git 삭제 파일 복구",
+      "actual_torch_transformers_cuda_execution": false,
+      "saved_completed_attempts_repeated": false,
+      "unfinished_attempt_restarts_from_prompt": true,
+      "partial_generated_tokens_or_rng_restored": false,
+      "automatic_retry": false,
+      "config_or_budget_changed": false,
+      "progress_interval_seconds": 15,
+      "user_resume_result": "TWO_RESUMES_AT_12_AND_31_COMPLETED_PREFIXES_PRESERVED_80_FINAL_RECORDS"
+    },
+    "completed_summary_review": {
+      "reviewed_date": "2026-09-29",
+      "audited_repository_head": "49317c044b42e76f9afeca84b360092e88b99979",
+      "attachment_name": "summary.json",
+      "attachment_bytes": 61144,
+      "attachment_sha256": "21ba286b4bd78caef53f269319c81564ad39fbabcfaa97ea5e90d740975fba90",
+      "evidence": "첨부 요약 파일을 직접 읽고80개 고유 키·파싱값/정답표·난도/쌍/경계/수동검토 집계·토큰/처리량 산술을 재계산해 일치를 확인함.",
+      "expected_attempts": 80,
+      "observed_attempts": 80,
+      "missing_attempts": 0,
+      "internal_aggregates_match": true,
+      "original_run_or_ids_reviewed": false,
+      "actual_generation_text_reviewed": false,
+      "actual_execution_commit_verified": null,
+      "runtime_and_resume_provenance_reviewed": false,
+      "prior_12_bf16_lengths_match_terminal_log": true,
+      "prior_12_records_byte_preservation_verified": false,
+      "bf16": {
+        "correct": 22,
+        "incorrect": 0,
+        "unscorable": 3,
+        "censored": 15,
+        "eos": 25,
+        "attempts": 40,
+        "generated_tokens": 105211
+      },
+      "awq_w3_replay": {
+        "correct": 11,
+        "incorrect": 0,
+        "unscorable": 1,
+        "censored": 28,
+        "eos": 12,
+        "attempts": 40,
+        "generated_tokens": 131744
+      },
+      "paired_termination": {
+        "both_eos": 12,
+        "bf16_eos_awq_censored": 13,
+        "bf16_censored_awq_eos": 0,
+        "both_censored": 15
+      },
+      "paired_scorable": 9,
+      "paired_both_correct": 9,
+      "level_verdicts": "ALL_10_ARM_LEVELS_INCONCLUSIVE",
+      "confirmed_difficulty_boundary": null,
+      "interpretation": "고정4096토큰 내 종료 차이 관측. 검열을 오답으로 치환하거나 전체 자연 길이 증가·동등성·MATH 재현·H1/H2로 판정하지 않음.",
+      "eos_unscorable_cases": [
+        {
+          "problem_id": "D1-04",
+          "arm": "bf16",
+          "seed": 42
+        },
+        {
+          "problem_id": "D1-04",
+          "arm": "bf16",
+          "seed": 43
+        },
+        {
+          "problem_id": "D2-01",
+          "arm": "bf16",
+          "seed": 43
+        },
+        {
+          "problem_id": "D1-02",
+          "arm": "awq_w3_replay",
+          "seed": 43
+        }
+      ],
+      "raw_results_committed": false,
+      "model_ready": false,
+      "record_scope": "요약만받은시점의역사적검토. 이후원본검증은raw_evidence_review를따름."
+    },
+    "existing_result_export": {
+      "script": "scripts/export_difficulty_review.py",
+      "test_file": "tests/test_difficulty_review_export.py",
+      "new_cpu_tests_passed": 5,
+      "new_cpu_tests_failed": 0,
+      "scope": "기존원본/요약대조·전체기록복사·재개백업/앞부분대조. 이후사용자전체snapshot과고정config.json을받아직접검토완료. GPU/원시가중치검증아님.",
+      "new_model_or_tokenizer_execution": false,
+      "network_download": false,
+      "original_files_modified": false,
+      "config_or_budget_or_scoring_changed": false,
+      "old_tests_rerun": false,
+      "user_export_result": "RECEIVED_PACKET_SNAPSHOTS_REVIEWED_ORIGINAL_SERIALIZATION_HASHES_MATCH"
+    },
+    "raw_evidence_review": {
+      "reference": "configs/difficulty_evidence_review_v01.json",
+      "attachment_name": "review_evidence_v01.json",
+      "attachment_sha256": "f9e30e7ad4b7638689e62a4f9f3368d61b5ac21d735a60cb08054019757baad4",
+      "attachment_bytes": 2372954,
+      "source_run_sha256": "ebdf46b1068754b3c12db1bef3dad2b496c18e85209099fed965b4bd3eaacbe0",
+      "source_summary_sha256": "21ba286b4bd78caef53f269319c81564ad39fbabcfaa97ea5e90d740975fba90",
+      "audited_repository_head": "2a3617a38c9cc6597fa86c12238862c3559e0bbb",
+      "all_80_input_ids_and_termination_checked": true,
+      "summary_recomputed_matches": true,
+      "source_serialization_byte_hashes_match": true,
+      "resume_prefixes_preserved": [
+        12,
+        31
+      ],
+      "recorded_execution_commits": {
+        "initial": "fbe673e97a42e38942745aea6d028a3f58bf0b90",
+        "resumes": [
+          "49317c044b42e76f9afeca84b360092e88b99979",
+          "49317c044b42e76f9afeca84b360092e88b99979"
+        ]
+      },
+      "recorded_code_and_status_hashes_match_repository": true,
+      "r0_29_input_hash_references_match": true,
+      "upstream_6_blob_references_match": true,
+      "raw_parameter_arrays_or_gpu_independently_executed": false,
+      "manual_four_unscorable_all_correct": true,
+      "supplemental_manual_counts": {
+        "bf16": {
+          "correct_and_eos": 25,
+          "censored": 15,
+          "stable_problems_by_level": [
+            4,
+            3,
+            3,
+            1,
+            0
+          ]
+        },
+        "awq_w3_replay": {
+          "correct_and_eos": 12,
+          "censored": 28,
+          "stable_problems_by_level": [
+            3,
+            1,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "automatic_v01_verdicts_unchanged": true,
+      "supplemental_manual_boundary": "BF16 D1은8/8 EOS와정답·4/4안정조건충족. AWQ는D1부터검열이있어통과경계미확정. 사후수동보완표이며기존자동판정을덮어쓰지않음.",
+      "censored_think_close_counts": {
+        "bf16_zero": 11,
+        "bf16_one": 4,
+        "awq_zero": 28,
+        "multiple": 0
+      },
+      "context_window_review": {
+        "use_sliding_window": false,
+        "sliding_window": 4096,
+        "input_tokens_min": 59,
+        "input_tokens_max": 110,
+        "max_input_plus_generated_tokens": 4206,
+        "crossing_4096": {
+          "bf16": 16,
+          "awq_w3_replay": 28
+        },
+        "crossing_eos_case": {
+          "problem_id": "D4-04",
+          "arm": "bf16",
+          "seed": 43,
+          "input_tokens": 102,
+          "generated_tokens": 4056
+        },
+        "status": "INSTALLED_CPU_MASK_OBSERVED_GENERATION_CAUSAL_IMPACT_UNVERIFIED"
+      },
+      "pre_window_prefix_sensitivity": {
+        "status": "POST_HOC_DESCRIPTIVE_EXISTING_IDS_ONLY",
+        "generated_prefix_limit": 3986,
+        "derivation": "4096 - 최대입력110 = 3986. 마지막 예측에 사용한KV 길이는최대4095로고정소스의4096마스크분기이전.",
+        "bf16_eos": 24,
+        "awq_eos": 12,
+        "both_eos": 12,
+        "bf16_only_eos": 12,
+        "awq_only_eos": 0,
+        "neither_eos": 16,
+        "original_budget_or_outcomes_changed": false,
+        "new_generation": false
+      },
+      "raw_results_committed": false,
+      "new_model_execution": false,
+      "model_ready": false
+    },
+    "sdpa_mask_inspection": {
+      "script": "scripts/inspect_qwen2_sdpa_mask.py",
+      "source_ref": "huggingface/transformers@v4.51.3",
+      "positions": [
+        4094,
+        4095,
+        4096,
+        4204
+      ],
+      "conditions": 2,
+      "device": "cpu",
+      "model_or_tokenizer_loading": false,
+      "model_forward_or_generation": false,
+      "gpu_or_network": false,
+      "source_config_modified": false,
+      "assistant_validation": "구문·고정소스호출시그니처·첨부해시/설정의--plan조회·잘못된근거해시거부·기존출력보호확인. PyTorch/Transformers부재로실제CPU텐서호출미실행.",
+      "user_result": "DISABLED_FLAG_WINDOW_MASK_OBSERVED",
+      "review": {
+        "document": "docs/SDPA_MASK_REVIEW_20260929_KO.md",
+        "audited_repository_head": "c45899c7d02056422e5aaa9d58a8bb183a50f767",
+        "attachment_name": "sdpa_mask_review_v01.json",
+        "attachment_bytes": 4556,
+        "attachment_sha256": "bd18f808619c03859653d43c6ad956f3aea7c9d816a27e8387ff0b7fe3b81b0c",
+        "reported_at_utc": "2026-09-29T14:55:42.644433+00:00",
+        "status": "DISABLED_FLAG_WINDOW_MASK_OBSERVED",
+        "script_sha256": "831ce0cc8ad55cd68f55f280941a28cf7408a0e4f4e13fcc7829e707ee9928b3",
+        "script_hash_matches_repository": true,
+        "source_hashes_match_official_pinned_bytes": true,
+        "source_files": [
+          {
+            "file": "configuration_qwen2.py",
+            "git_blob_sha1": "2e82f1976f3922f3620415f4eace6c6e046243f8",
+            "sha256": "4d3fc49747ab9dd0be658842bd30b877bd8bb644e494bba484b98c191e3952ed"
+          },
+          {
+            "file": "modeling_qwen2.py",
+            "git_blob_sha1": "16a7316e2d0e56eafe301a7f2d8693d6cc6c73ec",
+            "sha256": "1760c628019995d3564c8572be6c5149f488b6c3aa95ceda16099c2516e146ff"
+          },
+          {
+            "file": "modeling_attn_mask_utils.py",
+            "git_blob_sha1": "dfdd976f0156139024c6f7788870a71e4a41754d",
+            "sha256": "75189bb86ad79bb0337b008eb564ea43e29682a886e3730b9605bfe1ae0d61c2"
+          },
+          {
+            "file": "sdpa_attention.py",
+            "git_blob_sha1": "9c924c048ad52929a2d0f890a22295d5a56ef505",
+            "sha256": "5a2d607459531430503dd3cb1adc8778885037c1d0be7e6ca0e82a1a852f4d8b"
+          }
+        ],
+        "eight_records_recomputed_match": true,
+        "as_recorded_blocked_key_counts": [
+          0,
+          0,
+          1,
+          109
+        ],
+        "window_none_control_blocked_key_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "user_cpu_function_execution_reported": true,
+        "assistant_independent_tensor_execution": false,
+        "actual_generation_cache_or_mask_recorded": false,
+        "actual_model_or_sdpa_kernel_execution": false,
+        "original_results_changed": false,
+        "model_ready": false
+      }
+    }
+  },
+  "fixed_prefix_diagnostic": {
+    "status": "RAW_LOGIT_AUDIT_REVIEWED_FUNCTIONAL_ACCEPTANCE_PENDING",
+    "authorization": "APPROVED",
+    "authorization_reason_ko": "구체적인 입력·12회 상한·생성0·진단용 window=None·코드/설정 해시를 제시한 뒤 사용자 진행 지시를 받음. 같은 범위의 승인을 재요청하지 않음.",
+    "document": "docs/FIXED_PREFIX_DIAGNOSTIC_V01_KO.md",
+    "config": "configs/fixed_prefix_diagnostic_v01.json",
+    "config_sha256": "5d24000bfa9d7b15d398b978f671d94be816918bd9c5881a458448bced488fd6",
+    "script": "scripts/run_fixed_prefix_diagnostic.py",
+    "implementation_sha256": {
+      "run_fixed_prefix_diagnostic.py": "8c0c5d72984c8ba366e2209657f2bacbede196cbb52c1f341a08d4f942f326ff",
+      "fixed_prefix_diagnostic_contracts.py": "bafc0997feac28d93a2fc5b30910fe487edea85ccb56f9adfeaf4a14fc00c31d",
+      "replay_r0_awq.py": "b01e0124eb97a7e1145c886842d894966084ac8b1f7b47f538c647d7e1fb574a",
+      "qwen2_awq_adapter.py": "ea7d9e3c35443fc889480c667a826a9eca793c7592fb03be778b150d094b59c5",
+      "awq_weight_space.py": "230b604c0f436696b9118753c8ddbbd383029a3ca9a2aa89aab6478b1bd23b6b",
+      "runtime_assets.py": "d647bb31a0a72a373a95bf1561603c8eff2563ff598eff60516bd54dbedca130",
+      "run_difficulty_pilot.py": "809b14475e7eac56ce6667b52b85839e674f766106130407b6802aafe9fdaec7",
+      "difficulty_pilot_contracts.py": "d14b79ea22069dc6666fce2e70edc17557ef97029158eafdd51ebb306c460446",
+      "runtime_contracts.py": "ca514a25f560b8912edd90de83cb8d4a18aed0cd97d8769f5b9f1627cc8924ee",
+      "reproduction_contracts.py": "04923d60075be31ca7b14b7566dd0040b474bb4f1e009d416ee66819401e45bb"
+    },
+    "maximum_forward_calls": 12,
+    "maximum_forward_input_tokens": 25476,
+    "maximum_sequence_length": 2127,
+    "new_generation_tokens": 0,
+    "maximum_raw_logit_bytes": 940787712,
+    "proposed_effective_sliding_window": null,
+    "proposed_use_cache": false,
+    "selection": "기존 BF16 D2-03/D3-01 seed42의 입력+앞2048 생성토큰. 사후 선택한 탐색 표본, 모든 상태 동일 prefix.",
+    "assistant_validation": {
+      "new_cpu_tests_passed": 7,
+      "actual_attachment_inputs_verified": true,
+      "unapproved_execute_rejected_before_gpu_or_output": true,
+      "torch_transformers_available": false,
+      "gpu_or_model_execution": false,
+      "old_tests_rerun": false
+    },
+    "user_execution": "12_COMPLETED_FORWARD_RECORDS_RECEIVED_REPORT_REVIEWED",
+    "model_ready": false,
+    "authorization_record": "docs/FIXED_PREFIX_APPROVAL_20260930_KO.md",
+    "approved_at": "2026-09-30T00:41:13+09:00",
+    "approval_user_message": "다음 연구 단계 진행해줘.",
+    "approval_basis": "직전 최대12회 fixed_prefix_v01 진단 제안에 대한 진행 지시로 해당 범위를 수락. 무제한 예산 확대 또는 세션03/R1/H1/H2 승인이 아님.",
+    "approved_implementation_commit": "8785736bce854c54e2644fab55b5f4f3ccc6e217",
+    "execution_command": "python scripts/run_fixed_prefix_diagnostic.py --execute",
+    "output_directory": "results/local/fixed_prefix_v01",
+    "approval_record_validation": {
+      "config_hash_matches": true,
+      "implementation_hashes_match": true,
+      "runtime_code_or_protocol_changed": false,
+      "existing_tests_rerun": false,
+      "model_or_gpu_execution": false
+    },
+    "execution_budget_consumed": true,
+    "remaining_forward_calls": 0,
+    "automatic_rerun": false,
+    "latest_review_document": "docs/LOGITS_AUDIT_REVIEW_20260930_KO.md",
+    "result_review_reference": "configs/fixed_prefix_result_review_v01.json",
+    "next_read_only_command": null,
+    "result_review": {
+      "execution_commit": "907ca612d7138dab939505a4dc940b3fa27ea70d",
+      "source_run_sha256": "68ff918d9c4b9a43ae154b1d08b2e5fcc93028d66d1fe67d4338001094097fb7",
+      "source_run_bytes": 1280105,
+      "execution_research_status_sha256": "24188770101a037b656be9b80dbea2ab4a72d88198f75acbc74f1080baefd28d",
+      "reported_forward_calls": 12,
+      "forward_input_tokens": 25476,
+      "new_generation_tokens": 0,
+      "implementation_config_status_hashes_match": true,
+      "internal_aggregates_recomputed_match": true,
+      "raw_logits_independently_read": false,
+      "raw_parameters_independently_read": false,
+      "reported_B_and_Q_parameter_hashes_match_prior_pilot": true,
+      "reported_C_to_Cw_linear_hash_unchanged": true,
+      "functional_equivalence_verdict": "NOT_CERTIFIED",
+      "pooled_top1_changes": {
+        "B_to_B_repeat": 0,
+        "B_to_S": 1,
+        "B_to_Q": 22,
+        "Q_to_C": 3,
+        "C_to_Cw": 1
+      },
+      "positions_per_comparison": 258
+    },
+    "read_only_saved_logit_audit": {
+      "script": "scripts/audit_fixed_prefix_logits.py",
+      "script_sha256": "ab9b164c32413cdc4a2d8015c531b7a15bac0b76ebe7a5b7d9bc14894a2f5abd",
+      "command": "python scripts/audit_fixed_prefix_logits.py",
+      "output": "results/local/fixed_prefix_v01/logits_audit_v01.json",
+      "status": "USER_RESULT_RECEIVED_REVIEWED",
+      "new_cpu_tests_passed": 9,
+      "gpu_or_model_execution": false,
+      "old_tests_rerun": false,
+      "original_files_modified": false,
+      "analytical_filter": {
+        "temperature": 0.6,
+        "top_p": 0.95,
+        "dtype": "float64",
+        "tie_order": "ascending_token_id",
+        "original_gpu_sampling_replay": false
+      },
+      "t1_recalculation_tolerance": {
+        "rtol": 1e-10,
+        "atol": 1e-12,
+        "functional_equivalence_tolerance": false
+      },
+      "user_result_sha256": "266ff9aedcd99f95d64f5a7e4e85a0963b4ec3686f4d46dab166f0eb5d4bccd1",
+      "user_result_bytes": 2788862,
+      "user_local_raw_array_audit_completed_reported": true,
+      "reported_raw_files_verified": 12,
+      "reported_t1_comparisons_match": 10,
+      "assistant_raw_arrays_directly_read": false,
+      "latest_review_document": "docs/LOGITS_AUDIT_REVIEW_20260930_KO.md",
+      "repeat_required": false
+    },
+    "latest_audit_reference": "configs/logits_audit_review_v01.json"
+  },
+  "termination_prefix_diagnostic": {
+    "status": "REPORT_REVIEWED_FUNCTIONAL_ACCEPTANCE_PENDING",
+    "authorization": "APPROVED",
+    "authorization_reason_ko": "사용자가 직전 제시한 추가 최대6회 진단의 구체적 범위에 대해 “진행해줘”라고 지시했다. 이를 해당 범위의 실행 승인으로 기록하며 숫자별 별도 발화가 있었다고 기록하지 않는다. 기존 R0/완료한12회 승인이나 CPU 결과 제출을 재사용한 승인이 아니다.",
+    "document": "docs/TERMINATION_PREFIX_V01_KO.md",
+    "config": "configs/termination_prefix_v01.json",
+    "config_sha256": "073986759aa41f29e54dfdf2835e7877aa2a2dccdb7347878a696451bdc2b1b3",
+    "script": "scripts/run_termination_prefix_diagnostic.py",
+    "implementation_sha256": {
+      "run_termination_prefix_diagnostic.py": "a65f5e0484e03fc64eef698f81d24c1b3db6a9e1012e2c1d1f9f6216b44b270e",
+      "audit_fixed_prefix_logits.py": "ab9b164c32413cdc4a2d8015c531b7a15bac0b76ebe7a5b7d9bc14894a2f5abd",
+      "run_fixed_prefix_diagnostic.py": "8c0c5d72984c8ba366e2209657f2bacbede196cbb52c1f341a08d4f942f326ff",
+      "fixed_prefix_diagnostic_contracts.py": "bafc0997feac28d93a2fc5b30910fe487edea85ccb56f9adfeaf4a14fc00c31d",
+      "replay_r0_awq.py": "b01e0124eb97a7e1145c886842d894966084ac8b1f7b47f538c647d7e1fb574a",
+      "qwen2_awq_adapter.py": "ea7d9e3c35443fc889480c667a826a9eca793c7592fb03be778b150d094b59c5",
+      "awq_weight_space.py": "230b604c0f436696b9118753c8ddbbd383029a3ca9a2aa89aab6478b1bd23b6b",
+      "runtime_assets.py": "d647bb31a0a72a373a95bf1561603c8eff2563ff598eff60516bd54dbedca130",
+      "run_difficulty_pilot.py": "809b14475e7eac56ce6667b52b85839e674f766106130407b6802aafe9fdaec7",
+      "difficulty_pilot_contracts.py": "d14b79ea22069dc6666fce2e70edc17557ef97029158eafdd51ebb306c460446",
+      "runtime_contracts.py": "ca514a25f560b8912edd90de83cb8d4a18aed0cd97d8769f5b9f1627cc8924ee",
+      "reproduction_contracts.py": "04923d60075be31ca7b14b7566dd0040b474bb4f1e009d416ee66819401e45bb"
+    },
+    "proposed_maximum_forward_calls": 6,
+    "proposed_forward_input_tokens": 14970,
+    "proposed_maximum_sequence_length": 2495,
+    "proposed_raw_logit_bytes": 470393856,
+    "new_generation_tokens": 0,
+    "remaining_forward_calls": 0,
+    "use_cache": false,
+    "effective_sliding_window": null,
+    "output_directory": "results/local/termination_prefix_v01",
+    "assistant_validation": {
+      "new_cpu_tests_passed": 6,
+      "actual_attachment_input_hashes_checked": true,
+      "unapproved_execute_rejected_before_heavy_import_or_output": true,
+      "gpu_model_or_tokenizer_execution": false,
+      "old_tests_rerun": false
+    },
+    "user_execution": "COMPLETED_REPORT_REVIEWED",
+    "model_ready": false,
+    "approved_at": "2026-09-30T06:27:01+09:00",
+    "approval_user_message": "진행해줘",
+    "approved_implementation_commit": "f8fb2ee7fb084c3534f52cf20bca458ed104aa0d",
+    "authorization_record": "docs/TERMINATION_PREFIX_APPROVAL_20260930_KO.md",
+    "approved_scope": {
+      "maximum_forward_calls": 6,
+      "maximum_forward_input_tokens": 14970,
+      "maximum_sequence_length": 2495,
+      "maximum_raw_logit_bytes": 470393856,
+      "new_generation_tokens": 0,
+      "maximum_attempts": 1,
+      "automatic_retry": false
+    },
+    "approval_update_validation": {
+      "proposal_code_and_config_unchanged": true,
+      "pinned_implementation_files_checked": 12,
+      "stdlib_authorization_gate_checked": true,
+      "model_or_gpu_execution": false,
+      "old_tests_or_experiments_rerun": false
+    },
+    "execution_commit": "b57d9d7be24d8d8f7e1ebfdbb24c17dca983b636",
+    "result_review_document": "docs/TERMINATION_PREFIX_RESULT_REVIEW_20260930_KO.md",
+    "result_review_reference": "configs/termination_prefix_result_review_v01.json",
+    "authorization_history_note_ko": "APPROVED는 b57d9d7 실행 당시의 승인 기록이다. 추가6회 수집 보고를 받아 검토했으며 잔여 예산0이다. 같은 실행을 반복하도록 승인한 것이 아니다.",
+    "reported_execution_status": "TERMINATION_PREFIX_COLLECTED_PENDING_REVIEW",
+    "result_review": {
+      "source_run_sha256": "9ff8b7b828b6d1c25e2664d85a0bae8bbb2ef2746d83b56e947f313e32c426f0",
+      "source_run_bytes": 1585728,
+      "execution_research_status_sha256": "404914146c1801b1667c391e09be4c1dbc63c5c516f255220e9e7adec064bc14",
+      "reported_forward_calls": 6,
+      "reported_new_generation_tokens": 0,
+      "baseline_repeat_exact_reported": true,
+      "code_config_state_inputs_and_internal_aggregates_match": true,
+      "raw_arrays_or_weights_received": false,
+      "assistant_model_execution": false,
+      "last_position_eos_filtered_probability": {
+        "bf16_prefix": {
+          "B": 1.0,
+          "Q": 1.0
+        },
+        "awq_prefix": {
+          "B": 0.0,
+          "Q": 0.0
+        }
+      },
+      "interpretation_ko": "BF16 종료 직전 경로에서는 두 모델 모두 수학적 top-p 후 EOS만 남고, 동일길이 AWQ 경로에서는 양쪽 EOS가 제외된다. 이 사례의 고정 종료 문맥에서 AWQ의 EOS 후보 제거는 관측되지 않았다. 경로 의존 기술 관측이며 종료 지연의 인과 분해·전역 EOS 가설 기각·기능적 동등성 PASS가 아니다."
+    },
+    "historical_execution_command": "conda activate quantthink\ncd ~/quantthink\ngit switch setup/session-01-research-gates &&\ngit pull --ff-only &&\npython scripts/run_termination_prefix_diagnostic.py --execute"
+  },
+  "functional_holdout": {
+    "status": "PREPARED_UNAUTHORIZED_DEFERRED_FOR_USER_REQUESTED_32K_RETEST",
+    "authorization": "PENDING",
+    "remaining_forward_calls": 0,
+    "preparation_user_message": "지금 세션에서 무엇을 하고 있고 목적은 무엇이고 진행 결과는 어떤지 아주 쉽게 설명해줘. 그리고 실험방법은 어떻게 했는지도 구체적으로 설명해줘. 알려준 명령어는 입력했어. 다음 작업도 진행해줘",
+    "preparation_request_at": "2026-09-30T07:15:49+09:00",
+    "authorization_reason_ko": "직전 다음 작업은 프로토콜 구체화였으며 그 준비를 완료했다. 사용자 원래 예산 제한과 AGENTS.md8에 따라 구체화한 추가96회 GPU 범위의 승인을 아직 기록하지 않았다. 기존 R0/12회/6회의 재승인 요청이 아니다.",
+    "document": "docs/FUNCTIONAL_HOLDOUT_V01_KO.md",
+    "config": "configs/functional_holdout_v01.json",
+    "config_sha256": "5e50ff5ecf9b948330ca513b38b400dacdde8eb274bf809ac59caa78650efb8a",
+    "suite": "fixtures/functional_holdout_v01.json",
+    "suite_sha256": "a589153d2abfab834dce6fad7ba433a9d074bd775c4c46d7d75a0cb0bc0ba187",
+    "script": "scripts/run_functional_holdout.py",
+    "implementation_sha256": {
+      "run_functional_holdout.py": "b0cd7af1930025442b80a7e6eaab04b2d140c5fcc068f77cfef8daa2e91e8c44",
+      "functional_holdout_contracts.py": "745a25f4ec7730f459a11d725a95c0d25096b857de47200a5f092f900ca16d57",
+      "audit_fixed_prefix_logits.py": "ab9b164c32413cdc4a2d8015c531b7a15bac0b76ebe7a5b7d9bc14894a2f5abd",
+      "run_fixed_prefix_diagnostic.py": "8c0c5d72984c8ba366e2209657f2bacbede196cbb52c1f341a08d4f942f326ff",
+      "fixed_prefix_diagnostic_contracts.py": "bafc0997feac28d93a2fc5b30910fe487edea85ccb56f9adfeaf4a14fc00c31d",
+      "replay_r0_awq.py": "b01e0124eb97a7e1145c886842d894966084ac8b1f7b47f538c647d7e1fb574a",
+      "qwen2_awq_adapter.py": "ea7d9e3c35443fc889480c667a826a9eca793c7592fb03be778b150d094b59c5",
+      "awq_weight_space.py": "230b604c0f436696b9118753c8ddbbd383029a3ca9a2aa89aab6478b1bd23b6b",
+      "runtime_assets.py": "d647bb31a0a72a373a95bf1561603c8eff2563ff598eff60516bd54dbedca130",
+      "run_difficulty_pilot.py": "809b14475e7eac56ce6667b52b85839e674f766106130407b6802aafe9fdaec7",
+      "difficulty_pilot_contracts.py": "d14b79ea22069dc6666fce2e70edc17557ef97029158eafdd51ebb306c460446",
+      "runtime_contracts.py": "ca514a25f560b8912edd90de83cb8d4a18aed0cd97d8769f5b9f1627cc8924ee",
+      "reproduction_contracts.py": "04923d60075be31ca7b14b7566dd0040b474bb4f1e009d416ee66819401e45bb"
+    },
+    "proposed_maximum_forward_calls": 96,
+    "proposed_maximum_forward_input_tokens": 73728,
+    "proposed_maximum_sequence_length": 768,
+    "positions_per_input": 32,
+    "proposed_raw_logit_bytes": 1866989568,
+    "new_generation_tokens": 0,
+    "use_cache": false,
+    "effective_sliding_window": null,
+    "sampling": false,
+    "seed": 42,
+    "selection_ko": "기존 결과 확인 후 새로 작성한 고정16문맥. 모델 출력을 보고 선택하지 않음. 구현 확인용 선택 밖 패널이며 통계적 무작위 표본·MATH 공식 난도·H1 독립 확증 자료가 아님.",
+    "acceptance_comparisons": [
+      [
+        "B",
+        "S"
+      ],
+      [
+        "Q",
+        "C"
+      ],
+      [
+        "C",
+        "Cw"
+      ]
+    ],
+    "proposed_acceptance_bounds": {
+      "mean_filtered_tv_max": 0.01,
+      "maximum_filtered_tv_max": 0.05,
+      "final_anchor_eos_support_mismatches_max": 0
+    },
+    "acceptance_scope_ko": "고정 패널의 한 단계 분포 영향 한도 제안. 평균 토큰 집합 확률 오차1%p, 각 관측위치5%p 이내 및 완성 답 anchor EOS 후보 여부 일치. 보편적 기준·H1 한도·자연 종료/정답 동등성 보증이 아님. 과거 결과 재판정에 적용하지 않음.",
+    "population_equivalence_test": false,
+    "sequence_equivalence_certified": false,
+    "h1_h2_tested": false,
+    "old_results_reclassified": false,
+    "user_execution": "NOT_STARTED",
+    "model_ready": false,
+    "output_directory": "results/local/functional_holdout_v01",
+    "assistant_validation": {
+      "new_cpu_tests_passed": 8,
+      "test_file": "tests/test_functional_holdout.py",
+      "manually_written_answers_independently_recomputed": true,
+      "exact_normalized_old_prompt_overlap": 0,
+      "unapproved_execute_rejected_before_heavy_import_or_output": true,
+      "actual_token_lengths_measured": false,
+      "tokenizer_or_gpu_execution": false,
+      "torch_transformers_available": false,
+      "old_tests_rerun": false
+    },
+    "excluded_scope": [
+      "new_generation",
+      "calibration_search",
+      "network_download",
+      "automatic_retry",
+      "R1",
+      "MATH-500",
+      "new_Pile",
+      "KL_matching",
+      "long_context",
+      "H1_H2",
+      "7B"
+    ],
+    "deferred_reason_ko": "2026-09-30 08:27:53 사용자가 상한 확대 재시험을 우선 요청. 새96회는 승인하거나 실행하지 않았으며 기존 준비물을 보존한다."
+  },
+  "long_generation": {
+    "status": "EXECUTED_RAW_RESULTS_REVIEWED_EXPLORATORY_NOT_CERTIFICATION",
+    "authorization": "USER_REQUESTED_BOUNDED_LONG_GENERATION",
+    "request_recorded_at": "2026-09-30T08:27:53+09:00",
+    "user_request": "현재까지 시험한 결과 해석의 걸림돌은 토큰수 제한아니야? 토큰 수 제한을 늘려서 다시 시험하고, 앞으로의 시험도 토큰 수 제한을 충분히 늘리는게 어때?",
+    "authorization_scope_note_ko": "상한을 늘려 다시 시험하라는 현재 요청의 제한 구현.32K·80회·전체 문맥 조건은 요청을 구현한 명시 기본값이며 각 숫자에 별도 명시 승인을 받았다는 기록은 아님. 같은 요청의 승인을 반복하지 않는다. 원래 R0/12회/6회 승인·예산을 확대하지 않는다.",
+    "document": "docs/LONG_GENERATION_V01_KO.md",
+    "config": "configs/long_generation_v01.json",
+    "config_sha256": "033f98377d1ee1c12effb3b240321366683d8584aa11006ad0c254bc0193790e",
+    "suite": "fixtures/difficulty_ladder_v01.json",
+    "suite_sha256": "10fc1a73e263b1e8fa56849c27ce6748ab39bb8bea77858ada6d424dbe4ae961",
+    "script": "scripts/run_long_generation.py",
+    "implementation_sha256": {
+      "run_long_generation.py": "1fbee184e1b4970fd6abbc164f7eb122379fffc2d7aea7309b7c718918b9026a",
+      "long_generation_contracts.py": "629ef9dfe8e5ded77a68b66bda1dcf97724df613b2ca074e605fc2a57584d040",
+      "long_generation_recovery.py": "70b02a8068bfd016058f254fcebbb7cc55ead3cbdabdadf33ee7ab92894cb9b3",
+      "difficulty_pilot_resume.py": "20f1e6f37ed496c97e678172169004281719d0c8d450d6bee434031cbbf33fe6",
+      "run_fixed_prefix_diagnostic.py": "8c0c5d72984c8ba366e2209657f2bacbede196cbb52c1f341a08d4f942f326ff",
+      "fixed_prefix_diagnostic_contracts.py": "bafc0997feac28d93a2fc5b30910fe487edea85ccb56f9adfeaf4a14fc00c31d",
+      "replay_r0_awq.py": "b01e0124eb97a7e1145c886842d894966084ac8b1f7b47f538c647d7e1fb574a",
+      "qwen2_awq_adapter.py": "ea7d9e3c35443fc889480c667a826a9eca793c7592fb03be778b150d094b59c5",
+      "awq_weight_space.py": "230b604c0f436696b9118753c8ddbbd383029a3ca9a2aa89aab6478b1bd23b6b",
+      "runtime_assets.py": "d647bb31a0a72a373a95bf1561603c8eff2563ff598eff60516bd54dbedca130",
+      "run_difficulty_pilot.py": "809b14475e7eac56ce6667b52b85839e674f766106130407b6802aafe9fdaec7",
+      "difficulty_pilot_contracts.py": "d14b79ea22069dc6666fce2e70edc17557ef97029158eafdd51ebb306c460446",
+      "runtime_contracts.py": "ca514a25f560b8912edd90de83cb8d4a18aed0cd97d8769f5b9f1627cc8924ee",
+      "reproduction_contracts.py": "04923d60075be31ca7b14b7566dd0040b474bb4f1e009d416ee66819401e45bb"
+    },
+    "expected_attempts": 80,
+    "max_new_tokens": 32768,
+    "maximum_generation_tokens": 2621440,
+    "maximum_generation_calls": 80,
+    "max_prompt_tokens": 768,
+    "max_total_context_tokens": 33536,
+    "arms": [
+      "bf16",
+      "awq_w3_replay"
+    ],
+    "seeds": [
+      42,
+      43
+    ],
+    "budget_thresholds": [
+      4096,
+      8192,
+      16384,
+      32768
+    ],
+    "sliding_window": null,
+    "use_sliding_window": false,
+    "use_cache": true,
+    "expected_cache_class": "DynamicCache",
+    "source_run_sha256": "ebdf46b1068754b3c12db1bef3dad2b496c18e85209099fed965b4bd3eaacbe0",
+    "low_censoring_rate_target_per_arm": 0.05,
+    "low_censoring_target_scope_ko": "예산 내 지표를 위한 운영 목표. 자연 길이 평균 식별·통계적 동등성·H1 한도가 아님. 검열이0보다크면 전체 자연 길이 평균은 계속 미확정.",
+    "output_directory": "results/local/long_generation_v01",
+    "execution_command": "python scripts/run_long_generation.py --execute",
+    "resume_command": "python scripts/run_long_generation.py --execute --resume --max-attempts 8",
+    "user_execution": "COMPLETED_80_RESPONSES_81_PHYSICAL_CALLS_ONE_ABANDONED",
+    "model_ready": false,
+    "automatic_retry": false,
+    "old_results_overwritten": false,
+    "h1_h2_changed": false,
+    "functional_holdout_96_calls_authorized": false,
+    "resume_scope_ko": "완료 응답 보존·백업, 응답 사이 정상정지 후 명시적 재개. 도중Ctrl+C/OOM/오류의 미완료 호출도 소비 기록하고 자동 재생성하지 않음. 이후 보고된57완료/58시작 SSH 단절 한 건에 한해 별도 명시적 복구 플래그와 원본/소비 기록 검증을 허용한다. 일반 --resume은 다른 미완료 호출을 자동 재생성하지 않는다. 이후80개 완료 원본 검토를 마쳤고 잔여 호출은0이다. 이 기록을 새 폴더의 자동 재실행 권한으로 사용하지 않는다.",
+    "assistant_validation": {
+      "new_cpu_tests_passed": 9,
+      "test_file": "tests/test_long_generation.py",
+      "actual_torch_transformers_gpu_execution": false,
+      "actual_generation_cache_trace_verified": false,
+      "old_tests_rerun": false,
+      "old_config_and_runtime_code_preserved": true
+    },
+    "future_generation_budget_policy": "docs/GENERATION_BUDGET_POLICY_KO.md",
+    "scope_exclusions": [
+      "new_calibration",
+      "data_preparation_rerun",
+      "tokenizer_test_rerun",
+      "synthetic_AWQ_test_rerun",
+      "MATH-500",
+      "R1",
+      "KL_matching",
+      "H1_H2",
+      "7B",
+      "automatic_budget_increase"
+    ],
+    "comparison_warning_ko": "과거v01과상한/문맥설정이함께바뀌므로과거대비차이를상한만의인과효과로쓰지않음. 새동일경로의상한별집계로예산의존성을관측함.",
+    "original_implementation_sha256": {
+      "run_long_generation.py": "a2c3c685a2944da896cafdc76cd26c4e0862bf5bfb09a36acbd28c1b773f5417",
+      "long_generation_contracts.py": "5aa83b94a813a90d3f7d1cadde407d5bf88db39fd72bd05983a5e8355a3a9f45",
+      "difficulty_pilot_resume.py": "20f1e6f37ed496c97e678172169004281719d0c8d450d6bee434031cbbf33fe6",
+      "run_fixed_prefix_diagnostic.py": "8c0c5d72984c8ba366e2209657f2bacbede196cbb52c1f341a08d4f942f326ff",
+      "fixed_prefix_diagnostic_contracts.py": "bafc0997feac28d93a2fc5b30910fe487edea85ccb56f9adfeaf4a14fc00c31d",
+      "replay_r0_awq.py": "b01e0124eb97a7e1145c886842d894966084ac8b1f7b47f538c647d7e1fb574a",
+      "qwen2_awq_adapter.py": "ea7d9e3c35443fc889480c667a826a9eca793c7592fb03be778b150d094b59c5",
+      "awq_weight_space.py": "230b604c0f436696b9118753c8ddbbd383029a3ca9a2aa89aab6478b1bd23b6b",
+      "runtime_assets.py": "d647bb31a0a72a373a95bf1561603c8eff2563ff598eff60516bd54dbedca130",
+      "run_difficulty_pilot.py": "809b14475e7eac56ce6667b52b85839e674f766106130407b6802aafe9fdaec7",
+      "difficulty_pilot_contracts.py": "d14b79ea22069dc6666fce2e70edc17557ef97029158eafdd51ebb306c460446",
+      "runtime_contracts.py": "ca514a25f560b8912edd90de83cb8d4a18aed0cd97d8769f5b9f1627cc8924ee",
+      "reproduction_contracts.py": "04923d60075be31ca7b14b7566dd0040b474bb4f1e009d416ee66819401e45bb"
+    },
+    "ssh_recovery": "long_generation_ssh_recovery",
+    "recovery_command": "python scripts/run_long_generation.py --execute --resume --recover-interrupted",
+    "remaining_generation_calls": 0,
+    "actual_generation_calls_started": 81,
+    "observed_attempts": 80,
+    "result_review_document": "docs/LONG_GENERATION_RESULT_REVIEW_20260930_KO.md",
+    "result_review_reference": "configs/long_generation_result_review_v01.json",
+    "result_review_reference_sha256": "5c412a6d014936204d87e466785895b205c5ec69b5f5b3537378a96239e18d96",
+    "result_review": {
+      "received_at": "2026-09-30T18:55:53+09:00",
+      "source_files": {
+        "run.json": {
+          "bytes": 16116852,
+          "sha256": "e6b0587b75a08295dbabbb548bd95c078ccca1e1aa0c7383c93e8cc9534e0c19"
+        },
+        "summary.json": {
+          "bytes": 62329,
+          "sha256": "ae783decdc7fafc62b73f6f59f752d5b12b84527058c23df8c80cd3aa05587fc"
+        }
+      },
+      "source_commits": [
+        "2aef0938bdf8292ddc0423cd350a235ebe4c199a",
+        "44d4f207b61dbc11eb2df7018cddc95254d571ad"
+      ],
+      "summary_matches_recalculation": true,
+      "eos_counts": {
+        "bf16": 40,
+        "awq_w3_replay": 22
+      },
+      "censored_counts": {
+        "bf16": 0,
+        "awq_w3_replay": 18
+      },
+      "automatic_correct_counts": {
+        "bf16": 33,
+        "awq_w3_replay": 13
+      },
+      "unit_only_manual_supplement_correct_counts": {
+        "bf16": 36,
+        "awq_w3_replay": 14
+      },
+      "unit_only_manual_rows": 4,
+      "remaining_eos_format_invalid_counts": {
+        "bf16": 0,
+        "awq_w3_replay": 8
+      },
+      "manual_supplement_bf16_pass_levels": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "manual_supplement_bf16_fail_levels": [
+        5
+      ],
+      "manual_supplement_awq_all_levels": "INCONCLUSIVE",
+      "original_automatic_scores_modified": false,
+      "mean_min_length_32768": {
+        "bf16": 4005.15,
+        "awq_w3_replay": 20508.95
+      },
+      "full_awq_natural_length_mean_known": false,
+      "observed_runtime_mask_cache_trace_rows": 432,
+      "source_and_resumed_code_hashes_verified": [
+        13,
+        14
+      ],
+      "actual_user_weight_arrays_independently_loaded": false,
+      "pre_resume_backup_file_bytes_received": false,
+      "gpu_kernel_independently_reproduced": false
+    }
+  },
+  "long_generation_ssh_recovery": {
+    "status": "EXECUTED_COMPLETED_80_AND_REVIEWED",
+    "authorization": "USER_REQUESTED_SINGLE_SSH_RECOVERY",
+    "request_at": "2026-09-30T12:12:37+09:00",
+    "evidence_received_at": "2026-09-30T12:17:08+09:00",
+    "user_request": "명령 실행하다가 ssh 가 끊긴 것 같아. 다시 실행하는 방법 알려줘.",
+    "scope_note_ko": "동일 시험의 재시작 요청과 이어 제출된57완료/58시작 기록에 대한 제한 구현. 기존 응답 보존, 미완료 호출1회 별도 기록, 해당 응답부터 재생성하며 자동 반복 허용은 아님.",
+    "document": "docs/LONG_GENERATION_SSH_RECOVERY_20260930_KO.md",
+    "policy": "configs/long_generation_ssh_recovery_v01.json",
+    "policy_sha256": "e38bb10770c977caa685544603ad4388290dd621c80650636bbef8893e749601",
+    "reviewed_source_commit": "2aef0938bdf8292ddc0423cd350a235ebe4c199a",
+    "evidence": {
+      "type": "USER_TERMINAL_OUTPUT_ONLY",
+      "status": "LONG_GENERATION_RUNNING",
+      "completed_attempts": 57,
+      "generation_calls_started": 58,
+      "active_attempt": {
+        "problem_id": "D3-01",
+        "arm": "awq_w3_replay",
+        "seed": 43,
+        "reserved_maximum_tokens": 32768
+      },
+      "error": null,
+      "matching_pgrep_rows_reported": 0,
+      "cause_forensically_verified": false,
+      "user_original_run_json_received": false,
+      "completed_generated_ids_independently_reviewed": false
+    },
+    "completed_attempts_preserved": 57,
+    "remaining_completed_attempts": 23,
+    "additional_generation_calls": 1,
+    "maximum_generation_calls_including_abandoned": 81,
+    "maximum_generation_tokens_including_abandoned": 2654208,
+    "abandoned_actual_generated_tokens": null,
+    "abandoned_generation_tokens_upper_bound": 32768,
+    "original_config_modified": false,
+    "automatic_retry": false,
+    "restores_partial_rng_or_cache": false,
+    "execution_command": "python scripts/run_long_generation.py --execute --resume --recover-interrupted",
+    "assistant_validation": {
+      "new_cpu_tests_passed": 11,
+      "test_file": "tests/test_long_generation_ssh_recovery.py",
+      "unchanged_numerical_ast_nodes_checked": 8,
+      "unchanged_shared_implementation_files": 11,
+      "actual_torch_transformers_gpu_execution": false,
+      "old_tests_rerun": false
+    },
+    "model_ready": false,
+    "h1_h2_changed": false,
+    "remaining_additional_generation_calls": 0,
+    "completion_review": {
+      "document": "docs/LONG_GENERATION_RESULT_REVIEW_20260930_KO.md",
+      "result_reference": "configs/long_generation_result_review_v01.json",
+      "run_sha256": "e6b0587b75a08295dbabbb548bd95c078ccca1e1aa0c7383c93e8cc9534e0c19",
+      "completed_attempts": 80,
+      "generation_calls_started": 81,
+      "first_segment_rows": 57,
+      "resumed_segment_rows": 23,
+      "first_57_matches_recorded_hash": true,
+      "separate_source_backup_bytes_received": false,
+      "abandoned_actual_generated_tokens": null
+    }
+  }
+}

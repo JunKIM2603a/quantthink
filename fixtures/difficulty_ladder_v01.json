@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "suite_id": "quantthink_custom_difficulty_v01",
+  "provenance": "이번 요청에 맞춰 작성한 탐색 문제. MATH 원문을 가져온 자료가 아니며 독립성·학습 비노출을 보증하지 않음.",
+  "difficulty_label_scope": "D1~D5는 작성자의 임시 난도. MATH 공식 Level 또는 해당 모델의 실측 난도가 아님.",
+  "prompt_language": "en",
+  "instruction": "Solve the problem and explain your reasoning. Give exactly one final answer, an integer or an exact fraction, in \\boxed{} at the end of your final response.",
+  "problems": [
+    {
+      "id": "D1-01", "level": 1, "topic": "비율",
+      "question_en": "An item has a listed price of 240 dollars. A store first applies a 15 percent discount, then charges a 10 percent sales tax on the discounted price. What is the final price in dollars?",
+      "question_ko": "정가 240달러를 15% 할인한 뒤 할인 가격에 10% 세금을 붙인다. 최종 가격은 몇 달러인가?",
+      "answer": "1122/5",
+      "solution_ko": "240×17/20×11/10=1122/5달러."
+    },
+    {
+      "id": "D1-02", "level": 1, "topic": "산술",
+      "question_en": "A customer buys 6 notebooks at 4 dollars each and 3 pens at 2 dollars each. There are no taxes or discounts. The customer pays with 50 dollars. How many dollars of change should the customer receive?",
+      "question_ko": "4달러짜리 공책 6권과 2달러짜리 펜 3개를 사고 50달러를 냈다. 세금과 할인은 없다. 거스름돈은 몇 달러인가?",
+      "answer": "20",
+      "solution_ko": "50−6×4−3×2=20달러."
+    },
+    {
+      "id": "D1-03", "level": 1, "topic": "일차방정식",
+      "question_en": "Find the real number x satisfying 3(2x - 5) = 39.",
+      "question_ko": "3(2x−5)=39를 만족하는 실수 x를 구하라.",
+      "answer": "9",
+      "solution_ko": "2x−5=13이므로 x=9."
+    },
+    {
+      "id": "D1-04", "level": 1, "topic": "도형",
+      "question_en": "A rectangle has perimeter 46 centimeters. Its length is 5 centimeters greater than its width. Find its area in square centimeters.",
+      "question_ko": "직사각형의 둘레는 46cm이고 길이는 너비보다 5cm 길다. 넓이는 몇 cm²인가?",
+      "answer": "126",
+      "solution_ko": "너비 w에 대해 2(2w+5)=46이므로 w=9, 길이 14, 넓이 126."
+    },
+    {
+      "id": "D2-01", "level": 2, "topic": "순차 비율",
+      "question_en": "A tank initially contains 120 liters of water. One third of that water is removed. Then one fourth of the water remaining in the tank is removed. Finally, 18 liters of water are added. There are no other changes. How many liters are now in the tank?",
+      "question_ko": "물 120L에서 1/3을 버린 다음 남은 물의 1/4을 버리고 18L를 넣었다. 현재 몇 L인가?",
+      "answer": "78",
+      "solution_ko": "120×2/3×3/4+18=78. 두 번째 분수의 기준은 남은 물이다."
+    },
+    {
+      "id": "D2-02", "level": 2, "topic": "작업률",
+      "question_en": "Worker A can complete a job alone in 6 hours, and worker B can complete it alone in 9 hours. Both work at constant rates. A works alone for the first hour; then B joins A. How many additional hours are needed after B joins?",
+      "question_ko": "A는 혼자 6시간, B는 혼자 9시간에 일을 마친다. A가 1시간 일한 뒤 B가 합류한다. 합류 뒤 추가 시간은 몇 시간인가?",
+      "answer": "3",
+      "solution_ko": "남은 일 5/6을 합동 작업률 1/6+1/9=5/18로 나누면 3시간."
+    },
+    {
+      "id": "D2-03", "level": 2, "topic": "조건부 확률",
+      "question_en": "Two fair six-sided dice are rolled independently. Given that their sum is at least 9, what is the probability that at least one die shows 6?",
+      "question_ko": "독립인 공정한 주사위 두 개의 합이 9 이상임을 안다. 적어도 하나가 6일 조건부 확률은?",
+      "answer": "7/10",
+      "solution_ko": "합 9,10,11,12의 순서 있는 경우는 4+3+2+1=10개. 그중 6 포함은 2+2+2+1=7개."
+    },
+    {
+      "id": "D2-04", "level": 2, "topic": "자리수 방정식",
+      "question_en": "The digits of a two-digit positive integer sum to 11. Reversing its digits produces a two-digit integer that is 27 smaller than the original integer. Find the original integer.",
+      "question_ko": "두 자리 양의 정수의 자리수 합은 11이다. 두 자리수를 뒤집은 두 자리 정수는 원래 수보다 27 작다. 원래 수는?",
+      "answer": "74",
+      "solution_ko": "십의 자리 a, 일의 자리 b이면 a+b=11, 9(a−b)=27. a=7,b=4."
+    },
+    {
+      "id": "D3-01", "level": 3, "topic": "정수 해 개수",
+      "question_en": "How many ordered triples of integers (x, y, z) satisfy x + y + z = 14, x >= 2, y >= 3, and z >= 1?",
+      "question_ko": "x+y+z=14, x≥2,y≥3,z≥1을 만족하는 순서 있는 정수 삼중쌍은 몇 개인가?",
+      "answer": "45",
+      "solution_ko": "하한을 빼면 음이 아닌 세 정수의 합이 8이다. 중복조합 C(10,2)=45."
+    },
+    {
+      "id": "D3-02", "level": 3, "topic": "합동식",
+      "question_en": "Find the smallest positive integer n for which dividing n by 5, 7, and 9 gives remainders 2, 3, and 4, respectively.",
+      "question_ko": "5,7,9로 나눈 나머지가 각각 2,3,4인 가장 작은 양의 정수를 구하라.",
+      "answer": "157",
+      "solution_ko": "2n+1은 5,7,9의 공배수다. 양의 홀수 공배수의 최솟값은 315이므로 n=157."
+    },
+    {
+      "id": "D3-03", "level": 3, "topic": "삼각형 내접원",
+      "question_en": "A triangle has side lengths 13, 14, and 15. Find the radius of its inscribed circle.",
+      "question_ko": "세 변의 길이가 13,14,15인 삼각형의 내접원 반지름을 구하라.",
+      "answer": "4",
+      "solution_ko": "반둘레 21, 헤론 공식의 넓이는 sqrt(21×8×7×6)=84. 내접원 반지름 84/21=4."
+    },
+    {
+      "id": "D3-04", "level": 3, "topic": "대칭식",
+      "question_en": "Let a and b be the two roots of x^2 - 5x + 3 = 0. Compute a^4 + b^4 without approximating the roots.",
+      "question_ko": "x²−5x+3=0의 두 근을 a,b라 할 때 근을 근사하지 말고 a⁴+b⁴를 구하라.",
+      "answer": "343",
+      "solution_ko": "a+b=5,ab=3에서 a²+b²=19. a⁴+b⁴=19²−2×9=343."
+    },
+    {
+      "id": "D4-01", "level": 4, "topic": "원형 배치 계수",
+      "question_en": "Twelve positions numbered 1 through 12 lie on a circle. Each position receives either 0 or 1. Exactly five positions must receive 1, and no two positions receiving 1 may be adjacent, including positions 12 and 1. Rotations count as different assignments when the numbered positions differ. How many assignments are possible?",
+      "question_ko": "원 위의 번호 1~12 위치에 0 또는 1을 적는다. 1은 정확히 5개이고 서로 이웃하지 않으며 12와 1도 이웃이다. 위치 번호가 다른 회전 배치는 다르게 센다. 가능한 배치 수는?",
+      "answer": "36",
+      "solution_ko": "1번 위치가 0이면 길이 11의 일렬 선택 C(7,5)=21. 1이면 양옆 0을 고정한 길이 9에서 4개를 골라 C(6,4)=15. 합 36."
+    },
+    {
+      "id": "D4-02", "level": 4, "topic": "포함배제",
+      "question_en": "How many integers n with 1 <= n <= 1000 have greatest common divisor 1 with 210?",
+      "question_ko": "1≤n≤1000 중 210과 서로소인 정수 n은 몇 개인가?",
+      "answer": "228",
+      "solution_ko": "2,3,5,7의 배수를 포함배제로 제외한다. 1000−1175+478−79+4=228."
+    },
+    {
+      "id": "D4-03", "level": 4, "topic": "조합 확률",
+      "question_en": "Six distinct numbers are chosen uniformly as an unordered subset from the integers 1 through 12. What is the probability that their sum is odd?",
+      "question_ko": "1~12에서 서로 다른 6개를 부분집합으로 균등하게 고른다. 합이 홀수일 확률은?",
+      "answer": "118/231",
+      "solution_ko": "홀수 선택 개수가 1,3,5이면 된다. [C(6,1)C(6,5)+C(6,3)²+C(6,5)C(6,1)]/C(12,6)=472/924=118/231."
+    },
+    {
+      "id": "D4-04", "level": 4, "topic": "교점과 넓이",
+      "question_en": "Triangle ABC has coordinates A=(0,0), B=(12,0), and C=(0,9). Point P is the midpoint of AB. Point Q lies on AC with AQ:QC=1:2. Lines CP and BQ meet at R. Find the area of triangle ABR.",
+      "question_ko": "A=(0,0),B=(12,0),C=(0,9)이다. P는 AB의 중점이고 Q는 AC 위에서 AQ:QC=1:2이다. CP와 BQ의 교점을 R이라 할 때 삼각형 ABR의 넓이는?",
+      "answer": "54/5",
+      "solution_ko": "CP는 x/6+y/9=1, BQ는 x/12+y/3=1. 교점 R=(24/5,9/5)이므로 넓이 12×(9/5)/2=54/5."
+    },
+    {
+      "id": "D5-01", "level": 5, "topic": "생성함수·상한 포함배제",
+      "question_en": "Find the coefficient of x^20 in the polynomial (1 + x + x^2 + x^3 + x^4)^8.",
+      "question_ko": "다항식 (1+x+x²+x³+x⁴)⁸에서 x²⁰의 계수를 구하라.",
+      "answer": "23940",
+      "solution_ko": "(1−x⁵)⁸/(1−x)⁸을 전개한다. j=0~4에 대한 Σ(−1)^j C(8,j)C(27−5j,7)=23940."
+    },
+    {
+      "id": "D5-02", "level": 5, "topic": "디오판토스 방정식",
+      "question_en": "How many pairs of positive integers (x,y) satisfy 1/x + 1/y = 1/840 and x <= y? Count each pair only once under the condition x <= y.",
+      "question_ko": "1/x+1/y=1/840, x≤y를 만족하는 양의 정수쌍 (x,y)의 개수를 구하라.",
+      "answer": "95",
+      "solution_ko": "(x−840)(y−840)=840². 두 인수는 양수이고 840²=2⁶3²5²7²의 약수 수는 189. 제곱수 중앙쌍을 포함해 (189+1)/2=95."
+    },
+    {
+      "id": "D5-03", "level": 5, "topic": "제한 격자 경로",
+      "question_en": "A path on the integer lattice goes from (0,0) to (8,8), using only steps (1,0) and (0,1). At every visited point (x,y), it must satisfy y <= x. It must also avoid the point (4,4). How many such paths are there?",
+      "question_ko": "(0,0)에서 (8,8)까지 오른쪽 또는 위쪽으로 한 칸씩 이동한다. 모든 방문점에서 y≤x이고 (4,4)를 방문하지 않는 경로는 몇 개인가?",
+      "answer": "1234",
+      "solution_ko": "전체는 카탈란 수 C₈=1430. (4,4)를 통과하는 경로는 C₄²=14²=196. 차이는 1234."
+    },
+    {
+      "id": "D5-04", "level": 5, "topic": "완전순열·조건부 확률",
+      "question_en": "A permutation of the integers 1 through 7 is selected uniformly at random. You are told that the first position does not contain 1. Given this information, what is the probability that exactly two positions contain their own position number?",
+      "question_ko": "1~7의 순열을 균등하게 고른다. 첫째 자리에 1이 없음을 안다. 정확히 두 자리만 자기 자리 번호를 담고 있을 조건부 확률은?",
+      "answer": "11/72",
+      "solution_ko": "조건부 표본 수는 7!−6!=4320. 고정점 두 개를 2~7에서 고르고 나머지 5개를 완전순열로 배치하므로 C(6,2)×!5=15×44=660. 660/4320=11/72."
+    }
+  ]
+}

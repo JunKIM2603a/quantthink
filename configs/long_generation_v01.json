@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "pilot_id": "long_generation_v01",
+  "status": "USER_REQUESTED_BOUNDED_LONG_GENERATION",
+  "scope": "사용자 요청에 따른 기존20문제·2모델·2시드의 32K 상한 재시험. 전체 문맥 생성 조건의 탐색이며 공식 벤치마크·기능적 동등성·H1/H2 확증이 아님. 숫자는 요청 구현의 제한 기본값.",
+  "suite_path": "fixtures/difficulty_ladder_v01.json",
+  "suite_sha256": "10fc1a73e263b1e8fa56849c27ce6748ab39bb8bea77858ada6d424dbe4ae961",
+  "arms": [
+    "bf16",
+    "awq_w3_replay"
+  ],
+  "seeds": [
+    42,
+    43
+  ],
+  "max_new_tokens": 32768,
+  "max_prompt_tokens": 768,
+  "max_total_context_tokens": 33536,
+  "maximum_generation_tokens": 2621440,
+  "expected_attempts": 80,
+  "decoding": {
+    "temperature": 0.6,
+    "top_p": 0.95,
+    "top_k": 0,
+    "repetition_penalty": 1.0
+  },
+  "level_pass_min_stable_problems": 3,
+  "level_verdict_rule": "8개 응답 모두 EOS+파싱 가능일 때만 판정. 4문제 중 3개 이상이 두 시드 모두 최종 정답이면 PASS; 그 외 FAIL. 누락/오류/검열/모호한 답은 INCONCLUSIVE.",
+  "awq_source": "configs/r0_diagnostic_input_review_v01.json",
+  "awq_replay_status": "REPLAY_FROM_SAVED_RECIPES_NOT_ORIGINAL_CHECKPOINT_CERTIFIED",
+  "automatic_budget_increase": false,
+  "automatic_retry": false,
+  "calibration_search": false,
+  "math500_used": false,
+  "h1_h2_test": false,
+  "network_required": false,
+  "maximum_generation_calls": 80,
+  "budget_thresholds": [
+    4096,
+    8192,
+    16384,
+    32768
+  ],
+  "base_config_path": "configs/difficulty_pilot_v01.json",
+  "base_config_sha256": "1a0b9ccd1a2863b7078368ec853461f2973015ce13386d338aa51af2c2ba22c6",
+  "runtime_reference_path": "configs/fixed_prefix_diagnostic_v01.json",
+  "runtime_reference_sha256": "5d24000bfa9d7b15d398b978f671d94be816918bd9c5881a458448bced488fd6",
+  "source_run_sha256": "ebdf46b1068754b3c12db1bef3dad2b496c18e85209099fed965b4bd3eaacbe0",
+  "parameter_sha256": {
+    "bf16": "7d1589eaf3f2ef4d1425792e43f02fd3b4a3e73a649da9953fb6eb1c94f94f16",
+    "awq_w3_replay": "87308b8b58416e6e26f43e205baca802b8fae6aa542034bfc0163fd1757dfafc"
+  },
+  "effective_sliding_window": null,
+  "use_sliding_window": false,
+  "use_cache": true,
+  "expected_cache_class": "DynamicCache",
+  "low_censoring_rate_target_per_arm": 0.05,
+  "low_censoring_target_scope_ko": "예산 내 지표를 위한 운영 목표. 자연 길이 평균 식별·통계적 동등성·H1 한도가 아님. 검열이0보다크면 전체 자연 길이 평균은 계속 미확정.",
+  "mask_trace_positions": [
+    4094,
+    4095,
+    4096,
+    8191,
+    8192,
+    16383,
+    16384,
+    32767
+  ],
+  "official_budget_reference": "https://github.com/deepseek-ai/DeepSeek-R1#4-evaluation-results",
+  "old_results_overwritten": false,
+  "raw_logits_saved": false,
+  "unfinished_attempt_automatic_retry": false
+}
