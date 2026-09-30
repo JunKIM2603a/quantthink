@@ -52,7 +52,7 @@
     "scope": "Sequential per-device tensor checks only; no model loading, NCCL, peer communication, simultaneous load, or long-context test",
     "raw_report_committed": false
   },
-  "next_local_environment_step": "SSH 단절 후 사용자 터미널의 32K 완료57개·시작58회·D3-01/AWQ/seed43 미완료 보고를 받았다. 한 건 한정 복구 코드와 새 CPU 검사11개를 준비했다. --execute --resume --recover-interrupted로 원본 백업·57개 보존·중단1회 소비 기록 후 남은23개를 생성한다. 기존80회 예산과 별도인 재시작1회만 추가 허용하여 합산최대81회·2654208토큰이다. 사용자 원본/생성ID는 미수신이며 GPU 재개 실행·완료 결과 검토가 남아 있다. 새16문맥96회는 미승인 보류, model_ready=false·세션02 유지.",
+  "next_local_environment_step": "32K 원본80개·요약·SSH 복구57+23·물리81회 기록 검토를 완료했다. BF16 EOS40/40·AWQ22/40, AWQ검열18/40이다. 단위 표현4건의 별도 수동 보완표에서 정답 확인은BF16 36/40·AWQ14/40, BF16 D1~D4 PASS·D5 FAIL이며 AWQ 전단계 INCONCLUSIVE다. 생성432개 마스크/cache 표본과 처리량을 검토했다. 다음은 좌표 변환의 기능적 수락·평가기 일반 타당도·독립 확인 기준 결정이다. 이미 준비한16문맥96회 forward/새생성0 점검은 미승인 상태를 유지하며 기존32K 재실행·64K 자동 증액은 하지 않는다. model_ready=false·세션02 유지.",
   "upstream_code_audit": {
     "repository": "ruikangliu/Quantized-Reasoning-Models",
     "main_commit_at_inspection": "bf947e29f52e3f666e3263efac149dae0ac18d00",
@@ -108,18 +108,19 @@
     "tokenizer_execution_review_document": "docs/TOKENIZER_CONTRACT_REVIEW_20260929.md"
   },
   "assistant_cpu_diagnostic_tests": "7_PASSED_PREVIOUS_TURN_NOT_RERUN_IN_THIS_UPDATE",
-  "bf16_reproduction": "R0_AND_DIFFICULTY_REVIEWED_FIXED_PREFIX_REPEAT_REPORTED_EXACT_BENCHMARK_NOT_RUN",
-  "awq_reproduction": "DIFFICULTY_AND_FIXED_PREFIX_REPORTS_REVIEWED_EQUIVALENCE_UNCERTIFIED_BENCHMARK_NOT_RUN",
+  "bf16_reproduction": "R0_FIXED_PREFIX_AND_32K_RAW_RESULTS_REVIEWED_FORMAL_BENCHMARK_NOT_RUN",
+  "awq_reproduction": "R0_FIXED_PREFIX_AND_32K_RAW_RESULTS_REVIEWED_EQUIVALENCE_UNCERTIFIED",
   "kl_matching": "NOT_RUN",
   "h1": "UNTESTED",
   "h2": "UNTESTED",
   "next_session_ready": false,
   "next_session_title": "QuantThink 03 — 교란 매칭·대조군 검증",
   "blocking_items": [
-    "기존4K의80응답 중43개검열은 정답/자연길이 해석 제약이다. 32K 재시험은 사용자 보고로57개 완료·58회 시작 후 SSH 단절이 의심되며 한 건의 제한 복구를 준비했다. 이32K 원본/생성ID는 미수신, 나머지23개 완료와 결과 검토가 필요하다. 상한 확대만으로 좌표변환 수락·평가기 일반타당도·종료지연 인과원인이 해결되지는 않는다.",
-    "난도80개원본의입력/종료/집계·12개/31개재개백업·실행코드/상태해시대조완료. 형식미판정4개는수동정답. v01자동난도판정은보존하며43개검열의최종정오는미관측이다.",
-    "고정 use_sliding_window=false·sliding_window=4096의 CPU 마스크에서 query4096부터 이전 키 차단을 관측했고4개 설치소스 해시가 공식 원본과 일치한다. 당시 생성 cache/마스크 및 실제 인과 영향은 미검증이다. 경계 전 EOS24/40 대12/40 차이도 남는다.",
-    "기능적양자화검증·평가기일반타당도·후속재현기준 미완료로model_ready=false·세션02 유지. 요청된long_generation_v01과 보고된SSH중단1회 복구 이외의 R1/MATH-500/새Pile/KL매칭/별도장문맥연구/H1/H2/7B는 시작하지 않는다."
+    "32K 원본80개·요약 검토 완료. BF16 EOS40/40·AWQ22/40, AWQ18/40 검열로32K 충분성 운영목표5%를 미충족하며 전체 자연 종료 길이 평균은 미확정이다.",
+    "좌표 변환의 비영 분포 차이가 후속 결과에 허용되는지의 기능적 수락과 독립 확인은 미완료다. BF16/AWQ 행동 차이 자체는 구현 실패의 판정 기준이 아니다.",
+    "단위 표현4개는 별도 수동 정답으로 확인했다. AWQ EOS22개 중7개는 최종답 경계/박스 없음,1개는 think경계2개와 마지막오답7이다. 고정 자동점수는 보존하며 평가기의 일반 타당도는 미완료다.",
+    "사용자 생성 마스크/cache 저장표본432행에서 도달경계 누락·과거키 차단·28계층cache길이 불일치가 없었다. GPU kernel 내부 독립 관측/수치 재현·종료지연 인과원인은 미확정이다.",
+    "기능적 수락·독립 확인의 재현 기준 미완료로model_ready=false·세션02 유지. 준비된16문맥96회는 미승인, 기존32K+SSH복구81회는 소진됐다. R1/MATH-500/새Pile/KL매칭/H1/H2/7B는 시작하지 않는다."
   ],
   "allowed_now": [
     "literature_review",
@@ -138,7 +139,8 @@
     "read_only_result_review_and_session02_acceptance_protocol_design",
     "functional_holdout_v01_protocol_fixture_implementation_preparation_and_cpu_contract_tests_only",
     "user_requested_long_generation_v01_80_attempts_32768_tokens_full_context_bounded_retest",
-    "user_requested_single_ssh_recovery_preserve_57_completed_archive_one_interrupted_call_maximum_81_calls"
+    "user_requested_single_ssh_recovery_preserve_57_completed_archive_one_interrupted_call_maximum_81_calls",
+    "read_only_32k_saved_outputs_result_review_manual_unit_annotation_and_acceptance_design"
   ],
   "not_yet_authorized_by_gates": [
     "functional_holdout_v01_new_16_contexts_maximum_96_forward_calls",
@@ -585,12 +587,12 @@
     "model_execution_completed": false
   },
   "session02": {
-    "status": "LONG_GENERATION_PARTIAL_USER_REPORTED_SINGLE_SSH_RECOVERY_READY",
+    "status": "LONG_GENERATION_80_RAW_RESULTS_REVIEWED_FUNCTIONAL_ACCEPTANCE_PENDING",
     "handoff": "docs/HANDOFF_01_TO_02_KO.md",
-    "next_single_task": "SSH 단절 후 사용자 터미널의 32K 완료57개·시작58회·D3-01/AWQ/seed43 미완료 보고를 받았다. 한 건 한정 복구 코드와 새 CPU 검사11개를 준비했다. --execute --resume --recover-interrupted로 원본 백업·57개 보존·중단1회 소비 기록 후 남은23개를 생성한다. 기존80회 예산과 별도인 재시작1회만 추가 허용하여 합산최대81회·2654208토큰이다. 사용자 원본/생성ID는 미수신이며 GPU 재개 실행·완료 결과 검토가 남아 있다. 새16문맥96회는 미승인 보류, model_ready=false·세션02 유지.",
+    "next_single_task": "32K 원본80개·요약·SSH 복구57+23·물리81회 기록 검토를 완료했다. BF16 EOS40/40·AWQ22/40, AWQ검열18/40이다. 단위 표현4건의 별도 수동 보완표에서 정답 확인은BF16 36/40·AWQ14/40, BF16 D1~D4 PASS·D5 FAIL이며 AWQ 전단계 INCONCLUSIVE다. 생성432개 마스크/cache 표본과 처리량을 검토했다. 다음은 좌표 변환의 기능적 수락·평가기 일반 타당도·독립 확인 기준 결정이다. 이미 준비한16문맥96회 forward/새생성0 점검은 미승인 상태를 유지하며 기존32K 재실행·64K 자동 증액은 하지 않는다. model_ready=false·세션02 유지.",
     "r0_output_directory": "results/local/r0_v03",
     "exit_criteria_met": false,
-    "latest_review_document": "docs/TERMINATION_PREFIX_RESULT_REVIEW_20260930_KO.md",
+    "latest_review_document": "docs/LONG_GENERATION_RESULT_REVIEW_20260930_KO.md",
     "diagnostic_followup_plan": "docs/R0_DIAGNOSTIC_FOLLOWUP_20260929_KO.md",
     "realistic_input_plan": "docs/REALISTIC_INPUT_PILOT_PLAN_20260929_KO.md",
     "difficulty_pilot_plan": "docs/DIFFICULTY_PILOT_V01_KO.md",
@@ -606,9 +608,10 @@
     "functional_holdout_proposal": "docs/FUNCTIONAL_HOLDOUT_V01_KO.md",
     "long_generation_protocol": "docs/LONG_GENERATION_V01_KO.md",
     "generation_budget_policy": "docs/GENERATION_BUDGET_POLICY_KO.md",
-    "long_generation_ssh_recovery": "docs/LONG_GENERATION_SSH_RECOVERY_20260930_KO.md"
+    "long_generation_ssh_recovery": "docs/LONG_GENERATION_SSH_RECOVERY_20260930_KO.md",
+    "long_generation_result_reference": "configs/long_generation_result_review_v01.json"
   },
-  "snapshot_status_note": "configs의 기존 후보·정책·점검·준비 검토 JSON은 해시가 고정된 당시 스냅샷이며 과거 상태를 소급 수정하지 않는다. 상위 승인 상태와 allowed_now의 기존 실행 항목은 각 기록 범위에 한정한다. fixed_prefix_diagnostic와 termination_prefix_diagnostic의 APPROVED는 완료된 실행의 승인 이력이며 잔여 예산은0이다. 새 functional_holdout_v01 설정도 제안 당시 스냅샷으로 고정하고 현재 별도 실행 권한은 functional_holdout을 따른다. 프로토콜 준비 요청을 미제시 GPU 예산 승인으로 확대 해석하지 않는다. 이후 사용자 상한 확대 요청의 제한된 실행 범위는 long_generation에 별도로 기록한다. 기존 설정/결과나 functional_holdout 승인을 소급 변경하지 않는다. SSH 단절 한 건의 사용자 재시작 요청은 long_generation_ssh_recovery에 별도 기록한다. 원래80회 설정을 소급 수정하거나 미완료 호출을 지우지 않고 추가1회·합산81회로 제한한다.",
+  "snapshot_status_note": "configs의 기존 후보·정책·점검·준비 검토 JSON은 해시가 고정된 당시 스냅샷이며 과거 상태를 소급 수정하지 않는다. 상위 승인 상태와 allowed_now의 기존 실행 항목은 각 기록 범위에 한정한다. fixed_prefix_diagnostic와 termination_prefix_diagnostic의 APPROVED는 완료된 실행의 승인 이력이며 잔여 예산은0이다. 새 functional_holdout_v01 설정도 제안 당시 스냅샷으로 고정하고 현재 별도 실행 권한은 functional_holdout을 따른다. 프로토콜 준비 요청을 미제시 GPU 예산 승인으로 확대 해석하지 않는다. 이후 사용자 상한 확대 요청의 제한된 실행 범위는 long_generation에 별도로 기록한다. 기존 설정/결과나 functional_holdout 승인을 소급 변경하지 않는다. SSH 단절 한 건의 사용자 재시작 요청은 long_generation_ssh_recovery에 별도 기록한다. 원래80회 설정을 소급 수정하거나 미완료 호출을 지우지 않고 추가1회·합산81회로 제한한다. 32K 본시험과SSH복구는 완료80개·물리81회 원본 검토를 마쳐 잔여예산0이다. 과거 승인/요청 문구는 이력으로 보존한다. 수동 단위 보완표는 원래 자동 점수를 대체하지 않는다.",
   "approval_record_validation": {
     "r0_inspection": "PASS_NO_UNMET_GATES",
     "model_loaded": false,
@@ -1561,7 +1564,7 @@
     "deferred_reason_ko": "2026-09-30 08:27:53 사용자가 상한 확대 재시험을 우선 요청. 새96회는 승인하거나 실행하지 않았으며 기존 준비물을 보존한다."
   },
   "long_generation": {
-    "status": "PARTIAL_EXECUTION_USER_REPORTED_SSH_RECOVERY_READY",
+    "status": "EXECUTED_RAW_RESULTS_REVIEWED_EXPLORATORY_NOT_CERTIFICATION",
     "authorization": "USER_REQUESTED_BOUNDED_LONG_GENERATION",
     "request_recorded_at": "2026-09-30T08:27:53+09:00",
     "user_request": "현재까지 시험한 결과 해석의 걸림돌은 토큰수 제한아니야? 토큰 수 제한을 늘려서 다시 시험하고, 앞으로의 시험도 토큰 수 제한을 충분히 늘리는게 어때?",
@@ -1618,13 +1621,13 @@
     "output_directory": "results/local/long_generation_v01",
     "execution_command": "python scripts/run_long_generation.py --execute",
     "resume_command": "python scripts/run_long_generation.py --execute --resume --max-attempts 8",
-    "user_execution": "USER_REPORTED_57_COMPLETED_58_STARTED_ONE_ACTIVE_NO_MATCHING_PROCESS_OUTPUT",
+    "user_execution": "COMPLETED_80_RESPONSES_81_PHYSICAL_CALLS_ONE_ABANDONED",
     "model_ready": false,
     "automatic_retry": false,
     "old_results_overwritten": false,
     "h1_h2_changed": false,
     "functional_holdout_96_calls_authorized": false,
-    "resume_scope_ko": "완료 응답 보존·백업, 응답 사이 정상정지 후 명시적 재개. 도중Ctrl+C/OOM/오류의 미완료 호출도 소비 기록하고 자동 재생성하지 않음. 이후 보고된57완료/58시작 SSH 단절 한 건에 한해 별도 명시적 복구 플래그와 원본/소비 기록 검증을 허용한다. 일반 --resume은 다른 미완료 호출을 자동 재생성하지 않는다.",
+    "resume_scope_ko": "완료 응답 보존·백업, 응답 사이 정상정지 후 명시적 재개. 도중Ctrl+C/OOM/오류의 미완료 호출도 소비 기록하고 자동 재생성하지 않음. 이후 보고된57완료/58시작 SSH 단절 한 건에 한해 별도 명시적 복구 플래그와 원본/소비 기록 검증을 허용한다. 일반 --resume은 다른 미완료 호출을 자동 재생성하지 않는다. 이후80개 완료 원본 검토를 마쳤고 잔여 호출은0이다. 이 기록을 새 폴더의 자동 재실행 권한으로 사용하지 않는다.",
     "assistant_validation": {
       "new_cpu_tests_passed": 9,
       "test_file": "tests/test_long_generation.py",
@@ -1663,10 +1666,79 @@
       "reproduction_contracts.py": "04923d60075be31ca7b14b7566dd0040b474bb4f1e009d416ee66819401e45bb"
     },
     "ssh_recovery": "long_generation_ssh_recovery",
-    "recovery_command": "python scripts/run_long_generation.py --execute --resume --recover-interrupted"
+    "recovery_command": "python scripts/run_long_generation.py --execute --resume --recover-interrupted",
+    "remaining_generation_calls": 0,
+    "actual_generation_calls_started": 81,
+    "observed_attempts": 80,
+    "result_review_document": "docs/LONG_GENERATION_RESULT_REVIEW_20260930_KO.md",
+    "result_review_reference": "configs/long_generation_result_review_v01.json",
+    "result_review_reference_sha256": "5c412a6d014936204d87e466785895b205c5ec69b5f5b3537378a96239e18d96",
+    "result_review": {
+      "received_at": "2026-09-30T18:55:53+09:00",
+      "source_files": {
+        "run.json": {
+          "bytes": 16116852,
+          "sha256": "e6b0587b75a08295dbabbb548bd95c078ccca1e1aa0c7383c93e8cc9534e0c19"
+        },
+        "summary.json": {
+          "bytes": 62329,
+          "sha256": "ae783decdc7fafc62b73f6f59f752d5b12b84527058c23df8c80cd3aa05587fc"
+        }
+      },
+      "source_commits": [
+        "2aef0938bdf8292ddc0423cd350a235ebe4c199a",
+        "44d4f207b61dbc11eb2df7018cddc95254d571ad"
+      ],
+      "summary_matches_recalculation": true,
+      "eos_counts": {
+        "bf16": 40,
+        "awq_w3_replay": 22
+      },
+      "censored_counts": {
+        "bf16": 0,
+        "awq_w3_replay": 18
+      },
+      "automatic_correct_counts": {
+        "bf16": 33,
+        "awq_w3_replay": 13
+      },
+      "unit_only_manual_supplement_correct_counts": {
+        "bf16": 36,
+        "awq_w3_replay": 14
+      },
+      "unit_only_manual_rows": 4,
+      "remaining_eos_format_invalid_counts": {
+        "bf16": 0,
+        "awq_w3_replay": 8
+      },
+      "manual_supplement_bf16_pass_levels": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "manual_supplement_bf16_fail_levels": [
+        5
+      ],
+      "manual_supplement_awq_all_levels": "INCONCLUSIVE",
+      "original_automatic_scores_modified": false,
+      "mean_min_length_32768": {
+        "bf16": 4005.15,
+        "awq_w3_replay": 20508.95
+      },
+      "full_awq_natural_length_mean_known": false,
+      "observed_runtime_mask_cache_trace_rows": 432,
+      "source_and_resumed_code_hashes_verified": [
+        13,
+        14
+      ],
+      "actual_user_weight_arrays_independently_loaded": false,
+      "pre_resume_backup_file_bytes_received": false,
+      "gpu_kernel_independently_reproduced": false
+    }
   },
   "long_generation_ssh_recovery": {
-    "status": "IMPLEMENTED_CPU_TESTED_USER_RECOVERY_EXECUTION_PENDING",
+    "status": "EXECUTED_COMPLETED_80_AND_REVIEWED",
     "authorization": "USER_REQUESTED_SINGLE_SSH_RECOVERY",
     "request_at": "2026-09-30T12:12:37+09:00",
     "evidence_received_at": "2026-09-30T12:17:08+09:00",
@@ -1713,6 +1785,19 @@
       "old_tests_rerun": false
     },
     "model_ready": false,
-    "h1_h2_changed": false
+    "h1_h2_changed": false,
+    "remaining_additional_generation_calls": 0,
+    "completion_review": {
+      "document": "docs/LONG_GENERATION_RESULT_REVIEW_20260930_KO.md",
+      "result_reference": "configs/long_generation_result_review_v01.json",
+      "run_sha256": "e6b0587b75a08295dbabbb548bd95c078ccca1e1aa0c7383c93e8cc9534e0c19",
+      "completed_attempts": 80,
+      "generation_calls_started": 81,
+      "first_segment_rows": 57,
+      "resumed_segment_rows": 23,
+      "first_57_matches_recorded_hash": true,
+      "separate_source_backup_bytes_received": false,
+      "abandoned_actual_generated_tokens": null
+    }
   }
 }

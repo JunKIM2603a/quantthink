@@ -1,0 +1,624 @@
+{
+  "schema_version": 1,
+  "review_id": "long_generation_result_review_v01",
+  "status": "RAW_80_RESPONSES_AND_SUMMARY_REVIEWED_EXPLORATORY_NOT_CERTIFICATION",
+  "received_at": "2026-09-30T18:55:53+09:00",
+  "reviewed_branch_head": "44d4f207b61dbc11eb2df7018cddc95254d571ad",
+  "source_files": {
+    "run.json": {
+      "bytes": 16116852,
+      "sha256": "e6b0587b75a08295dbabbb548bd95c078ccca1e1aa0c7383c93e8cc9534e0c19"
+    },
+    "summary.json": {
+      "bytes": 62329,
+      "sha256": "ae783decdc7fafc62b73f6f59f752d5b12b84527058c23df8c80cd3aa05587fc"
+    }
+  },
+  "source_commits": [
+    "2aef0938bdf8292ddc0423cd350a235ebe4c199a",
+    "44d4f207b61dbc11eb2df7018cddc95254d571ad"
+  ],
+  "source_research_status_sha256": [
+    "d72a3d8d7887521f22b49994a33bcac8de8db3c3c588433ce516eba0f88c1492",
+    "c48ccb1df3760f4785b6054c268ccb10b44690cba12e42850c768a6cff41a424"
+  ],
+  "source_config_sha256": "033f98377d1ee1c12effb3b240321366683d8584aa11006ad0c254bc0193790e",
+  "source_suite_sha256": "10fc1a73e263b1e8fa56849c27ce6748ab39bb8bea77858ada6d424dbe4ae961",
+  "source_run_sha256": "ebdf46b1068754b3c12db1bef3dad2b496c18e85209099fed965b4bd3eaacbe0",
+  "recovery_policy_sha256": "e38bb10770c977caa685544603ad4388290dd621c80650636bbef8893e749601",
+  "verification": {
+    "unique_planned_attempts": 80,
+    "all_80_original_input_ids_equal_prior_4k": true,
+    "all_generation_ids_termination_and_think_boundary_counts_checked": true,
+    "summary_exactly_matches_recalculation": true,
+    "initial_13_and_resumed_14_code_hashes_match_git": true,
+    "two_research_status_hashes_match_pinned_commits": true,
+    "fixed_packages_model_reference_parameter_hashes_match": true,
+    "r0_29_and_upstream_6_recorded_file_references_match_previous": true,
+    "installed_source_4_recorded_hashes_match_fixed_reference": true,
+    "user_physical_weight_arrays_independently_loaded": false,
+    "original_r0_checkpoint_equivalence_certified": false,
+    "full_tokenizer_redecode_performed": false,
+    "assistant_gpu_execution_performed": false,
+    "old_preparation_or_model_tests_rerun": false,
+    "user_raw_files_modified": false
+  },
+  "recovery": {
+    "completed_attempts": 80,
+    "generation_calls_started": 81,
+    "abandoned_calls": 1,
+    "first_segment_rows": 57,
+    "resumed_segment_rows": 23,
+    "resumed_physical_call_indices": [
+      59,
+      81
+    ],
+    "first_57_canonical_sha256": "f726369c8e2d6f62cdc4bc3f7521dd180286ae53e6cff0ab71ab0db10174a0ea",
+    "first_57_matches_ledger_and_segment_hash": true,
+    "original_pre_resume_backup_sha256": "e703d8edcbc0f584ba2795bbf3248a0c9a4036e3af0ceb0090df8da5198c777d",
+    "original_pre_resume_backup_bytes_received": false,
+    "abandoned_actual_generated_tokens": null,
+    "abandoned_generation_tokens_upper_bound": 32768,
+    "completed_generation_tokens": 980564,
+    "completed_plus_abandoned_token_upper_bound": 1013332,
+    "authorized_maximum_generation_calls": 81,
+    "authorized_maximum_generation_tokens": 2654208,
+    "remaining_generation_calls": 0,
+    "completed_at_utc": "2026-09-30T08:48:25.176939+00:00"
+  },
+  "runtime_trace": {
+    "attempts": 80,
+    "trace_rows": 432,
+    "mask_kind_counts": {
+      "implicit_sdpa": 432
+    },
+    "observed_masked_past_or_current_keys_nonzero": 0,
+    "all_required_reached_markers_present": true,
+    "all_nonempty_cache_28_layer_lengths_equal_past_position": true,
+    "query_position_marker_counts": {
+      "4094": 44,
+      "4095": 44,
+      "4096": 44,
+      "8191": 35,
+      "8192": 35,
+      "16383": 26,
+      "16384": 26,
+      "32767": 18
+    },
+    "maximum_observed_past_tokens": 32767,
+    "prompt_tokens_min": 59,
+    "prompt_tokens_max": 110,
+    "maximum_observed_input_plus_output_tokens": 32878,
+    "scope_ko": "사용자 실제 생성 중 Qwen2 마스크 함수 반환/cache 길이의 저장 표본을 읽어 검증. GPU kernel 내부 직접 관측이나 모든 토큰의 독립 수치 재현은 아님."
+  },
+  "arms": [
+    {
+      "arm": "bf16",
+      "attempts": 40,
+      "eos": 40,
+      "censored": 0,
+      "automatic_outcomes": {
+        "CORRECT": 33,
+        "UNSCORABLE": 3,
+        "INCORRECT": 4
+      },
+      "unit_only_manual_supplement_outcomes": {
+        "CORRECT": 36,
+        "INCORRECT": 4
+      },
+      "eos_final_format_missing_or_duplicated": 0,
+      "observed_length_min": 307,
+      "observed_length_median": 2707.0,
+      "observed_length_max": 14494,
+      "mean_min_natural_length_32768": 4005.15,
+      "all_natural_lengths_known": true,
+      "generated_tokens_known": 160206,
+      "eos_per_seed": {
+        "42": 20,
+        "43": 20
+      }
+    },
+    {
+      "arm": "awq_w3_replay",
+      "attempts": 40,
+      "eos": 22,
+      "censored": 18,
+      "automatic_outcomes": {
+        "CORRECT": 13,
+        "UNSCORABLE": 9,
+        "CENSORED": 18
+      },
+      "unit_only_manual_supplement_outcomes": {
+        "CORRECT": 14,
+        "UNSCORABLE": 8,
+        "CENSORED": 18
+      },
+      "eos_final_format_missing_or_duplicated": 8,
+      "observed_length_min": 370,
+      "observed_length_median": 30412.5,
+      "observed_length_max": 32768,
+      "mean_min_natural_length_32768": 20508.95,
+      "all_natural_lengths_known": false,
+      "generated_tokens_known": 820358,
+      "eos_per_seed": {
+        "42": 11,
+        "43": 11
+      }
+    }
+  ],
+  "budget_profiles": [
+    {
+      "budget": 4096,
+      "arm": "bf16",
+      "expected_attempts": 40,
+      "observed_attempts": 40,
+      "eos_by_budget": 25,
+      "censored_at_budget": 15,
+      "eos_rate_over_observed": 0.625,
+      "censored_rate_over_observed": 0.375,
+      "mean_min_length_budget_over_observed": 2630.325,
+      "all_40_observed": true,
+      "all_observed_natural_lengths_known": false,
+      "low_censoring_target_met": false
+    },
+    {
+      "budget": 4096,
+      "arm": "awq_w3_replay",
+      "expected_attempts": 40,
+      "observed_attempts": 40,
+      "eos_by_budget": 12,
+      "censored_at_budget": 28,
+      "eos_rate_over_observed": 0.3,
+      "censored_rate_over_observed": 0.7,
+      "mean_min_length_budget_over_observed": 3293.6,
+      "all_40_observed": true,
+      "all_observed_natural_lengths_known": false,
+      "low_censoring_target_met": false
+    },
+    {
+      "budget": 8192,
+      "arm": "bf16",
+      "expected_attempts": 40,
+      "observed_attempts": 40,
+      "eos_by_budget": 32,
+      "censored_at_budget": 8,
+      "eos_rate_over_observed": 0.8,
+      "censored_rate_over_observed": 0.2,
+      "mean_min_length_budget_over_observed": 3588.65,
+      "all_40_observed": true,
+      "all_observed_natural_lengths_known": false,
+      "low_censoring_target_met": false
+    },
+    {
+      "budget": 8192,
+      "arm": "awq_w3_replay",
+      "expected_attempts": 40,
+      "observed_attempts": 40,
+      "eos_by_budget": 13,
+      "censored_at_budget": 27,
+      "eos_rate_over_observed": 0.325,
+      "censored_rate_over_observed": 0.675,
+      "mean_min_length_budget_over_observed": 6074.825,
+      "all_40_observed": true,
+      "all_observed_natural_lengths_known": false,
+      "low_censoring_target_met": false
+    },
+    {
+      "budget": 16384,
+      "arm": "bf16",
+      "expected_attempts": 40,
+      "observed_attempts": 40,
+      "eos_by_budget": 40,
+      "censored_at_budget": 0,
+      "eos_rate_over_observed": 1.0,
+      "censored_rate_over_observed": 0.0,
+      "mean_min_length_budget_over_observed": 4005.15,
+      "all_40_observed": true,
+      "all_observed_natural_lengths_known": true,
+      "low_censoring_target_met": true
+    },
+    {
+      "budget": 16384,
+      "arm": "awq_w3_replay",
+      "expected_attempts": 40,
+      "observed_attempts": 40,
+      "eos_by_budget": 14,
+      "censored_at_budget": 26,
+      "eos_rate_over_observed": 0.35,
+      "censored_rate_over_observed": 0.65,
+      "mean_min_length_budget_over_observed": 11464.5,
+      "all_40_observed": true,
+      "all_observed_natural_lengths_known": false,
+      "low_censoring_target_met": false
+    },
+    {
+      "budget": 32768,
+      "arm": "bf16",
+      "expected_attempts": 40,
+      "observed_attempts": 40,
+      "eos_by_budget": 40,
+      "censored_at_budget": 0,
+      "eos_rate_over_observed": 1.0,
+      "censored_rate_over_observed": 0.0,
+      "mean_min_length_budget_over_observed": 4005.15,
+      "all_40_observed": true,
+      "all_observed_natural_lengths_known": true,
+      "low_censoring_target_met": true
+    },
+    {
+      "budget": 32768,
+      "arm": "awq_w3_replay",
+      "expected_attempts": 40,
+      "observed_attempts": 40,
+      "eos_by_budget": 22,
+      "censored_at_budget": 18,
+      "eos_rate_over_observed": 0.55,
+      "censored_rate_over_observed": 0.45,
+      "mean_min_length_budget_over_observed": 20508.95,
+      "all_40_observed": true,
+      "all_observed_natural_lengths_known": false,
+      "low_censoring_target_met": false
+    }
+  ],
+  "manual_supplement": {
+    "scope_ko": "EOS 종료 응답의 최종 영역을 수동 판독. 단위 꼬리4개만 별도 보완표에서 정답으로 확인. 원본 자동 점수/요약/평가기 보존. 검열·태그 중복/누락은 정답 승격하지 않음.",
+    "unit_only_rows": [
+      {
+        "problem_id": "D1-04",
+        "arm": "bf16",
+        "seed": 42,
+        "original_outcome": "UNSCORABLE",
+        "original_parse_status": "TEXT_AFTER_FINAL_BOX",
+        "manual_supplement_outcome": "CORRECT",
+        "expected_answer": "126",
+        "generated_text_sha256": "5500df8e51d1042f056a0c79a1d1171ab1d451c360e6a54f82d7ebf2c75451a1",
+        "basis_ko": "EOS로 종료한 응답의 think 종료 뒤 최종 boxed 답을 직접 읽음. 박스 뒤는 단위/설명이며 정답 번복 없음."
+      },
+      {
+        "problem_id": "D1-04",
+        "arm": "bf16",
+        "seed": 43,
+        "original_outcome": "UNSCORABLE",
+        "original_parse_status": "TEXT_AFTER_FINAL_BOX",
+        "manual_supplement_outcome": "CORRECT",
+        "expected_answer": "126",
+        "generated_text_sha256": "1d17178824befefef00816bb4b3c515164f82b1f5e73e3445d68fcbaea70771a",
+        "basis_ko": "EOS로 종료한 응답의 think 종료 뒤 최종 boxed 답을 직접 읽음. 박스 뒤는 단위/설명이며 정답 번복 없음."
+      },
+      {
+        "problem_id": "D2-01",
+        "arm": "bf16",
+        "seed": 43,
+        "original_outcome": "UNSCORABLE",
+        "original_parse_status": "TEXT_AFTER_FINAL_BOX",
+        "manual_supplement_outcome": "CORRECT",
+        "expected_answer": "78",
+        "generated_text_sha256": "06f4d3534367fb330ca14875b630311164751cd9b829d940f7cbb504609dc029",
+        "basis_ko": "EOS로 종료한 응답의 think 종료 뒤 최종 boxed 답을 직접 읽음. 박스 뒤는 단위/설명이며 정답 번복 없음."
+      },
+      {
+        "problem_id": "D1-02",
+        "arm": "awq_w3_replay",
+        "seed": 43,
+        "original_outcome": "UNSCORABLE",
+        "original_parse_status": "TEXT_AFTER_FINAL_BOX",
+        "manual_supplement_outcome": "CORRECT",
+        "expected_answer": "20",
+        "generated_text_sha256": "55fbe27fd85327259f097cbfea709c6d8be9977d58a77bbf0a328f8c23a592b3",
+        "basis_ko": "EOS로 종료한 응답의 think 종료 뒤 최종 boxed 답을 직접 읽음. 박스 뒤는 단위/설명이며 정답 번복 없음."
+      }
+    ],
+    "levels": [
+      {
+        "arm": "bf16",
+        "level": 1,
+        "outcomes": {
+          "CORRECT": 8
+        },
+        "stable_problems": 4,
+        "stable_problem_ids": [
+          "D1-01",
+          "D1-02",
+          "D1-03",
+          "D1-04"
+        ],
+        "verdict_with_unit_only_manual_supplement": "PASS",
+        "original_automatic_verdict": "INCONCLUSIVE"
+      },
+      {
+        "arm": "bf16",
+        "level": 2,
+        "outcomes": {
+          "CORRECT": 7,
+          "INCORRECT": 1
+        },
+        "stable_problems": 3,
+        "stable_problem_ids": [
+          "D2-01",
+          "D2-02",
+          "D2-04"
+        ],
+        "verdict_with_unit_only_manual_supplement": "PASS",
+        "original_automatic_verdict": "INCONCLUSIVE"
+      },
+      {
+        "arm": "bf16",
+        "level": 3,
+        "outcomes": {
+          "CORRECT": 8
+        },
+        "stable_problems": 4,
+        "stable_problem_ids": [
+          "D3-01",
+          "D3-02",
+          "D3-03",
+          "D3-04"
+        ],
+        "verdict_with_unit_only_manual_supplement": "PASS",
+        "original_automatic_verdict": "PASS"
+      },
+      {
+        "arm": "bf16",
+        "level": 4,
+        "outcomes": {
+          "CORRECT": 8
+        },
+        "stable_problems": 4,
+        "stable_problem_ids": [
+          "D4-01",
+          "D4-02",
+          "D4-03",
+          "D4-04"
+        ],
+        "verdict_with_unit_only_manual_supplement": "PASS",
+        "original_automatic_verdict": "PASS"
+      },
+      {
+        "arm": "bf16",
+        "level": 5,
+        "outcomes": {
+          "CORRECT": 5,
+          "INCORRECT": 3
+        },
+        "stable_problems": 2,
+        "stable_problem_ids": [
+          "D5-02",
+          "D5-03"
+        ],
+        "verdict_with_unit_only_manual_supplement": "FAIL",
+        "original_automatic_verdict": "FAIL"
+      },
+      {
+        "arm": "awq_w3_replay",
+        "level": 1,
+        "outcomes": {
+          "CORRECT": 7,
+          "UNSCORABLE": 1
+        },
+        "stable_problems": 3,
+        "stable_problem_ids": [
+          "D1-02",
+          "D1-03",
+          "D1-04"
+        ],
+        "verdict_with_unit_only_manual_supplement": "INCONCLUSIVE",
+        "original_automatic_verdict": "INCONCLUSIVE"
+      },
+      {
+        "arm": "awq_w3_replay",
+        "level": 2,
+        "outcomes": {
+          "CORRECT": 4,
+          "UNSCORABLE": 1,
+          "CENSORED": 3
+        },
+        "stable_problems": 1,
+        "stable_problem_ids": [
+          "D2-04"
+        ],
+        "verdict_with_unit_only_manual_supplement": "INCONCLUSIVE",
+        "original_automatic_verdict": "INCONCLUSIVE"
+      },
+      {
+        "arm": "awq_w3_replay",
+        "level": 3,
+        "outcomes": {
+          "CENSORED": 4,
+          "UNSCORABLE": 1,
+          "CORRECT": 3
+        },
+        "stable_problems": 1,
+        "stable_problem_ids": [
+          "D3-04"
+        ],
+        "verdict_with_unit_only_manual_supplement": "INCONCLUSIVE",
+        "original_automatic_verdict": "INCONCLUSIVE"
+      },
+      {
+        "arm": "awq_w3_replay",
+        "level": 4,
+        "outcomes": {
+          "CENSORED": 6,
+          "UNSCORABLE": 2
+        },
+        "stable_problems": 0,
+        "stable_problem_ids": [],
+        "verdict_with_unit_only_manual_supplement": "INCONCLUSIVE",
+        "original_automatic_verdict": "INCONCLUSIVE"
+      },
+      {
+        "arm": "awq_w3_replay",
+        "level": 5,
+        "outcomes": {
+          "UNSCORABLE": 3,
+          "CENSORED": 5
+        },
+        "stable_problems": 0,
+        "stable_problem_ids": [],
+        "verdict_with_unit_only_manual_supplement": "INCONCLUSIVE",
+        "original_automatic_verdict": "INCONCLUSIVE"
+      }
+    ],
+    "eos_final_format_invalid_rows": [
+      {
+        "problem_id": "D1-01",
+        "arm": "awq_w3_replay",
+        "seed": 43,
+        "generated_tokens": 31337,
+        "think_close_count": 0,
+        "boxed_count": 0,
+        "generated_text_sha256": "0deea722aa49f6c9e528c349cdf73fe34b173aee1281ff1c0670854cdd26e377",
+        "assessment_ko": "EOS 관측. 종료 전 끝부분 반복을 직접 확인했고 고정 최종답 형식을 충족하지 못함. 수동 정답으로 승격하지 않음."
+      },
+      {
+        "problem_id": "D2-01",
+        "arm": "awq_w3_replay",
+        "seed": 43,
+        "generated_tokens": 29488,
+        "think_close_count": 2,
+        "boxed_count": 3,
+        "generated_text_sha256": "ae30c6ac60a786d12c8edff54497923aac69921f614853abdc34976dba5e9090",
+        "assessment_ko": "think 닫힘 두 번. 마지막 명시적 boxed 값7은 정답78과 다름. 엄격 형식 UNSCORABLE을 보존하고 최종값 오류 관찰을 별도 기록.",
+        "last_explicit_box_value": "7",
+        "expected_answer": "78"
+      },
+      {
+        "problem_id": "D3-02",
+        "arm": "awq_w3_replay",
+        "seed": 42,
+        "generated_tokens": 31378,
+        "think_close_count": 0,
+        "boxed_count": 0,
+        "generated_text_sha256": "30dfbb2eda42c1eddc97ba4f51352d592e6e1229b13ac55f3e86e1ab21fffeaf",
+        "assessment_ko": "EOS 관측. 종료 전 끝부분 반복을 직접 확인했고 고정 최종답 형식을 충족하지 못함. 수동 정답으로 승격하지 않음."
+      },
+      {
+        "problem_id": "D4-03",
+        "arm": "awq_w3_replay",
+        "seed": 42,
+        "generated_tokens": 17018,
+        "think_close_count": 0,
+        "boxed_count": 0,
+        "generated_text_sha256": "299df6addd0eaefbe1128e99355e402ba5529bab506642d098c805288159ec85",
+        "assessment_ko": "EOS 관측. 종료 전 끝부분 반복을 직접 확인했고 고정 최종답 형식을 충족하지 못함. 수동 정답으로 승격하지 않음."
+      },
+      {
+        "problem_id": "D4-03",
+        "arm": "awq_w3_replay",
+        "seed": 43,
+        "generated_tokens": 24798,
+        "think_close_count": 0,
+        "boxed_count": 0,
+        "generated_text_sha256": "d2b884a128d3ed7947202cef950263b9af02d952adb13440ae226e9c9915d6eb",
+        "assessment_ko": "EOS 관측. 종료 전 끝부분 반복을 직접 확인했고 고정 최종답 형식을 충족하지 못함. 수동 정답으로 승격하지 않음."
+      },
+      {
+        "problem_id": "D5-01",
+        "arm": "awq_w3_replay",
+        "seed": 42,
+        "generated_tokens": 19930,
+        "think_close_count": 0,
+        "boxed_count": 0,
+        "generated_text_sha256": "15a2da1f6aa75d1dd32a14c1f44f4b323c08c20db285f061d0ccabeea8404205",
+        "assessment_ko": "EOS 관측. 종료 전 끝부분 반복을 직접 확인했고 고정 최종답 형식을 충족하지 못함. 수동 정답으로 승격하지 않음."
+      },
+      {
+        "problem_id": "D5-01",
+        "arm": "awq_w3_replay",
+        "seed": 43,
+        "generated_tokens": 16834,
+        "think_close_count": 0,
+        "boxed_count": 0,
+        "generated_text_sha256": "0df21ee2bc1620470ce9d5a8e21be6db678d7e4196e413d39260ea82b1d39fdd",
+        "assessment_ko": "EOS 관측. 종료 전 끝부분 반복을 직접 확인했고 고정 최종답 형식을 충족하지 못함. 수동 정답으로 승격하지 않음."
+      },
+      {
+        "problem_id": "D5-04",
+        "arm": "awq_w3_replay",
+        "seed": 43,
+        "generated_tokens": 27155,
+        "think_close_count": 0,
+        "boxed_count": 0,
+        "generated_text_sha256": "ce27524f3d6c6bcc3c77b123d728b783d327f1227edbf83a1201146f7037af07",
+        "assessment_ko": "EOS 관측. 종료 전 끝부분 반복을 직접 확인했고 고정 최종답 형식을 충족하지 못함. 수동 정답으로 승격하지 않음."
+      }
+    ],
+    "automatic_incorrect_rows_confirmed": [
+      {
+        "problem_id": "D2-03",
+        "arm": "bf16",
+        "seed": 43,
+        "final_answer": "9/10",
+        "expected_answer": "7/10"
+      },
+      {
+        "problem_id": "D5-01",
+        "arm": "bf16",
+        "seed": 43,
+        "final_answer": "7274487",
+        "expected_answer": "23940"
+      },
+      {
+        "problem_id": "D5-04",
+        "arm": "bf16",
+        "seed": 42,
+        "final_answer": "31/144",
+        "expected_answer": "11/72"
+      },
+      {
+        "problem_id": "D5-04",
+        "arm": "bf16",
+        "seed": 43,
+        "final_answer": "77/180",
+        "expected_answer": "11/72"
+      }
+    ],
+    "gold_checks_for_observed_incorrect_problems": {
+      "D2-03": "7/10:36개 순서쌍 열거",
+      "D5-01": "23940:8개 다항식의 정수 계수 합성",
+      "D5-04": "11/72:5040개 순열 중 조건부4320개/유리660개 열거"
+    }
+  },
+  "paired_capped_lengths": {
+    "pairs": 40,
+    "awq_greater": 38,
+    "equal": 0,
+    "awq_shorter": 2,
+    "mean_delta_awq_minus_bf16": 16503.8,
+    "ratio_of_means_awq_over_bf16": 5.120644669987391,
+    "interpretation_ko": "32768상한의 관측 출력 토큰 수 비교. AWQ18개가 검열돼 전체 자연 종료 길이 평균/비율이 아님. 모집단/H1 검정은 하지 않음."
+  },
+  "throughput": {
+    "bf16": {
+      "measured_attempts": 40,
+      "elapsed_generation_seconds": 4808.764007151127,
+      "generated_tokens_including_eos": 160206,
+      "tokens_per_generation_second": 33.31542154319846,
+      "scope": "batch=1 생성 호출 시간; 로딩/recipe 재적용/파일 저장 제외. native low-bit 성능 아님."
+    },
+    "awq_w3_replay": {
+      "measured_attempts": 40,
+      "elapsed_generation_seconds": 25167.05410466343,
+      "generated_tokens_including_eos": 820358,
+      "tokens_per_generation_second": 32.59650480299911,
+      "scope": "batch=1 생성 호출 시간; 로딩/recipe 재적용/파일 저장 제외. native low-bit 성능 아님."
+    }
+  },
+  "comparison_to_4k": {
+    "same_problem_input_ids": true,
+    "same_resolved_generation_settings_except_max_new_tokens": true,
+    "effective_sliding_window_changed_from": 4096,
+    "effective_sliding_window_changed_to": null,
+    "shared_recorded_runtime_flags_equal": true,
+    "newly_recorded_runtime_flag": {
+      "cudnn_allow_tf32": false
+    },
+    "old_cudnn_flag_value_not_recorded": true,
+    "pure_token_cap_causal_effect_estimated": false,
+    "same_new_32k_trajectory_budget_slices_used": true
+  },
+  "scope_ko": "자체20문제/2시드의 탐색. 독립 MATH 난도경계·기능적 동등성·원인 확증·H1/H2 판정으로 사용하지 않음.",
+  "model_ready": false,
+  "session02_exit_criteria_met": false,
+  "next_step_ko": "32K 결과를 고정하고 좌표 변환의 기능적 수락 점검과 독립 확인 지표를 결정한다. 준비된16문맥96회는 별도 실행 승인 전이며 현 결과로 자동 실행/64K 증액하지 않음."
+}

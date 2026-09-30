@@ -1,12 +1,12 @@
-# 세션 02 인계 — 32K 완료57개 보고·SSH 복구 준비
+# 세션 02 인계 — 32K 원본80개 검토 완료·기능적 수락 미완료
 
 **현재 세션 이름: QuantThink 02 — 환경 구축·BF16/AWQ 재현**
 
-최신 상태: [32K SSH 복구](LONG_GENERATION_SSH_RECOVERY_20260930_KO.md)를 따른다. 사용자 터미널의 완료57개·시작58회·D3-01/AWQ/seed43 미완료를 근거로 한 건 복구를 준비했다. 새 CPU 검사11개 통과, 사용자 GPU 재개 대기다. 원본/57개를 보존하고 중단1회를 소비 기록한 뒤 남은23개를 생성하며 합산최대81회·2,654,208토큰으로 제한한다. 이32K 원본/생성ID는 아직 받지 않았다.
+최신 상태: [32K 결과 검토](LONG_GENERATION_RESULT_REVIEW_20260930_KO.md)를 완료했다. 첨부 원본80개에서 요약 재계산이 정확히 일치하고 SSH복구57+23·물리81회 기록을 확인했다. BF16 EOS40/40·AWQ22/40, AWQ18개는32K 검열이다. 단위 표현4개 수동 보완 후 정답 확인은36/40·14/40이며 BF16 D1~D4 PASS·D5 FAIL, AWQ 전단계 INCONCLUSIVE다. 원래 자동 점수는 보존했다. 432개 생성 마스크/cache 표본을 검토했지만 기능적 동등성·원인은 미확정이다. 세션02·model_ready=false를 유지한다.
 
 새 채팅에서도 세션 02를 계속한다. 세션 01은 명시적 사용자 승인으로 완료됐고, 이후 R0 실행 결과 요약도 제출됐다. 초기 검토는 [R0 결과 검토](R0_RESULT_REVIEW_20260929_KO.md), 최신 상세 값은 [상세 요약 검토](R0_DETAIL_REVIEW_20260929_KO.md), 승인 범위는 [승인 기록](R0_APPROVAL_20260929_KO.md)을 따른다.
 
-이후 자체 난도20문제의80개 응답 요약과 원본/백업 묶음을 받아 [최신 원본 근거 검토](DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md)를 기록했다. [설치 코드의 CPU 마스크](SDPA_MASK_REVIEW_20260929_KO.md), [고정 prefix12회](FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md), [사용자 로컬 CPU 감사](LOGITS_AUDIT_REVIEW_20260930_KO.md), [종료 prefix6회](TERMINATION_PREFIX_RESULT_REVIEW_20260930_KO.md) 보고도 검토했다. 그 뒤 [설계안](SESSION02_ACCEPTANCE_DESIGN_20260930_KO.md)을 구체화하여 **[새16문맥 좌표 점검](FUNCTIONAL_HOLDOUT_V01_KO.md)의 입력·수락 규칙·예산·실행기를 준비**했다. 새 CPU 검사8개가 통과했으며 실제 GPU 실행은 미승인·미실행이다. 이후 사용자가 상한 확대 재시험을 요청하여 새96회는 미승인 보류하고 [32K·전체 문맥80응답 재시험](LONG_GENERATION_V01_KO.md)을 우선한다. 기존12회/6회 예산은 소진됐고 같은 실행을 반복하지 않는다. [목적·방법·결과의 쉬운 설명](SESSION02_EXPLAINED_20260930_KO.md)을 함께 참고한다. 아래 R0 결과와 후속 결과를 구분한다.
+이후 자체 난도20문제의80개 응답 요약과 원본/백업 묶음을 받아 [최신 원본 근거 검토](DIFFICULTY_EVIDENCE_REVIEW_20260929_KO.md)를 기록했다. [설치 코드의 CPU 마스크](SDPA_MASK_REVIEW_20260929_KO.md), [고정 prefix12회](FIXED_PREFIX_RESULT_REVIEW_20260930_KO.md), [사용자 로컬 CPU 감사](LOGITS_AUDIT_REVIEW_20260930_KO.md), [종료 prefix6회](TERMINATION_PREFIX_RESULT_REVIEW_20260930_KO.md) 보고도 검토했다. 그 뒤 [설계안](SESSION02_ACCEPTANCE_DESIGN_20260930_KO.md)을 구체화하여 **[새16문맥 좌표 점검](FUNCTIONAL_HOLDOUT_V01_KO.md)의 입력·수락 규칙·예산·실행기를 준비**했다. 새 CPU 검사8개가 통과했으며 실제 GPU 실행은 미승인·미실행이다. 이후 사용자가 상한 확대 재시험을 요청하여 새96회는 미승인 보류하고 [32K·전체 문맥80응답 재시험](LONG_GENERATION_V01_KO.md)을 우선 실행했고 이후 원본80개와 요약 검토를 완료했다. 기존12회/6회 예산은 소진됐고 같은 실행을 반복하지 않는다. [목적·방법·결과의 쉬운 설명](SESSION02_EXPLAINED_20260930_KO.md)을 함께 참고한다. 아래 R0 결과와 후속 결과를 구분한다.
 
 ## R0 인계 기록과 최신 준비 상태
 
@@ -21,7 +21,7 @@
 | model_ready | false |
 | 후속 상태 | R1·확증·KL 매칭·장문맥·H1/H2·7B 미실행 |
 | 다음 세션 | 03 전환 조건 미충족. 세션 02 유지 |
-| 최신 준비 | 32K 완료57개·시작58회 사용자 보고, 제한 SSH 복구·CPU11검사 완료, 재개 실행 대기 |
+| 최신 결과 | 32K 원본80개·요약·SSH복구57+23/물리81회 검토 완료, BF16 EOS40·AWQ22/40, 세션02 유지 |
 
 원본 run.json·계층 파일·전체 생성 ID를 이 환경에서 읽은 것은 아니다. 보고의 후보·정책·고정 자료 참조·당시 연구 상태 해시를 실행 commit에 대조했다. 준비 보고 해시는 앞서 제출된 전체 내용의 구조 재구성과 일치했다. 현재 상태 문서는 갱신되므로 과거 실행의 연구 상태 해시는 해당 실행 commit과 비교한다.
 
@@ -72,6 +72,8 @@ B/S/Q/C/Cw 실행기 후보를 준비했다. D2-03/D3-01 BF16 seed42의 생성 �
 - AGENTS.md
 - docs/research_status.json
 - docs/SESSION_PLAN.md
+- docs/LONG_GENERATION_RESULT_REVIEW_20260930_KO.md
+- configs/long_generation_result_review_v01.json
 - docs/LONG_GENERATION_SSH_RECOVERY_20260930_KO.md
 - configs/long_generation_ssh_recovery_v01.json
 - docs/R0_APPROVAL_20260929_KO.md
@@ -203,7 +205,7 @@ B/S·Q/C·C/Cw마다 평균TV≤.01·개별위치최대TV≤.05·최종답4문�
 B/Q는 수락대상이 아니고 과거 결과를 소급 PASS로 바꾸지 않는다.
 입력·판정·예산·승인차단의 새CPU검사8개 통과, 실제tokenizer/GPU미실행이다.
 functional_holdout.authorization=PENDING·remaining_forward_calls=0이다.
-그 뒤 사용자가 토큰 상한 확대 재시험을 요청했다. 현재 다음은 LONG_GENERATION_SSH_RECOVERY_20260930_KO.md의32K 부분 실행 복구다.
+그 뒤 사용자가 토큰 상한 확대 재시험을 요청했다. 32K 실행과SSH복구는완료됐고 LONG_GENERATION_RESULT_REVIEW_20260930_KO.md에원본80개검토를기록했다. 다음은기능적수락·독립확인기준결정이다.
 새96회는 미승인 보류이며 기존R0/12회/6회승인을 재요청하지 않는다.
 미래 생성 결과의 주 지표·의미 있는 차이·검정력·독립 표본 설계는 별도로 남아 있다.
 쉬운 설명은 SESSION02_EXPLAINED_20260930_KO.md를 따른다.
@@ -226,14 +228,22 @@ termination_prefix추가6회는보고검토완료·잔여예산0이다. 같은�
 새16문맥 프로토콜은 미승인 보류다. 별도 사용자 요청의long_generation_v01은
 기존20문제×2모델×2시드80응답·32768 출력상한·최대2621440생성토큰이다.
 양쪽window=None/use_cache=true, 동일경로4K/8K/16K/32K 집계를한다.
-최초 코드·CPU9검사 후 사용자가 GPU 실행을 시작했다. 최신 터미널에는완료57개·시작58회,
-D3-01/awq_w3_replay/seed43의active_attempt와error=null이있고pgrep일치행은없다.
-SSH 단절이의심되며이32K 원본run.json/생성ID는미수신이다.
-복구코드·새CPU11검사완료, --execute --resume --recover-interrupted로같은폴더에서재개한다.
-원본바이트백업·57개보존·미완료1회소비기록을남기고23개만생성한다.
-별도추가1회/32768토큰, 합산최대81회/2654208토큰. 원래80회설정을소급변경하지않는다.
-재개실행은아직미확인이고저장된57개만으로정답/EOS/길이판정을하지마라.
-기존difficulty_v01결과와results/local/long_generation_v01의완료분을보존한다.
+최초32K 실행뒤57개완료·58회시작에서SSH단절을보고받아복구했다.
+이후run(2).json과summary(1).json을받아원본80개와요약검토를완료했다.
+run SHA-256: e6b0587b75a08295dbabbb548bd95c078ccca1e1aa0c7383c93e8cc9534e0c19
+summary SHA-256: ae783decdc7fafc62b73f6f59f752d5b12b84527058c23df8c80cd3aa05587fc
+최초commit2aef093/재개44d4f20의코드13/14개·당시연구상태·입력80개·종료ID·요약전체일치.
+첫57개hash가원장/재개기록과일치하며재개23개물리호출59~81을확인했다. 별도백업바이트는미첨부다.
+중단1회소비는미상으로보존, 합산81회완료·잔여예산0이다. 다시실행하지마라.
+BF16 EOS40/40·AWQ22/40, AWQ18개32K검열. 자동정답33/13, 수동단위4건보완후36/14다.
+AWQ EOS중7개는최종답경계/박스없고1개는think경계중복과끝의오답7이다. 원래형식분류는보존한다.
+수동보완난도표BF16 D1~D4 PASS·D5 FAIL, AWQ전단계INCONCLUSIVE. 자체표본의운영판정이다.
+자동요약은수정하지않았다. 검열18개/형식미충족8개를자동오답또는정답으로바꾸지마라.
+관측평균토큰4005.15/20508.95(약5.12배)는32768상한지표이며AWQ전체자연길이평균은미확정이다.
+실제생성마스크/cache저장표본432행의도달경계누락·과거키차단·28계층길이불일치없음.
+GPU kernel내부독립재현/가중치배열/원R0체크포인트동등성을확인한것은아니다.
+기능적수락·평가기일반타당도·독립확인기준이남아세션02/model_ready=false/H1H2미검증유지.
+기존32K결과를보존하고다음은준비된16문맥96회/생성0점검의범위결정이다. 현재미승인상태를유지한다.
 과거결과대비차이를상한만의인과효과로쓰지마라. 같은상한확대요청의승인을다시묻지마라.
 자체 난도 시험과 이번 진단의 범위는 각각의 승인/요청 기록을 따른다. 그 밖의 자동 예산 확대·R1·MATH-500·
 KL 매칭·장문맥·H1/H2·7B는 현재 범위에 포함되지 않는다.
