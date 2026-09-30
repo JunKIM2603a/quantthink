@@ -1,6 +1,8 @@
-# 세션 02 인계 — 사용자 요청32K 재시험 준비 완료
+# 세션 02 인계 — 32K 완료57개 보고·SSH 복구 준비
 
 **현재 세션 이름: QuantThink 02 — 환경 구축·BF16/AWQ 재현**
+
+최신 상태: [32K SSH 복구](LONG_GENERATION_SSH_RECOVERY_20260930_KO.md)를 따른다. 사용자 터미널의 완료57개·시작58회·D3-01/AWQ/seed43 미완료를 근거로 한 건 복구를 준비했다. 새 CPU 검사11개 통과, 사용자 GPU 재개 대기다. 원본/57개를 보존하고 중단1회를 소비 기록한 뒤 남은23개를 생성하며 합산최대81회·2,654,208토큰으로 제한한다. 이32K 원본/생성ID는 아직 받지 않았다.
 
 새 채팅에서도 세션 02를 계속한다. 세션 01은 명시적 사용자 승인으로 완료됐고, 이후 R0 실행 결과 요약도 제출됐다. 초기 검토는 [R0 결과 검토](R0_RESULT_REVIEW_20260929_KO.md), 최신 상세 값은 [상세 요약 검토](R0_DETAIL_REVIEW_20260929_KO.md), 승인 범위는 [승인 기록](R0_APPROVAL_20260929_KO.md)을 따른다.
 
@@ -19,7 +21,7 @@
 | model_ready | false |
 | 후속 상태 | R1·확증·KL 매칭·장문맥·H1/H2·7B 미실행 |
 | 다음 세션 | 03 전환 조건 미충족. 세션 02 유지 |
-| 최신 준비 | 사용자 요청32K·80응답 재시험 구현·CPU9검사 완료, 사용자 GPU 실행 전 |
+| 최신 준비 | 32K 완료57개·시작58회 사용자 보고, 제한 SSH 복구·CPU11검사 완료, 재개 실행 대기 |
 
 원본 run.json·계층 파일·전체 생성 ID를 이 환경에서 읽은 것은 아니다. 보고의 후보·정책·고정 자료 참조·당시 연구 상태 해시를 실행 commit에 대조했다. 준비 보고 해시는 앞서 제출된 전체 내용의 구조 재구성과 일치했다. 현재 상태 문서는 갱신되므로 과거 실행의 연구 상태 해시는 해당 실행 commit과 비교한다.
 
@@ -55,7 +57,7 @@ B/S/Q/C/Cw 실행기 후보를 준비했다. D2-03/D3-01 BF16 seed42의 생성 �
 
 최신 근거: review_evidence_v01.json, SHA-256 f9e30e7ad4b7638689e62a4f9f3368d61b5ac21d735a60cb08054019757baad4. 원본 ID/텍스트·재개 백업을 직접 대조했으며 검사 결과는 configs/difficulty_evidence_review_v01.json에 있다. 추가 첨부 sdpa_mask_review_v01.json의 SHA-256은 bd18f808619c03859653d43c6ad956f3aea7c9d816a27e8387ff0b7fe3b81b0c이며 설치 코드의 CPU 마스크 확인을 완료했다. 최신 fixed_prefix_v01/run.json의 SHA-256은68ff918d9c4b9a43ae154b1d08b2e5fcc93028d66d1fe67d4338001094097fb7이다. CPU 감사 파일도 수신했다. SHA-256은266ff9aedcd99f95d64f5a7e4e85a0963b4ec3686f4d46dab166f0eb5d4bccd1이며 사용자 로컬12개배열/10비교일치 보고·해시/집계를 대조했다. EOS는 모든 상태의258위치에서 수학적 top-p 후보 밖이다. B/Q 후보 집합62곳 차이·고유1위 역전18곳, 좌표 관련argmax5건은모두최댓값집합교집합을 확인했다. 원시 .npy/가중치를 이 환경에서 직접 읽은 것은 아니다. 같은 CPU 감사 재실행은 필요 없다.
 
-종료 prefix6회는 승인 후 commit b57d9d7에서 완료한 보고를 받았다. 첨부 SHA-256은9ff8b7b828b6d1c25e2664d85a0bae8bbb2ef2746d83b56e947f313e32c426f0이다. 코드12개·설정·실행 당시 연구 상태·입력2개·6회/4비교와 내부 집계가 일치한다. 문맥2495·처리입력14970·새 생성0이며 B 반복 정확 일치로 보고됐다. BF16 종료 직전 문맥의 필터 후 EOS는 B/Q 모두1, 동일길이 AWQ 문맥은 양쪽0이다. 경로 의존 관측이며 원인 확증·기능적 동등성은 아니다. 원시 .npy/가중치는 직접 받지 않았다. authorization=APPROVED는 당시 기록이며 remaining_forward_calls=0이다. 같은6회/계획/CPU 감사는 반복하지 않는다. 이후 FUNCTIONAL_HOLDOUT_V01_KO.md의 새16문맥·최대96회 점검을 준비했고 현재 새 실행 승인 여부 결정 단계다.
+종료 prefix6회는 승인 후 commit b57d9d7에서 완료한 보고를 받았다. 첨부 SHA-256은9ff8b7b828b6d1c25e2664d85a0bae8bbb2ef2746d83b56e947f313e32c426f0이다. 코드12개·설정·실행 당시 연구 상태·입력2개·6회/4비교와 내부 집계가 일치한다. 문맥2495·처리입력14970·새 생성0이며 B 반복 정확 일치로 보고됐다. BF16 종료 직전 문맥의 필터 후 EOS는 B/Q 모두1, 동일길이 AWQ 문맥은 양쪽0이다. 경로 의존 관측이며 원인 확증·기능적 동등성은 아니다. 원시 .npy/가중치는 직접 받지 않았다. authorization=APPROVED는 당시 기록이며 remaining_forward_calls=0이다. 같은6회/계획/CPU 감사는 반복하지 않는다. 이후 FUNCTIONAL_HOLDOUT_V01_KO.md의 새16문맥·최대96회 점검을 준비했고 당시 새 실행 승인 여부 결정 단계였으며 지금은 미승인 보류하고32K 재시험 복구를 우선한다.
 
 아래 내용을 그대로 복사한다.
 
@@ -70,6 +72,8 @@ B/S/Q/C/Cw 실행기 후보를 준비했다. D2-03/D3-01 BF16 seed42의 생성 �
 - AGENTS.md
 - docs/research_status.json
 - docs/SESSION_PLAN.md
+- docs/LONG_GENERATION_SSH_RECOVERY_20260930_KO.md
+- configs/long_generation_ssh_recovery_v01.json
 - docs/R0_APPROVAL_20260929_KO.md
 - docs/R0_RESULT_REVIEW_20260929_KO.md
 - docs/HANDOFF_01_TO_02_KO.md
@@ -199,7 +203,7 @@ B/S·Q/C·C/Cw마다 평균TV≤.01·개별위치최대TV≤.05·최종답4문�
 B/Q는 수락대상이 아니고 과거 결과를 소급 PASS로 바꾸지 않는다.
 입력·판정·예산·승인차단의 새CPU검사8개 통과, 실제tokenizer/GPU미실행이다.
 functional_holdout.authorization=PENDING·remaining_forward_calls=0이다.
-그 뒤 사용자가 토큰 상한 확대 재시험을 요청했다. 현재 다음은 LONG_GENERATION_V01_KO.md의32K/80응답 실행이다.
+그 뒤 사용자가 토큰 상한 확대 재시험을 요청했다. 현재 다음은 LONG_GENERATION_SSH_RECOVERY_20260930_KO.md의32K 부분 실행 복구다.
 새96회는 미승인 보류이며 기존R0/12회/6회승인을 재요청하지 않는다.
 미래 생성 결과의 주 지표·의미 있는 차이·검정력·독립 표본 설계는 별도로 남아 있다.
 쉬운 설명은 SESSION02_EXPLAINED_20260930_KO.md를 따른다.
@@ -222,8 +226,14 @@ termination_prefix추가6회는보고검토완료·잔여예산0이다. 같은�
 새16문맥 프로토콜은 미승인 보류다. 별도 사용자 요청의long_generation_v01은
 기존20문제×2모델×2시드80응답·32768 출력상한·최대2621440생성토큰이다.
 양쪽window=None/use_cache=true, 동일경로4K/8K/16K/32K 집계를한다.
-코드·새CPU검사9개·요청범위기록완료, 실제GPU실행전이다.
-기존difficulty_v01결과를보존하고results/local/long_generation_v01에새로저장한다.
+최초 코드·CPU9검사 후 사용자가 GPU 실행을 시작했다. 최신 터미널에는완료57개·시작58회,
+D3-01/awq_w3_replay/seed43의active_attempt와error=null이있고pgrep일치행은없다.
+SSH 단절이의심되며이32K 원본run.json/생성ID는미수신이다.
+복구코드·새CPU11검사완료, --execute --resume --recover-interrupted로같은폴더에서재개한다.
+원본바이트백업·57개보존·미완료1회소비기록을남기고23개만생성한다.
+별도추가1회/32768토큰, 합산최대81회/2654208토큰. 원래80회설정을소급변경하지않는다.
+재개실행은아직미확인이고저장된57개만으로정답/EOS/길이판정을하지마라.
+기존difficulty_v01결과와results/local/long_generation_v01의완료분을보존한다.
 과거결과대비차이를상한만의인과효과로쓰지마라. 같은상한확대요청의승인을다시묻지마라.
 자체 난도 시험과 이번 진단의 범위는 각각의 승인/요청 기록을 따른다. 그 밖의 자동 예산 확대·R1·MATH-500·
 KL 매칭·장문맥·H1/H2·7B는 현재 범위에 포함되지 않는다.

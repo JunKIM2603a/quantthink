@@ -18,6 +18,7 @@ from long_generation_contracts import (
 )
 from difficulty_pilot_contracts import prompt_for
 from difficulty_pilot_resume import output_lock, backup_before_resume, ProgressReporter, attempt_key
+from long_generation_recovery import resume_candidate, verify_backup
 
 
 def execute(args, cfg, suite, runtime, status):
@@ -25,10 +26,14 @@ def execute(args, cfg, suite, runtime, status):
     if args.output_dir.is_symlink():
         raise ValueError('출력 폴더는 심볼릭 링크일 수 없습니다.')
     if args.resume:
-        previous = json.loads((args.output_dir / 'run.json').read_text())
-        if not validate_resume(previous, cfg, suite)['remaining']:
-            print('80개 완료 기록 보존. 모델을 로드하지 않고 종료합니다.', flush=True)
-            return previous
+        with output_lock(args.output_dir, resume=True):
+            previous = resume_candidate(args.output_dir / 'run.json', cfg, suite, status, hashes,
+                                        recover=args.recover_interrupted)
+            preview = validate_resume(previous, cfg, suite)
+            if not preview['remaining']:
+                print('80개 완료 기록 보존. 모델을 로드하지 않고 종료합니다.', flush=True)
+                return previous
+            print(f"재개 검사 완료: 저장 {preview['completed']}개 보존 / 남은 {preview['remaining']}개.", flush=True)
     elif args.output_dir.exists():
         raise FileExistsError('결과 폴더가 있습니다. 완료분 재개는 --execute --resume을 사용하세요.')
     if file_hash(args.source_run) != cfg['source_run_sha256']:
@@ -112,14 +117,19 @@ def execute(args, cfg, suite, runtime, status):
         'mask_trace_scope_ko': '실제 생성의 고정 Qwen2 마스크 함수 반환·cache 길이 표본. CUDA SDPA kernel 내부 관찰이나 수치 동등성 검증은 아님.'}
     with output_lock(args.output_dir, resume=args.resume):
         if args.resume:
-            report = json.loads((args.output_dir / 'run.json').read_text())
+            report = resume_candidate(args.output_dir / 'run.json', cfg, suite, status, hashes,
+                                      recover=args.recover_interrupted)
             plan = validate_resume(report, cfg, suite)
+            if not plan['remaining']:
+                return report
             verify_resume_runtime(report, current, inputs)
             backup = backup_before_resume(args.output_dir / 'run.json')
+            verify_backup(report, args.output_dir, cfg, suite)
         else:
             report, backup = current, None
             plan = validate_resume(report, cfg, suite)
         segment = {'started_at_utc': datetime.now(timezone.utc).isoformat(), 'repository': repository,
+                   'implementation_sha256': hashes,
                    'research_status_sha256': canonical_hash(status), 'completed_at_start': plan['completed'],
                    'completed_attempts_sha256': plan['completed_attempts_sha256'], 'backup': backup}
         report['execution_segments'].append(segment)
@@ -201,6 +211,7 @@ def execute(args, cfg, suite, runtime, status):
                         row = {'problem_id': problem['id'], 'arm': arm, 'seed': seed, 'level': problem['level'],
                                'input_ids': ids, 'input_ids_sha256': canonical_hash(ids), 'input_token_count': len(ids),
                                'prompt_sha256': canonical_hash(prompt_for(suite, problem)),
+                               'generation_call_index': report['generation_calls_started'],
                                'execution_segment_index': len(report['execution_segments']) - 1}
                         tensor = torch.tensor([ids], device=device, dtype=torch.long)
                         torch.manual_seed(seed)
@@ -260,6 +271,8 @@ def main(argv=None):
     group.add_argument('--execute', action='store_true')
     group.add_argument('--plan', action='store_true')
     parser.add_argument('--resume', action='store_true', help='응답 사이에서 멈춘 완료 기록만 재개')
+    parser.add_argument('--recover-interrupted', action='store_true',
+                        help='사용자가 보고한 57완료/58시작 SSH 단절 한 건만 기록·복구')
     parser.add_argument('--max-attempts', type=int, default=80, help='이번 호출에서 완료할 응답 수. 1~80, 응답 사이에서 멈춤')
     parser.add_argument('--source-run', type=Path, default=ROOT / 'results/local/difficulty_v01/run.json')
     parser.add_argument('--r0-dir', type=Path, default=ROOT / 'results/local/r0_v03')
@@ -268,6 +281,8 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         cfg, suite, runtime = load_plan()
+        if args.recover_interrupted and not (args.execute and args.resume):
+            raise ValueError('--recover-interrupted는 --execute --resume과 함께 사용하세요.')
         if not 1 <= args.max_attempts <= 80:
             raise ValueError('--max-attempts는1~80이어야 합니다.')
         status = json.loads((ROOT / 'docs/research_status.json').read_text())

@@ -5,11 +5,12 @@ import statistics
 
 from difficulty_pilot_contracts import ROOT, canonical_hash, file_hash, load_suite, summarize
 from difficulty_pilot_resume import resume_plan
+from long_generation_recovery import recovery_allowance, verify_code_migration
 from run_fixed_prefix_diagnostic import IMPLEMENTATION as BASE_IMPLEMENTATION
 
 CONFIG = ROOT / 'configs/long_generation_v01.json'
 IMPLEMENTATION = ['run_long_generation.py', 'long_generation_contracts.py',
-                  'difficulty_pilot_resume.py', *BASE_IMPLEMENTATION]
+                  'long_generation_recovery.py', 'difficulty_pilot_resume.py', *BASE_IMPLEMENTATION]
 
 
 def load_plan(path=CONFIG):
@@ -51,10 +52,11 @@ def validate_resume(report, cfg, suite):
     plan = resume_plan(report, cfg, suite)
     if report.get('active_attempt') or report.get('status') in {'LONG_GENERATION_FAILED', 'LONG_GENERATION_INTERRUPTED'}:
         raise ValueError('미완료/오류 응답이 있습니다. 사용한 계산을 숨겨 재시도하지 말고 보고서부터 검토하세요.')
-    if report.get('generation_calls_started') != plan['completed']:
+    abandoned = recovery_allowance(report, cfg)
+    if report.get('generation_calls_started') != plan['completed'] + abandoned:
         raise ValueError('시작한 생성 횟수와 완료 기록 불일치')
-    if report['generation_calls_started'] > cfg['maximum_generation_calls']:
-        raise ValueError('80회 생성 예산 초과')
+    if report['generation_calls_started'] > cfg['maximum_generation_calls'] + abandoned:
+        raise ValueError('기록된 생성 호출 예산 초과')
     if report.get('config_sha256') != canonical_hash(cfg):
         raise ValueError('재개 설정 변경')
     return plan
@@ -64,8 +66,11 @@ def reserve_attempt(report, key, cfg):
     if report.get('active_attempt'):
         raise ValueError('이미 진행 중이거나 중단된 응답이 있습니다.')
     calls = report['generation_calls_started']
-    if calls >= cfg['maximum_generation_calls']:
-        raise ValueError('80회 생성 예산 소진')
+    abandoned = recovery_allowance(report, cfg)
+    if calls != len(report['attempts']) + abandoned:
+        raise ValueError('생성 예약 전 소비 횟수 불일치')
+    if calls >= cfg['maximum_generation_calls'] + abandoned:
+        raise ValueError('기록된 생성 호출 예산 소진')
     report['generation_calls_started'] = calls + 1
     report['active_attempt'] = {'problem_id': key[0], 'arm': key[1], 'seed': key[2],
                                 'reserved_maximum_tokens': cfg['max_new_tokens']}
@@ -101,6 +106,13 @@ def summarize_long(report, cfg, suite):
     summary['status'] = 'LONG_GENERATION_EXPLORATORY_SUMMARY_NOT_CERTIFICATION'
     summary['budget_profiles'] = budget_profiles(report, cfg)
     summary['generation_calls_started'] = report['generation_calls_started']
+    abandoned = recovery_allowance(report, cfg)
+    summary['abandoned_generation_calls'] = abandoned
+    summary['maximum_generation_calls_including_abandoned'] = cfg['maximum_generation_calls'] + abandoned
+    summary['maximum_generation_tokens_including_abandoned'] = (cfg['maximum_generation_calls'] + abandoned) * cfg['max_new_tokens']
+    summary['abandoned_actual_generated_tokens'] = None if abandoned else 0
+    summary['abandoned_generation_tokens_upper_bound'] = abandoned * cfg['max_new_tokens']
+    summary['total_actual_generation_tokens_known'] = not abandoned and not bool(report.get('active_attempt'))
     summary['reserved_maximum_generation_tokens'] = report['generation_calls_started'] * cfg['max_new_tokens']
     summary['actual_completed_generation_tokens'] = sum(len(r['generated_ids']) for r in report['attempts'])
     summary['model_ready'] = False
@@ -114,10 +126,12 @@ def summarize_long(report, cfg, suite):
 def verify_resume_runtime(previous, current, inputs):
     from difficulty_pilot_resume import verify_compatibility
     verify_compatibility(previous, current, inputs)
-    for key in ('implementation_sha256', 'source_run_sha256', 'source_configuration_sha256',
+    for key in ('source_run_sha256', 'source_configuration_sha256', 'resolved_generation_config',
                 'effective_source_configuration_sha256', 'installed_sources', 'runtime_contract'):
         if previous.get(key) != current.get(key):
             raise ValueError(f'32K 재개 조건 변경: {key}')
+    if previous.get('implementation_sha256') != current.get('implementation_sha256'):
+        verify_code_migration(previous, current)
 
 
 def validate_mask_trace(row):
